@@ -10,7 +10,7 @@ cloudflight {
     softwareProjectKey = "interact/ems"
 }
 
-if (isCloudflightBuild(project)) {
+if (isCloudflightBuild()) {
     bootJar {
         enabled = false
     }
