@@ -1,35 +1,39 @@
 plugins {
-    id 'org.springframework.boot' version '2.3.6.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id "cloudflight-gradle-plugin" version "5.15.2"
 }
 
-group 'io.cloudflight.jems.plugin.default'
-version '1.0-SNAPSHOT'
+description "Jems standard plugin"
+group 'io.cloudflight.jems.plugin.standard'
+version '1.0.0'
 
-repositories {
-    mavenCentral()
+cloudflight {
+    softwareProjectKey = "interact/ems"
 }
 
-bootJar {
-    enabled = false
+if (isCloudflightBuild(project)) {
+    bootJar {
+        enabled = false
+    }
 }
 jar {
     enabled = true
 }
+if (isKotlinProject(project)) {
+    dependencies {
+        implementation platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
+        annotationProcessor platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
+        testImplementation platform("io.cloudflight.platform:platform-test-bom:$cloudflightPlatformVersion")
+        kapt platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
 
+        constraints {
+            implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0"
+            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:0.0.1')
+
+        }
+    }
+}
 dependencies {
-    compile files('../jems-plugin-interface/build/libs/jems-plugin-interface-1.0-SNAPSHOT.jar')
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
+    implementation('org.springframework.boot:spring-boot-starter-web')
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
