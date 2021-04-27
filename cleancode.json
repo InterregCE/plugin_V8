@@ -1,0 +1,8 @@
+{
+  "suppressedRules": [
+    {
+      "rule": "gradle.buildlog.errors.io.cloudflight.gradle.license.missing",
+      "reason": "we don't know what kind of license we should provide"
+    }
+  ]
+}

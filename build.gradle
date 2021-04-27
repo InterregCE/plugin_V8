@@ -27,7 +27,7 @@ if (isKotlinProject(project)) {
 
         constraints {
             implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0"
-            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:0.0.1')
+            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.0')
 
         }
     }
