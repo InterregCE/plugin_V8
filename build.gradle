@@ -1,3 +1,5 @@
+import io.cloudflight.gradle.RepositoryVisibility
+
 plugins {
     id "cloudflight-gradle-plugin" version "5.15.2"
 }
@@ -7,6 +9,7 @@ group 'io.cloudflight.jems.plugin.standard'
 version '1.0.0'
 
 cloudflight {
+    visibility = RepositoryVisibility.PUBLIC
     softwareProjectKey = "interact/ems"
 }
 
