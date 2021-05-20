@@ -8,34 +8,27 @@ import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditi
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import org.springframework.stereotype.Service
 
+const val MESSAGES_PREFIX = "jems.standard.pre.condition.check.plugin.project"
 
 @Service
 open class PreConditionCheckDefaultImpl(val projectDataProvider: ProjectDataProvider) : PreConditionCheckPlugin {
 
-    override fun check(projectId: Long): PreConditionCheckResult {
-        val projectData = projectDataProvider.getProjectDataForProjectId(projectId)
-
-        if (projectData.sectionA == null ||
-            projectData.sectionA!!.title.isEmpty() ||
-            projectData.sectionA!!.title.all { it.translation.isNullOrBlank() }
-        ) {
-            return PreConditionCheckResult(
-                listOf(
-                    PreConditionCheckMessage(
-                        "plugin.section.a.project.title.not.defined",
-                        MessageType.ERROR,
-                        emptyList()
-                    )
-                ),
-                isSubmissionAllowed = false
-            )
+    override fun check(projectId: Long): PreConditionCheckResult =
+        projectDataProvider.getProjectDataForProjectId(projectId).let { projectData ->
+            mutableListOf<PreConditionCheckMessage>().plus(
+                arrayOf(
+                    checkSectionA(projectData.sectionA),
+                    checkSectionB(projectData.sectionB),
+                    checkSectionC(projectData.sectionC),
+                    checkSectionE(projectData.sectionE)
+                )
+            ).let { messages ->
+                PreConditionCheckResult(
+                    messages = messages,
+                    isSubmissionAllowed = messages.none { it.messageType == MessageType.ERROR }
+                )
+            }
         }
-
-        return PreConditionCheckResult(
-            emptyList(),
-            isSubmissionAllowed = true
-        )
-    }
 
     override fun getDescription(): String =
         "Standard implementation for pre condition check"
