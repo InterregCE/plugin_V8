@@ -1,6 +1,5 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
-
 import io.cloudflight.jems.plugin.contract.pre_condition_check.PreConditionCheckPlugin
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
@@ -40,5 +39,5 @@ open class PreConditionCheckDefaultImpl(val projectDataProvider: ProjectDataProv
         "Standard pre condition check"
 
     override fun getVersion(): String =
-        "1.0.0"
+        "1.0.1"
 }
