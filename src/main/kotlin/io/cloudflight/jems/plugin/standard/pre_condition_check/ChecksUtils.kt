@@ -81,7 +81,15 @@ fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =
 fun BigDecimal.truncate(): BigDecimal =
     setScale(2, RoundingMode.FLOOR)
 
+fun BigDecimal.truncateDown(): BigDecimal =
+    setScale(2, RoundingMode.DOWN)
+
 fun BigDecimal.percentage(percentage: Int): BigDecimal =
     multiply(BigDecimal.valueOf(percentage.toLong()))
         .divide(BigDecimal(100))
         .truncate()
+
+fun BigDecimal.percentageDown(percentage: Int): BigDecimal =
+    multiply(BigDecimal.valueOf(percentage.toLong()))
+        .divide(BigDecimal(100))
+        .truncateDown()

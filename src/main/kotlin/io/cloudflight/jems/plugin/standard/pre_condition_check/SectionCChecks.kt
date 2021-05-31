@@ -8,6 +8,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionC.management.Pr
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectManagementData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.overallObjective.ProjectOverallObjectiveData
+import io.cloudflight.jems.plugin.contract.models.project.sectionC.partnership.ProjectPartnershipData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceBenefitData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceStrategyData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceSynergyData
@@ -52,6 +53,12 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
             checkIfSynergiesAreNotEmpty(sectionCData?.projectRelevance?.projectSynergies),
 
             checkIfAvailableKnowledgeAreNotEmpty(sectionCData?.projectRelevance?.availableKnowledge)
+        ),
+
+        buildPreConditionCheckMessage(
+            messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c3", messageArgs = emptyMap(),
+
+            checkIfProjectPpartnershipIsAdded(sectionCData?.projectPartnership)
         ),
 
         buildPreConditionCheckMessage(
@@ -591,6 +598,13 @@ private fun checkIfInvestmentsAreValid(investments: List<WorkPackageInvestmentDa
     }
     return errorInvestmentsMessages
 }
+
+private fun checkIfProjectPpartnershipIsAdded(projectPartnership: ProjectPartnershipData?) =
+    when {
+        projectPartnership?.partnership == null ||
+        projectPartnership.partnership.isNullOrEmptyOrMissingAnyTranslation() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.partnership.is.not.provided")
+        else -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.project.partnership.passed")
+    }
 
 private fun isSustainableDevelopmentCriteriaEffectNotNeutralAndHasMissingTranslation(projectManagement: ProjectManagementData?) =
     projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect != ProjectHorizontalPrinciplesEffectData.Neutral && projectManagement?.sustainableDevelopmentDescription.isNullOrEmptyOrMissingAnyTranslation()
