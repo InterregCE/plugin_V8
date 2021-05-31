@@ -84,13 +84,19 @@ private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartne
 {
     val errorMessages = mutableListOf<PreConditionCheckMessage>()
     partners.forEach { partner ->
+
+        var fundsAmount = BigDecimal.ZERO;
+        partner.budget.projectPartnerCoFinancing.finances.forEach{
+            finance ->
+            if (finance.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution)
+            {
+                fundsAmount = fundsAmount + partner.budget.projectPartnerBudgetTotalCost.percentageDown((finance.percentage  ?: BigDecimal.ZERO).toInt());
+            }
+        }
+        fundsAmount = partner.budget.projectPartnerBudgetTotalCost - fundsAmount;
+
         if (partner.budget.projectPartnerCoFinancing.finances.isEmpty() ||
-            (partner.budget.projectPartnerBudgetTotalCost -
-                    (partner.budget.projectPartnerBudgetTotalCost.percentage(
-                        (partner.budget.projectPartnerCoFinancing.finances.firstOrNull {
-                            it.fundType == ProjectPartnerCoFinancingFundTypeData.PartnerContribution
-                        }?.percentage ?: BigDecimal.ZERO).toInt())
-                    ).truncate()) !=
+            fundsAmount !=
             partner.budget.projectPartnerCoFinancing.partnerContributions.sumOf { it.amount } ) {
             errorMessages.add(
                 buildErrorPreConditionCheckMessage(
@@ -634,12 +640,12 @@ private fun checkIfPartnerPersonContentIsProvided(partners: Set<ProjectPartnerDa
 private fun checkIfPartnerMotivationContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
-            partner.motivation?.organizationExperience.isNullOrEmptyOrMissingAnyTranslation() ||
+            partner.motivation?.organizationRelevance.isNullOrEmptyOrMissingAnyTranslation() ||
             partner.motivation?.organizationRole.isNullOrEmptyOrMissingAnyTranslation()
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.motivation?.organizationExperience.isNullOrEmptyOrMissingAnyTranslation()) {
+                if (partner.motivation?.organizationRelevance.isNullOrEmptyOrMissingAnyTranslation()) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.motivation.thematic.competences.is.not.provided",
