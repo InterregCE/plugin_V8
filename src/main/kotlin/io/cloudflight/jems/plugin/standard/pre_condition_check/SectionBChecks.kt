@@ -201,7 +201,9 @@ private fun checkIfTravelAndAccommodationContentIsProvided(partners: Set<Project
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -> budgetEntry.unitType.isNullOrEmpty() }) {
+                if (partner.budget.projectPartnerBudgetCosts.travelCosts
+                        .filter { budgetEntry -> budgetEntry.unitCostId == null }
+                        .any { budgetEntry -> budgetEntry.unitType.isNullOrEmpty() }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.type.is.not.provided",
