@@ -176,7 +176,7 @@ private fun checkIfSynergiesAreNotEmpty(relevanceSynergies: List<ProjectRelevanc
 private fun checkIfAvailableKnowledgeAreNotEmpty(availableKnowledge: Set<InputTranslationData>?) =
     when {
         availableKnowledge == null ||
-        availableKnowledge.isNullOrEmptyOrMissingAnyTranslation() ->
+                availableKnowledge.isNullOrEmptyOrMissingAnyTranslation() ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.build.available.knowledge.is.not.provided")
         else -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.project.build.available.knowledge.is.provided")
     }
@@ -186,7 +186,7 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
         workPackages != null &&
                 workPackages.any { workPackage ->
                     isActivitiesContentMissing(workPackage.activities) ||
-                    isOutputsContentMissing(workPackage.outputs)
+                            isOutputsContentMissing(workPackage.outputs)
                 } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             workPackages.forEach { workPackage ->
@@ -194,7 +194,7 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.title.is.not.provided",
-                            mapOf("id" to (workPackage.id.toString()))
+                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation()))
                         )
                     )
                 }
@@ -203,7 +203,7 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
                     errorMessages.add(
                         buildErrorPreConditionCheckMessages(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity",
-                            mapOf("id" to (workPackage.id.toString())),
+                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation())),
                             errorActivitiesMessages
                         )
                     )
@@ -213,7 +213,7 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
                     errorMessages.add(
                         buildErrorPreConditionCheckMessages(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output",
-                            mapOf("id" to (workPackage.id.toString())),
+                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation())),
                             errorOutputMessages
                         )
                     )
@@ -223,13 +223,14 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
                     errorMessages.add(
                         buildErrorPreConditionCheckMessages(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments",
-                            mapOf("id" to (workPackage.id.toString())),
+                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation())),
                             errorInvestmentsMessages
                         )
                     )
                 }
             }
-            buildErrorPreConditionCheckMessages("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c4.content",
+            buildErrorPreConditionCheckMessages(
+                "$SECTION_C_ERROR_MESSAGES_PREFIX.project.c4.content",
                 messageArgs = emptyMap(),
                 errorMessages
             )
@@ -255,9 +256,35 @@ private fun checkIfNamesOfWorkPackagesAreProvided(workPackages: List<ProjectWork
 private fun checkIfObjectivesOfWorkPackagesAreProvided(workPackages: List<ProjectWorkPackageData>?) =
     when {
         workPackages.isNullOrEmpty() -> null
-        workPackages.any { it.objectiveAndAudience.isNullOrEmptyOrMissingAnyTranslation() ||
-                it.specificObjective.isNullOrEmptyOrMissingAnyTranslation() } ->
-            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.communication.objective.is.not.provided")
+        workPackages.any {
+            it.objectiveAndAudience.isNullOrEmptyOrMissingAnyTranslation() ||
+                    it.specificObjective.isNullOrEmptyOrMissingAnyTranslation()
+        } -> {
+            val errorMessages = mutableListOf<PreConditionCheckMessage>()
+            workPackages.forEach { workPackage ->
+                if (workPackage.objectiveAndAudience.isNullOrEmptyOrMissingAnyTranslation()) {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.audience.objective.is.not.provided",
+                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation()))
+                        )
+                    )
+                }
+                if (workPackage.specificObjective.isNullOrEmptyOrMissingAnyTranslation()) {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.specific.objective.is.not.provided",
+                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation()))
+                        )
+                    )
+                }
+            }
+            buildErrorPreConditionCheckMessages(
+                "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.objectives",
+                messageArgs = emptyMap(),
+                errorMessages
+            )
+        }
         else -> null
     }
 
@@ -277,19 +304,21 @@ private fun checkIfAtLeastOneResultIsAdded(results: List<ProjectResultData>?) =
 private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?) =
     when {
         results != null &&
-        results.any { result ->
-            result.programmeResultIndicatorId ?: 0 <= 0 ||
-            result.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO ||
-            result.periodNumber ?: 0 <= 0 ||
-            result.translatedValues.isResultNullOrEmptyOrMissingAnyDescription()
-        } -> {
+                results.any { result ->
+                    result.programmeResultIndicatorId ?: 0 <= 0 ||
+                            result.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO ||
+                            result.periodNumber ?: 0 <= 0 ||
+                            result.translatedValues.isResultNullOrEmptyOrMissingAnyDescription()
+                } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             results.forEach { result ->
                 if (result.programmeResultIndicatorId ?: 0 <= 0) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.indicator.is.not.provided",
-                            mapOf("name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString()))
+                            mapOf(
+                                "name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString())
+                            )
                         )
                     )
                 }
@@ -297,7 +326,9 @@ private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?) =
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.target.is.not.provided",
-                            mapOf("name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString()))
+                            mapOf(
+                                "name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString())
+                            )
                         )
                     )
                 }
@@ -305,7 +336,9 @@ private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?) =
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.delivery.is.not.provided",
-                            mapOf("name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString()))
+                            mapOf(
+                                "name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString())
+                            )
                         )
                     )
                 }
@@ -313,12 +346,15 @@ private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?) =
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.description.is.not.provided",
-                            mapOf("name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString()))
+                            mapOf(
+                                "name" to (result.programmeResultIndicatorIdentifier ?: result.resultNumber.toString())
+                            )
                         )
                     )
                 }
             }
-            buildErrorPreConditionCheckMessages("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c5.content",
+            buildErrorPreConditionCheckMessages(
+                "$SECTION_C_ERROR_MESSAGES_PREFIX.project.c5.content",
                 messageArgs = emptyMap(),
                 errorMessages
             )
@@ -371,7 +407,7 @@ private fun checkIfDescriptionForTypeOfContributionIsProvided(projectManagement:
 private fun checkIfCoordinateProjectIsValid(projectManagement: ProjectManagementData?) =
     when {
         projectManagement == null || projectManagement.projectCoordination.isNullOrEmpty()
-                 ->
+        ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c71.is.not.provided")
         else -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.project.c71.is.provided")
     }
@@ -416,12 +452,10 @@ private fun checkIfTransferabilityIsValid(projectLongTermPlans: ProjectLongTermP
         else -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.project.c83.is.provided")
     }
 
-private fun checkIfActivitiesAreValid(activities: List<WorkPackageActivityData> ): List<PreConditionCheckMessage>
-{
+private fun checkIfActivitiesAreValid(activities: List<WorkPackageActivityData>): List<PreConditionCheckMessage> {
     val errorActivitiesMessages = mutableListOf<PreConditionCheckMessage>()
     if (activities.isNotEmpty()) {
-        activities.forEach {
-                activity ->
+        activities.forEach { activity ->
             if (activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle()) {
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
@@ -455,23 +489,20 @@ private fun checkIfActivitiesAreValid(activities: List<WorkPackageActivityData> 
                 )
             }
         }
-    }
-    else
-    {
+    } else {
         errorActivitiesMessages.add(
             buildErrorPreConditionCheckMessage(
-                "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.activity.should.be.added")
+                "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.activity.should.be.added"
+            )
         )
     }
     return errorActivitiesMessages
 }
 
-private fun checkIfOutputsAreValid(outputs: List<WorkPackageOutputData>): List<PreConditionCheckMessage>
-{
+private fun checkIfOutputsAreValid(outputs: List<WorkPackageOutputData>): List<PreConditionCheckMessage> {
     val errorOutputsMessages = mutableListOf<PreConditionCheckMessage>()
     if (outputs.isNotEmpty()) {
-        outputs.forEach {
-                output ->
+        outputs.forEach { output ->
             if (output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle()) {
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
@@ -505,23 +536,20 @@ private fun checkIfOutputsAreValid(outputs: List<WorkPackageOutputData>): List<P
                 )
             }
         }
-    }
-    else
-    {
+    } else {
         errorOutputsMessages.add(
             buildErrorPreConditionCheckMessage(
-                "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.output.should.be.added")
+                "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.output.should.be.added"
+            )
         )
     }
     return errorOutputsMessages
 }
 
-private fun checkIfInvestmentsAreValid(investments: List<WorkPackageInvestmentData>): List<PreConditionCheckMessage>
-{
+private fun checkIfInvestmentsAreValid(investments: List<WorkPackageInvestmentData>): List<PreConditionCheckMessage> {
     val errorInvestmentsMessages = mutableListOf<PreConditionCheckMessage>()
     if (investments.isNotEmpty()) {
-        investments.forEach {
-                investment ->
+        investments.forEach { investment ->
             if (investment.title.isNullOrEmptyOrMissingAnyTranslation()) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
@@ -602,7 +630,9 @@ private fun checkIfInvestmentsAreValid(investments: List<WorkPackageInvestmentDa
 private fun checkIfProjectPpartnershipIsAdded(projectPartnership: ProjectPartnershipData?) =
     when {
         projectPartnership?.partnership == null ||
-        projectPartnership.partnership.isNullOrEmptyOrMissingAnyTranslation() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.partnership.is.not.provided")
+                projectPartnership.partnership.isNullOrEmptyOrMissingAnyTranslation() -> buildErrorPreConditionCheckMessage(
+            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.partnership.is.not.provided"
+        )
         else -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.project.partnership.passed")
     }
 
@@ -626,41 +656,41 @@ private fun isJointStaffingSelectedAndHasMissingTranslation(projectManagement: P
 
 private fun isActivitiesContentMissing(activities: List<WorkPackageActivityData>) =
     activities.isEmpty() ||
-        (activities.isNotEmpty() &&
-            activities.any
-            {
-                activity -> activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle() ||
-                activity.startPeriod ?: 0 <= 0 ||
-                activity.endPeriod ?: 0 <= 0 ||
-                    activity.deliverables.isEmpty()
-            }
-        )
+            (activities.isNotEmpty() &&
+                    activities.any
+                    { activity ->
+                        activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle() ||
+                                activity.startPeriod ?: 0 <= 0 ||
+                                activity.endPeriod ?: 0 <= 0 ||
+                                activity.deliverables.isEmpty()
+                    }
+                    )
 
 private fun isOutputsContentMissing(outputs: List<WorkPackageOutputData>) =
     outputs.isEmpty() ||
-        (outputs.isNotEmpty() &&
-            outputs.any
-            {
-                output -> output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle() ||
-                output.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO ||
-                output.periodNumber ?: 0 <= 0 ||
-                output.programmeOutputIndicatorId ?: 0 <= 0
-            }
-        )
+            (outputs.isNotEmpty() &&
+                    outputs.any
+                    { output ->
+                        output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle() ||
+                                output.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO ||
+                                output.periodNumber ?: 0 <= 0 ||
+                                output.programmeOutputIndicatorId ?: 0 <= 0
+                    }
+                    )
 
 private fun isInvestmentsContentMissing(investments: List<WorkPackageInvestmentData>) =
     investments.isEmpty() ||
-        (investments.isNotEmpty() &&
-            investments.any
-            {
-                investment -> investment.title.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.justificationExplanation.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.justificationBenefits.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.justificationTransactionalRelevance.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.ownershipSiteLocation.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.ownershipRetain.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.ownershipMaintenance.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.risk.isNullOrEmptyOrMissingAnyTranslation() ||
-                investment.documentation.isNullOrEmptyOrMissingAnyTranslation()
-            }
-        )
+            (investments.isNotEmpty() &&
+                    investments.any
+                    { investment ->
+                        investment.title.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.justificationExplanation.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.justificationBenefits.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.justificationTransactionalRelevance.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.ownershipSiteLocation.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.ownershipRetain.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.ownershipMaintenance.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.risk.isNullOrEmptyOrMissingAnyTranslation() ||
+                                investment.documentation.isNullOrEmptyOrMissingAnyTranslation()
+                    }
+                    )
