@@ -39,5 +39,5 @@ open class PreConditionCheckDefaultImpl(val projectDataProvider: ProjectDataProv
         "Standard pre condition check"
 
     override fun getVersion(): String =
-        "1.0.3"
+        "1.0.4"
 }

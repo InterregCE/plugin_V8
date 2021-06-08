@@ -89,7 +89,15 @@ fun BigDecimal.percentage(percentage: Int): BigDecimal =
         .divide(BigDecimal(100))
         .truncate()
 
-fun BigDecimal.percentageDown(percentage: Int): BigDecimal =
-    multiply(BigDecimal.valueOf(percentage.toLong()))
+fun BigDecimal.percentageDown(percentage: BigDecimal): BigDecimal =
+    multiply(percentage)
         .divide(BigDecimal(100))
         .truncateDown()
+
+fun Set<InputTranslationData>?.getFirstOrDefaultTranslation(): String {
+    if (this == null || this.isEmpty())
+    {
+        return ""
+    }
+    return this.first { !it.translation.isNullOrBlank() }.translation ?: ""
+}
