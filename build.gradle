@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugin"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.5'
+version '1.0.6'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
