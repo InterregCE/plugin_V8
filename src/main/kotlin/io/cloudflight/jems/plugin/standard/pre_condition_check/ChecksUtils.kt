@@ -70,10 +70,10 @@ fun Set<ProjectResultTranslatedValueData>?.isResultNullOrEmptyOrMissingAnyDescri
     this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() }
 
 fun Set<WorkPackageActivityTranslatedValueData>?.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle() =
-    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrEmpty() }
+    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrBlank() }
 
 fun Set<WorkPackageOutputTranslatedValueData>?.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle() =
-    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrEmpty() }
+    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrBlank() }
 
 fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =
     this.map { fieldExtractor.invoke(it) ?: BigDecimal.ZERO }.fold(BigDecimal.ZERO, BigDecimal::add)
