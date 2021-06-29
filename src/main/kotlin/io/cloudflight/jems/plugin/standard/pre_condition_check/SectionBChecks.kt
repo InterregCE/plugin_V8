@@ -3,6 +3,7 @@ package io.cloudflight.jems.plugin.standard.pre_condition_check
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectContactTypeData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerRoleData
@@ -85,15 +86,13 @@ private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartne
     val errorMessages = mutableListOf<PreConditionCheckMessage>()
     partners.forEach { partner ->
 
-        var fundsAmount = BigDecimal.ZERO;
+        var fundsAmount = BigDecimal.ZERO
         partner.budget.projectPartnerCoFinancing.finances.forEach { finance ->
             if (finance.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution) {
-                fundsAmount = fundsAmount + partner.budget.projectPartnerBudgetTotalCost.percentageDown(
-                    finance.percentage ?: BigDecimal.ZERO
-                );
+                fundsAmount += partner.budget.projectPartnerBudgetTotalCost.percentageDown(finance.percentage)
             }
         }
-        fundsAmount = partner.budget.projectPartnerBudgetTotalCost - fundsAmount;
+        fundsAmount = partner.budget.projectPartnerBudgetTotalCost - fundsAmount
 
         if (partner.budget.projectPartnerCoFinancing.finances.isEmpty() ||
             fundsAmount !=
@@ -496,16 +495,20 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
         partners.any { partner ->
             partner.addresses.isEmpty() || (
                 partner.addresses.any { address ->
-                    address.type == ProjectPartnerAddressTypeData.Organization
-                    address.country.isNullOrBlank() ||
-                    address.nutsRegion2.isNullOrBlank() ||
-                    address.nutsRegion3.isNullOrBlank() ||
-                    address.street.isNullOrBlank() ||
-                    address.houseNumber.isNullOrBlank() ||
-                    address.postalCode.isNullOrBlank() ||
-                    address.city.isNullOrBlank()})
+                    (address.type == ProjectPartnerAddressTypeData.Organization &&
+                        (address.country.isNullOrBlank() ||
+                        address.nutsRegion2.isNullOrBlank() ||
+                        address.nutsRegion3.isNullOrBlank() ||
+                        address.street.isNullOrBlank() ||
+                        address.houseNumber.isNullOrBlank() ||
+                        address.postalCode.isNullOrBlank() ||
+                        address.city.isNullOrBlank())) ||
+                    (address.type == ProjectPartnerAddressTypeData.Department &&
+                        checkIfOneOfAddressFieldTouched(address)
+                    )
+                })
         } -> {
-            var errorMessages = mutableListOf<PreConditionCheckMessage>()
+            val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
                 if (partner.addresses.isEmpty())
                 {
@@ -517,63 +520,65 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                     )
                 }
                 partner.addresses.forEach { address ->
-                    if (address.type == ProjectPartnerAddressTypeData.Organization) {
-                        if (partner.addresses[0].country.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.country.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                    val messagePostfix = if (address.type == ProjectPartnerAddressTypeData.Organization)
+                        "main"
+                        else
+                        "department"
+                    if (address.country.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.country.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
-                        if (partner.addresses[0].nutsRegion2.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.nuts2.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                        )
+                    }
+                    if (address.nutsRegion2.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.nuts2.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
-                        if (partner.addresses[0].nutsRegion3.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.nuts2.nuts3.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                        )
+                    }
+                    if (address.nutsRegion3.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.nuts2.nuts3.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
-                        if (partner.addresses[0].street.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.street.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                        )
+                    }
+                    if (address.street.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.street.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
-                        if (partner.addresses[0].houseNumber.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.house.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                        )
+                    }
+                    if (address.houseNumber.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.house.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
-                        if (partner.addresses[0].postalCode.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.postal.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                        )
+                    }
+                    if (address.postalCode.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.postal.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
-                        if (partner.addresses[0].city.isNullOrBlank()) {
-                            errorMessages.add(
-                                buildErrorPreConditionCheckMessage(
-                                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.main.address.city.is.not.provided",
-                                    mapOf("name" to (partner.abbreviation))
-                                )
+                        )
+                    }
+                    if (address.city.isNullOrBlank()) {
+                        errorMessages.add(
+                            buildErrorPreConditionCheckMessage(
+                                "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.city.is.not.provided",
+                                mapOf("name" to (partner.abbreviation))
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -727,23 +732,19 @@ private fun checkIfPartnerAssociatedOrganisationIsProvided(associatedOrganizatio
                                     )
                             ) ||
                     (associatedOrganization.contacts.size == 2 &&
-                            (
-                                    associatedOrganization.contacts.any { contact ->
-                                        contact.type == ProjectContactTypeData.ContactPerson &&
-                                                (contact.firstName.isNullOrBlank() ||
-                                                        contact.lastName.isNullOrBlank() ||
-                                                        contact.telephone.isNullOrBlank() ||
-                                                        contact.email.isNullOrBlank())
-                                    } ||
-                                            associatedOrganization.contacts.any { contact ->
-                                                contact.type == ProjectContactTypeData.ContactPerson &&
-                                                        (contact.firstName.isNullOrBlank() ||
-                                                                contact.lastName.isNullOrBlank() ||
-                                                                contact.telephone.isNullOrBlank() ||
-                                                                contact.email.isNullOrBlank())
-                                            }
-                                    )
-                            )
+                            associatedOrganization.contacts.any { contact ->
+                                contact.type == ProjectContactTypeData.ContactPerson &&
+                                        (contact.firstName.isNullOrBlank() ||
+                                                contact.lastName.isNullOrBlank() ||
+                                                contact.telephone.isNullOrBlank() ||
+                                                contact.email.isNullOrBlank())
+                            }  ||
+                            associatedOrganization.contacts.any { contact ->
+                                contact.type == ProjectContactTypeData.LegalRepresentative &&
+                                        (contact.firstName.isNullOrBlank() ||
+                                                contact.lastName.isNullOrBlank())
+                            }
+                    )
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             associatedOrganizations.forEach { associatedOrganization ->
@@ -936,3 +937,26 @@ private fun checkIfPartnerAssociatedOrganisationIsProvided(associatedOrganizatio
         }
         else -> null
     }
+
+private fun checkIfOneOfAddressFieldTouched(address: ProjectPartnerAddressData): Boolean
+{
+    val oneOfTouched =
+        address.country?.isNotBlank() ?: false ||
+                address.nutsRegion2?.isNotBlank() ?: false ||
+                address.nutsRegion3?.isNotBlank() ?: false ||
+                address.street?.isNotBlank() ?: false ||
+                address.houseNumber?.isNotBlank() ?: false ||
+                address.postalCode?.isNotBlank() ?: false ||
+                address.city?.isNotBlank() ?: false
+
+    val oneOfEmpty =
+        address.country.isNullOrBlank() ||
+                address.nutsRegion2.isNullOrBlank() ||
+                address.nutsRegion3.isNullOrBlank() ||
+                address.street.isNullOrBlank() ||
+                address.houseNumber.isNullOrBlank() ||
+                address.postalCode.isNullOrBlank() ||
+                address.city.isNullOrBlank()
+
+    return oneOfTouched && oneOfEmpty
+}
