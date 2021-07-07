@@ -1,6 +1,9 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
+import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
+import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
+import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.longTermPlans.ProjectLongTermPlansData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectCooperationCriteriaData
@@ -24,7 +27,9 @@ private const val SECTION_C_MESSAGES_PREFIX = "$MESSAGES_PREFIX.section.c"
 private const val SECTION_C_ERROR_MESSAGES_PREFIX = "$SECTION_C_MESSAGES_PREFIX.error"
 private const val SECTION_C_INFO_MESSAGES_PREFIX = "$SECTION_C_MESSAGES_PREFIX.info"
 
-fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage =
+fun checkSectionC(
+    sectionCData: ProjectDataSectionC?, lifecycleData: ProjectLifecycleData, callData: CallDetailData
+): PreConditionCheckMessage =
     buildPreConditionCheckMessage(
         messageKey = "$SECTION_C_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
 
@@ -79,7 +84,7 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c5", messageArgs = emptyMap(),
             checkIfAtLeastOneResultIsAdded(sectionCData?.projectResults),
 
-            checkIfResultContentIsProvided(sectionCData?.projectResults)
+            checkIfResultContentIsProvided(sectionCData?.projectResults, lifecycleData, callData)
         ),
 
         buildPreConditionCheckMessage(
@@ -297,7 +302,7 @@ private fun checkIfAtLeastOneResultIsAdded(results: List<ProjectResultData>?) =
         else -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.at.least.one.result.is.added")
     }
 
-private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?) =
+private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?, lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
     when {
         results != null &&
         results.any { result ->
@@ -324,7 +329,7 @@ private fun checkIfResultContentIsProvided(results: List<ProjectResultData>?) =
                         )
                     )
                 }
-                if (result.periodNumber ?: 0 <= 0) {
+                if (isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DELIVERY_PERIOD, lifecycleData, callData) && result.periodNumber ?: 0 <= 0) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.delivery.is.not.provided",
