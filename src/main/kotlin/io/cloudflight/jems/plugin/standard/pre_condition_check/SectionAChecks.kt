@@ -52,7 +52,9 @@ private fun checkIfProgrammePriorityIsProvided(programmePriority: ProgrammePrior
 
 private fun checkIfIntroIsProvidedInEnglish(intro: Set<InputTranslationData>?) =
     when {
-        intro.isNullOrEmpty() || intro!!.first { it.language == SystemLanguageData.EN }.translation.isNullOrBlank() ->
+        intro.isNullOrEmpty() ||
+            intro!!.none { it.language == SystemLanguageData.EN } ||
+            intro.first { it.language == SystemLanguageData.EN }.translation.isNullOrBlank() ->
             buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.intro.in.en.is.not.provided")
         else -> buildInfoPreConditionCheckMessage("$SECTION_A_INFO_MESSAGES_PREFIX.intro.in.en.is.provided")
     }
