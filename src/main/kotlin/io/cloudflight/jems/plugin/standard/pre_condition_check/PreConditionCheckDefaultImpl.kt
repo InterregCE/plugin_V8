@@ -4,21 +4,26 @@ import io.cloudflight.jems.plugin.contract.pre_condition_check.PreConditionCheck
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckResult
+import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import org.springframework.stereotype.Service
 
 const val MESSAGES_PREFIX = "jems.standard.pre.condition.check.plugin.project"
 
 @Service
-open class PreConditionCheckDefaultImpl(val projectDataProvider: ProjectDataProvider) : PreConditionCheckPlugin {
+open class PreConditionCheckDefaultImpl(
+    val projectDataProvider: ProjectDataProvider,
+    val callDataProvider: CallDataProvider
+) : PreConditionCheckPlugin {
 
     override fun check(projectId: Long): PreConditionCheckResult =
         projectDataProvider.getProjectDataForProjectId(projectId).let { projectData ->
+            val callData = callDataProvider.getCallDataByProjectId(projectId)
             mutableListOf<PreConditionCheckMessage>().plus(
                 arrayOf(
                     checkSectionA(projectData.sectionA),
                     checkSectionB(projectData.sectionB),
-                    checkSectionC(projectData.sectionC),
+                    checkSectionC(projectData.sectionC, projectData.lifecycleData, callData),
                     checkSectionE(projectData.sectionE)
                 )
             ).let { messages ->
@@ -39,5 +44,5 @@ open class PreConditionCheckDefaultImpl(val projectDataProvider: ProjectDataProv
         "Standard pre condition check"
 
     override fun getVersion(): String =
-        "1.0.7"
+        "1.0.9"
 }
