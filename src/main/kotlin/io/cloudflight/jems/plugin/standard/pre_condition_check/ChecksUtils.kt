@@ -4,10 +4,12 @@ import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.call.FieldVisibilityStatusData
 import io.cloudflight.jems.plugin.contract.models.common.I18nMessageData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
+import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ApplicationStatusData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.results.ProjectResultTranslatedValueData
+import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityDeliverableTranslatedValueData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityTranslatedValueData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageOutputTranslatedValueData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
@@ -65,20 +67,29 @@ fun buildErrorPreConditionCheckMessages(
 ): PreConditionCheckMessage =
     buildPreConditionCheckMessage(messageKey, messageArgs, MessageType.ERROR, checkResults)
 
-fun Set<InputTranslationData>?.isNullOrEmpty() =
-    this == null || this.isEmpty() || this.any { it.translation.isNullOrBlank() }
+fun Set<InputTranslationData>?.isNotFullyTranslated(mandatoryLanguages: Set<SystemLanguageData>): Boolean {
+    return !this.isFullyTranslated(mandatoryLanguages)
+}
+fun Set<InputTranslationData>?.isFullyTranslated(mandatoryLanguages: Set<SystemLanguageData>): Boolean {
+    if (this.isNullOrEmpty()) return false
+    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
+    val allLanguagesTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.translation.isNullOrBlank() }
+    return allLanguagesUsed && allLanguagesTranslated
+}
 
-fun Set<InputTranslationData>?.isNullOrEmptyOrMissingAnyTranslation() =
-    this.isNullOrEmpty() || this!!.any { it.translation.isNullOrBlank() }
-
+// those should be replaced by Set<InputTranslationData>
 fun Set<ProjectResultTranslatedValueData>?.isResultNullOrEmptyOrMissingAnyDescription() =
     this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() }
 
 fun Set<WorkPackageActivityTranslatedValueData>?.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle() =
     this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrBlank() }
 
+fun Set<WorkPackageActivityDeliverableTranslatedValueData>?.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle() =
+    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() }
+
 fun Set<WorkPackageOutputTranslatedValueData>?.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle() =
     this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrBlank() }
+// ..or add mandatoryLanguages check
 
 fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =
     this.map { fieldExtractor.invoke(it) ?: BigDecimal.ZERO }.fold(BigDecimal.ZERO, BigDecimal::add)

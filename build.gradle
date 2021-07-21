@@ -4,9 +4,9 @@ plugins {
     id "cloudflight-gradle-plugin" version "5.15.2"
 }
 
-description "Jems standard plugin"
+description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.10'
+version '1.0.11'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -30,7 +30,7 @@ if (isKotlinProject(project)) {
 
         constraints {
             implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0"
-            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.8')
+            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.9')
 
         }
     }
