@@ -21,10 +21,10 @@ open class PreConditionCheckDefaultImpl(
             val callData = callDataProvider.getCallDataByProjectId(projectId)
             mutableListOf<PreConditionCheckMessage>().plus(
                 arrayOf(
-                    checkSectionA(projectData.sectionA),
-                    checkSectionB(projectData.sectionB),
+                    checkSectionA(projectData.sectionA, projectData.lifecycleData, callData),
+                    checkSectionB(projectData.sectionB, projectData.lifecycleData, callData),
                     checkSectionC(projectData.sectionC, projectData.lifecycleData, callData),
-                    checkSectionE(projectData.sectionE)
+                    checkSectionE(projectData.sectionE, projectData.lifecycleData, callData)
                 )
             ).let { messages ->
                 PreConditionCheckResult(
@@ -44,5 +44,5 @@ open class PreConditionCheckDefaultImpl(
         "Standard pre condition check"
 
     override fun getVersion(): String =
-        "1.0.9"
+        "1.0.10"
 }

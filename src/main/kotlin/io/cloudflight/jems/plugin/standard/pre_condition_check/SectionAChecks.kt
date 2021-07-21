@@ -1,8 +1,11 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
+import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammePriorityDataSimple
+import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
+import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
 
@@ -10,11 +13,17 @@ private const val SECTION_A_MESSAGES_PREFIX = "$MESSAGES_PREFIX.section.a"
 private const val SECTION_A_ERROR_MESSAGES_PREFIX = "$SECTION_A_MESSAGES_PREFIX.error"
 private const val SECTION_A_INFO_MESSAGES_PREFIX = "$SECTION_A_MESSAGES_PREFIX.info"
 
-fun checkSectionA(sectionAData: ProjectDataSectionA?): PreConditionCheckMessage =
-    buildPreConditionCheckMessage(
+private var _lifecycleData: ProjectLifecycleData? = null
+private var _callData: CallDetailData? = null
+
+fun checkSectionA(sectionAData: ProjectDataSectionA?, lifecycleData: ProjectLifecycleData, callData: CallDetailData): PreConditionCheckMessage {
+    _lifecycleData = lifecycleData
+    _callData = callData
+
+    return buildPreConditionCheckMessage(
         messageKey = "$SECTION_A_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
 
-        checkIfTitleIsProvided(sectionAData?.title),
+        checkIfTitleIsProvided(callData.inputLanguages, sectionAData?.title),
 
         checkIfAcronymIsProvided(sectionAData?.acronym),
 
@@ -22,39 +31,54 @@ fun checkSectionA(sectionAData: ProjectDataSectionA?): PreConditionCheckMessage 
 
         checkIfProgrammePriorityIsProvided(sectionAData?.programmePriority),
 
-        checkIfIntroIsProvidedInEnglish(sectionAData?.intro)
+        checkIfIntroIsProvidedInEnglish(sectionAData?.intro),
+
+        checkIfIntroIsProvided(callData.inputLanguages, sectionAData?.intro)
     )
+}
 
-
-private fun checkIfTitleIsProvided(title: Set<InputTranslationData>?) =
+private fun checkIfTitleIsProvided(mandatoryLanguages: Set<SystemLanguageData>, title: Set<InputTranslationData>?) =
     when {
-        title.isNullOrEmptyOrMissingAnyTranslation() -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.title.is.not.provided")
+        isFieldVisible(ApplicationFormFieldId.PROJECT_TITLE) && title.isNotFullyTranslated(mandatoryLanguages)
+        -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.title.is.not.provided")
         else -> null
     }
 
 private fun checkIfAcronymIsProvided(acronym: String?) =
     when {
+        isFieldVisible(ApplicationFormFieldId.PROJECT_ACRONYM) &&
         acronym.isNullOrBlank() -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.acronym.is.not.provided")
         else -> null
     }
 
 private fun checkIfDurationIsProvided(duration: Int?) =
-    when (duration) {
-        null -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.duration.is.not.provided")
+    when {
+        isFieldVisible(ApplicationFormFieldId.PROJECT_DURATION) &&
+        duration == null -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.duration.is.not.provided")
         else -> null
     }
 
 private fun checkIfProgrammePriorityIsProvided(programmePriority: ProgrammePriorityDataSimple?) =
     when {
-        programmePriority == null || programmePriority.code.isBlank() -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.programme.priority.is.not.provided")
+        isFieldVisible(ApplicationFormFieldId.PROJECT_PRIORITY) &&
+        (programmePriority == null || programmePriority.code.isBlank()) -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.programme.priority.is.not.provided")
         else -> null
     }
 
 private fun checkIfIntroIsProvidedInEnglish(intro: Set<InputTranslationData>?) =
     when {
-        intro.isNullOrEmpty() ||
-            intro!!.none { it.language == SystemLanguageData.EN } ||
-            intro.first { it.language == SystemLanguageData.EN }.translation.isNullOrBlank() ->
-            buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.intro.in.en.is.not.provided")
-        else -> buildInfoPreConditionCheckMessage("$SECTION_A_INFO_MESSAGES_PREFIX.intro.in.en.is.provided")
+        intro.isNotFullyTranslated(setOf(SystemLanguageData.EN))
+        -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.intro.in.en.is.not.provided")
+        else -> null
     }
+
+private fun checkIfIntroIsProvided(mandatoryLanguages: Set<SystemLanguageData>, intro: Set<InputTranslationData>?) =
+    when {
+        intro.isNotFullyTranslated(mandatoryLanguages)
+        -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.intro.is.not.provided")
+        else -> null
+    }
+
+private fun isFieldVisible(fieldId: ApplicationFormFieldId): Boolean {
+    return isFieldVisible(fieldId, _lifecycleData!!, _callData!!)
+}
