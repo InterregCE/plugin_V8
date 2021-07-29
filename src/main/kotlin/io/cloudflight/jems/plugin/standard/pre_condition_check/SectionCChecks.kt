@@ -22,21 +22,15 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.W
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageInvestmentData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageOutputData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import java.math.BigDecimal
 
 private const val SECTION_C_MESSAGES_PREFIX = "$MESSAGES_PREFIX.section.c"
 private const val SECTION_C_ERROR_MESSAGES_PREFIX = "$SECTION_C_MESSAGES_PREFIX.error"
 private const val SECTION_C_INFO_MESSAGES_PREFIX = "$SECTION_C_MESSAGES_PREFIX.info"
 
-private var _lifecycleData: ProjectLifecycleData? = null
-private var _callData: CallDetailData? = null
-
-fun checkSectionC(
-    sectionCData: ProjectDataSectionC?, lifecycleData: ProjectLifecycleData, callData: CallDetailData
-): PreConditionCheckMessage {
-    _lifecycleData = lifecycleData
-    _callData = callData
-
+fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
         messageKey = "$SECTION_C_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
 
@@ -48,29 +42,29 @@ fun checkSectionC(
         buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c2", messageArgs = emptyMap(),
 
-            checkIfTerritorialChallengeGroupIsProvided(callData.inputLanguages, sectionCData?.projectRelevance?.territorialChallenge),
+            checkIfTerritorialChallengeGroupIsProvided(sectionCData?.projectRelevance?.territorialChallenge),
 
-            checkIfCommonChallengeGroupIsProvided(callData.inputLanguages, sectionCData?.projectRelevance?.commonChallenge),
+            checkIfCommonChallengeGroupIsProvided(sectionCData?.projectRelevance?.commonChallenge),
 
-            checkIfTransnationalCooperationGroupIsProvided(callData.inputLanguages, sectionCData?.projectRelevance?.transnationalCooperation),
+            checkIfTransnationalCooperationGroupIsProvided(sectionCData?.projectRelevance?.transnationalCooperation),
 
             checkIfAtLeastOneTargetGroupIsAdded(sectionCData?.projectRelevance?.projectBenefits),
 
-            checkIfSpecificationIsProvidedForAllTargetGroups(callData.inputLanguages, sectionCData?.projectRelevance?.projectBenefits),
+            checkIfSpecificationIsProvidedForAllTargetGroups(sectionCData?.projectRelevance?.projectBenefits),
 
             checkIfAtLeastOneStrategyIsAdded(sectionCData?.projectRelevance?.projectStrategies),
 
-            checkIfSpecificationIsProvidedForAllStrategies(callData.inputLanguages, sectionCData?.projectRelevance?.projectStrategies),
+            checkIfSpecificationIsProvidedForAllStrategies(sectionCData?.projectRelevance?.projectStrategies),
 
-            checkIfSynergiesAreNotEmpty(callData.inputLanguages, sectionCData?.projectRelevance?.projectSynergies),
+            checkIfSynergiesAreNotEmpty(sectionCData?.projectRelevance?.projectSynergies),
 
-            checkIfAvailableKnowledgeAreNotEmpty(callData.inputLanguages, sectionCData?.projectRelevance?.availableKnowledge)
+            checkIfAvailableKnowledgeAreNotEmpty(sectionCData?.projectRelevance?.availableKnowledge)
         ),
 
         buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c3", messageArgs = emptyMap(),
 
-            checkIfProjectPpartnershipIsAdded(callData.inputLanguages, sectionCData?.projectPartnership)
+            checkIfProjectPpartnershipIsAdded(sectionCData?.projectPartnership)
         ),
 
         buildPreConditionCheckMessage(
@@ -78,131 +72,142 @@ fun checkSectionC(
 
             checkIfAtLeastOneWorkPackageIsAdded(sectionCData?.projectWorkPackages),
 
-            checkIfNamesOfWorkPackagesAreProvided(callData.inputLanguages, sectionCData?.projectWorkPackages),
+            checkIfNamesOfWorkPackagesAreProvided(sectionCData?.projectWorkPackages),
 
-            checkIfObjectivesOfWorkPackagesAreProvided(callData.inputLanguages, sectionCData?.projectWorkPackages),
+            checkIfObjectivesOfWorkPackagesAreProvided(sectionCData?.projectWorkPackages),
 
             checkIfAtLeastOneOutputForEachWorkPackageIsAdded(sectionCData?.projectWorkPackages),
 
-            checkIfWorkPackageContentIsProvided(callData.inputLanguages, sectionCData?.projectWorkPackages)
+            checkIfWorkPackageContentIsProvided(sectionCData?.projectWorkPackages)
         ),
 
         buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c5", messageArgs = emptyMap(),
             checkIfAtLeastOneResultIsAdded(sectionCData?.projectResults),
 
-            checkIfResultContentIsProvided(callData.inputLanguages, sectionCData)
+            checkIfResultContentIsProvided(sectionCData)
         ),
 
         buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c7", messageArgs = emptyMap(),
 
-            checkIfCoordinateProjectIsValid(callData.inputLanguages, sectionCData?.projectManagement),
+            checkIfCoordinateProjectIsValid(sectionCData?.projectManagement),
 
-            checkIfMeasuresQualityIsValid(callData.inputLanguages, sectionCData?.projectManagement),
+            checkIfMeasuresQualityIsValid(sectionCData?.projectManagement),
 
-            checkIfCommunicationIsValid(callData.inputLanguages, sectionCData?.projectManagement),
+            checkIfCommunicationIsValid(sectionCData?.projectManagement),
 
-            checkIfFinancialManagementIsProvided(callData.inputLanguages, sectionCData?.projectManagement?.projectFinancialManagement),
+            checkIfFinancialManagementIsProvided(sectionCData?.projectManagement?.projectFinancialManagement),
 
             checkIfSelectedCooperationCriteriaAreValid(sectionCData?.projectManagement?.projectCooperationCriteria),
 
-            checkIfDescriptionForAllSelectedCooperationCriteriaIsProvided(callData.inputLanguages, sectionCData?.projectManagement),
+            checkIfDescriptionForAllSelectedCooperationCriteriaIsProvided(sectionCData?.projectManagement),
 
             checkIfTypeOfContributionsAreProvided(sectionCData?.projectManagement?.projectHorizontalPrinciples),
 
-            checkIfDescriptionForTypeOfContributionIsProvided(callData.inputLanguages, sectionCData?.projectManagement)
+            checkIfDescriptionForTypeOfContributionIsProvided(sectionCData?.projectManagement)
         ),
 
         buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c8", messageArgs = emptyMap(),
 
-            checkIfOwnershipIsValid(callData.inputLanguages, sectionCData?.projectLongTermPlans),
+            checkIfOwnershipIsValid(sectionCData?.projectLongTermPlans),
 
-            checkIfDurabilityIsValid(callData.inputLanguages, sectionCData?.projectLongTermPlans),
+            checkIfDurabilityIsValid(sectionCData?.projectLongTermPlans),
 
-            checkIfTransferabilityIsValid(callData.inputLanguages, sectionCData?.projectLongTermPlans)
+            checkIfTransferabilityIsValid(sectionCData?.projectLongTermPlans)
         )
     )
 }
 
 private fun checkIfProjectOverallObjectiveIsProvided(projectOverallObjectiveData: ProjectOverallObjectiveData?) =
-    when (projectOverallObjectiveData) {
-        null -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.overall.objective.should.be.provided")
+    when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_OVERALL_OBJECTIVE) -> null
+        projectOverallObjectiveData == null -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.overall.objective.should.be.provided")
         else -> null
     }
 
-private fun checkIfTerritorialChallengeGroupIsProvided(mandatoryLanguages: Set<SystemLanguageData>, territorialChallenge: Set<InputTranslationData>?) =
+private fun checkIfTerritorialChallengeGroupIsProvided(territorialChallenge: Set<InputTranslationData>?) =
     when {
-        territorialChallenge.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_TERRITORIAL_CHALLENGES) -> null
+        territorialChallenge.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.territorial.challenge.is.not.provided")
         else -> null
     }
 
-private fun checkIfCommonChallengeGroupIsProvided(mandatoryLanguages: Set<SystemLanguageData>, commonChallenge: Set<InputTranslationData>?) =
+private fun checkIfCommonChallengeGroupIsProvided(commonChallenge: Set<InputTranslationData>?) =
     when {
-        commonChallenge.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED) -> null
+        commonChallenge.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.common.challenges.is.not.provided")
         else -> null
     }
 
-private fun checkIfTransnationalCooperationGroupIsProvided(mandatoryLanguages: Set<SystemLanguageData>, transnationalCooperation: Set<InputTranslationData>?) =
+private fun checkIfTransnationalCooperationGroupIsProvided(transnationalCooperation: Set<InputTranslationData>?) =
     when {
-        transnationalCooperation.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_WHY_IS_COOPERATION_NEEDED) -> null
+        transnationalCooperation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.transnational.cooperation.is.not.provided")
         else -> null
     }
 
 private fun checkIfAtLeastOneTargetGroupIsAdded(projectBenefits: List<ProjectRelevanceBenefitData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_TARGET_GROUP) -> null
         projectBenefits.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.target.group.should.be.added")
         else -> null
     }
 
-private fun checkIfSpecificationIsProvidedForAllTargetGroups(mandatoryLanguages: Set<SystemLanguageData>, projectBenefits: List<ProjectRelevanceBenefitData>?) =
+private fun checkIfSpecificationIsProvidedForAllTargetGroups(projectBenefits: List<ProjectRelevanceBenefitData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_TARGET_GROUP) -> null
         projectBenefits.isNullOrEmpty() -> null
-        projectBenefits.any { it.specification.isNotFullyTranslated(mandatoryLanguages) }
+        projectBenefits.any { it.specification.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.specifications.for.all.target.groups.should.be.added")
         else -> null
     }
 
 private fun checkIfAtLeastOneStrategyIsAdded(projectStrategies: List<ProjectRelevanceStrategyData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_STRATEGY_CONTRIBUTION) -> null
         projectStrategies.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.strategy.should.be.added")
         else -> null
     }
 
-private fun checkIfSpecificationIsProvidedForAllStrategies(mandatoryLanguages: Set<SystemLanguageData>, projectStrategies: List<ProjectRelevanceStrategyData>?) =
+private fun checkIfSpecificationIsProvidedForAllStrategies(projectStrategies: List<ProjectRelevanceStrategyData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_STRATEGY_CONTRIBUTION) -> null
         projectStrategies.isNullOrEmpty() -> null
-        projectStrategies.any { it.specification.isNotFullyTranslated(mandatoryLanguages) }
+        projectStrategies.any { it.specification.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.specifications.for.all.strategies.should.be.added")
         else -> null
     }
 
-private fun checkIfSynergiesAreNotEmpty(mandatoryLanguages: Set<SystemLanguageData>, relevanceSynergies: List<ProjectRelevanceSynergyData>?) =
+private fun checkIfSynergiesAreNotEmpty(relevanceSynergies: List<ProjectRelevanceSynergyData>?) =
     when {
-        relevanceSynergies.isNullOrEmpty() -> buildInfoPreConditionCheckMessage("$SECTION_C_INFO_MESSAGES_PREFIX.synergies.are.not.added")
-        relevanceSynergies.any { it.synergy.isNotFullyTranslated(mandatoryLanguages) }
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_SYNERGIES) -> null
+        relevanceSynergies.isNullOrEmpty() -> null
+        relevanceSynergies.any { it.synergy.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                it.specification.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.synergies.should.be.provided")
         else -> null
     }
 
-private fun checkIfAvailableKnowledgeAreNotEmpty(mandatoryLanguages: Set<SystemLanguageData>, availableKnowledge: Set<InputTranslationData>?) =
+private fun checkIfAvailableKnowledgeAreNotEmpty(availableKnowledge: Set<InputTranslationData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_HOW_BUILDS_PROJECT_ON_AVAILABLE_KNOWLEDGE) -> null
         availableKnowledge == null ||
-        availableKnowledge.isNotFullyTranslated(mandatoryLanguages)
+        availableKnowledge.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.build.available.knowledge.is.not.provided")
         else -> null
     }
 
-private fun checkIfWorkPackageContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, workPackages: List<ProjectWorkPackageData>?) =
+private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPackageData>?) =
     when {
         workPackages != null &&
                 workPackages.any { workPackage ->
-                    isActivitiesContentMissing(mandatoryLanguages, workPackage.activities) ||
-                    isOutputsContentMissing(mandatoryLanguages, workPackage.outputs)
+                    isActivitiesContentMissing(workPackage.activities) ||
+                    isOutputsContentMissing(workPackage.outputs)
                 } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             workPackages.forEach { workPackage ->
@@ -210,37 +215,37 @@ private fun checkIfWorkPackageContentIsProvided(mandatoryLanguages: Set<SystemLa
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.activity.should.be.added",
-                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation()))
+                            mapOf("id" to ("WP" + workPackage.workPackageNumber.toString()))
                         )
                     )
                 }
-                val errorActivitiesMessages = checkIfActivitiesAreValid(mandatoryLanguages, workPackage.activities)
-                if (errorActivitiesMessages.isNotEmpty()) {
-                    errorMessages.add(
-                        buildErrorPreConditionCheckMessages(
-                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity",
-                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation())),
-                            errorActivitiesMessages
-                        )
-                    )
-                }
-                val errorOutputMessages = checkIfOutputsAreValid(mandatoryLanguages, workPackage.outputs)
-                if (errorOutputMessages.isNotEmpty()) {
-                    errorMessages.add(
-                        buildErrorPreConditionCheckMessages(
-                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output",
-                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation())),
-                            errorOutputMessages
-                        )
-                    )
-                }
-                val errorInvestmentsMessages = checkIfInvestmentsAreValid(mandatoryLanguages, workPackage.investments)
+                val errorInvestmentsMessages = checkIfInvestmentsAreValid(workPackage.workPackageNumber, workPackage.investments)
                 if (errorInvestmentsMessages.isNotEmpty()) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessages(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments",
-                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation())),
+                            mapOf("id" to ("WP" + workPackage.workPackageNumber.toString())),
                             errorInvestmentsMessages
+                        )
+                    )
+                }
+                val errorActivitiesMessages = checkIfActivitiesAreValid(workPackage.workPackageNumber, workPackage.activities)
+                if (errorActivitiesMessages.isNotEmpty()) {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessages(
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity",
+                            mapOf("id" to ("WP" + workPackage.workPackageNumber.toString())),
+                            errorActivitiesMessages
+                        )
+                    )
+                }
+                val errorOutputMessages = checkIfOutputsAreValid(workPackage.workPackageNumber, workPackage.outputs)
+                if (errorOutputMessages.isNotEmpty()) {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessages(
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output",
+                            mapOf("id" to ("WP" + workPackage.workPackageNumber.toString())),
+                            errorOutputMessages
                         )
                     )
                 }
@@ -260,34 +265,34 @@ private fun checkIfAtLeastOneWorkPackageIsAdded(workPackages: List<ProjectWorkPa
         else -> null
     }
 
-private fun checkIfNamesOfWorkPackagesAreProvided(mandatoryLanguages: Set<SystemLanguageData>, workPackages: List<ProjectWorkPackageData>?) =
+private fun checkIfNamesOfWorkPackagesAreProvided(workPackages: List<ProjectWorkPackageData>?) =
     when {
         workPackages.isNullOrEmpty() -> null
-        workPackages.any { it.name.isNotFullyTranslated(mandatoryLanguages) }
+        workPackages.any { it.name.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.names.of.work.packages.should.be.added")
         else -> null
     }
 
-private fun checkIfObjectivesOfWorkPackagesAreProvided(mandatoryLanguages: Set<SystemLanguageData>, workPackages: List<ProjectWorkPackageData>?) =
+private fun checkIfObjectivesOfWorkPackagesAreProvided(workPackages: List<ProjectWorkPackageData>?) =
     when {
         workPackages.isNullOrEmpty() -> null
-        workPackages.any { it.objectiveAndAudience.isNotFullyTranslated(mandatoryLanguages) ||
-                it.specificObjective.isNotFullyTranslated(mandatoryLanguages) } -> {
+        workPackages.any { it.objectiveAndAudience.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                it.specificObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages) } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             workPackages.forEach { workPackage ->
-                if (workPackage.objectiveAndAudience.isNotFullyTranslated(mandatoryLanguages)) {
-                    errorMessages.add(
-                        buildErrorPreConditionCheckMessage(
-                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.audience.objective.is.not.provided",
-                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation()))
-                        )
-                    )
-                }
-                if (workPackage.specificObjective.isNotFullyTranslated(mandatoryLanguages)) {
+                if (workPackage.specificObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.specific.objective.is.not.provided",
-                            mapOf("id" to (workPackage.name.getFirstOrDefaultTranslation()))
+                            mapOf("id" to ("WP" + workPackage.workPackageNumber.toString()))
+                        )
+                    )
+                }
+                if (workPackage.objectiveAndAudience.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.audience.objective.is.not.provided",
+                            mapOf("id" to ("WP" + workPackage.workPackageNumber.toString()))
                         )
                     )
                 }
@@ -309,22 +314,27 @@ private fun checkIfAtLeastOneOutputForEachWorkPackageIsAdded(workPackages: List<
 
 private fun checkIfAtLeastOneResultIsAdded(results: List<ProjectResultData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT) &&
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_TARGET_VALUE) &&
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DELIVERY_PERIOD) &&
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DESCRIPTION) -> null
         results.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.result.should.be.added")
         else -> null
     }
 
-private fun checkIfResultContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, projectData: ProjectDataSectionC?) =
+private fun checkIfResultContentIsProvided(projectData: ProjectDataSectionC?) =
     when {
         projectData?.projectResults != null &&
             projectData.projectResults.any { result ->
             result.programmeResultIndicatorId ?: 0 <= 0 ||
             result.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO ||
             result.periodNumber ?: 0 <= 0 ||
-            result.translatedValues.isResultNullOrEmptyOrMissingAnyDescription()
+            result.translatedValues.isResultNullOrEmptyOrMissingAnyDescription(CallDataContainer.get().inputLanguages)
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             projectData.projectResults.forEach { result ->
-                if (result.programmeResultIndicatorId ?: 0 <= 0) {
+                if (isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT) &&
+                    result.programmeResultIndicatorId ?: 0 <= 0) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.indicator.is.not.provided",
@@ -332,7 +342,7 @@ private fun checkIfResultContentIsProvided(mandatoryLanguages: Set<SystemLanguag
                         )
                     )
                 }
-                if (result.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO) {
+                if (isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_TARGET_VALUE) && result.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.target.is.not.provided",
@@ -348,8 +358,8 @@ private fun checkIfResultContentIsProvided(mandatoryLanguages: Set<SystemLanguag
                         )
                     )
                 }
-                var numberOfLanguages = projectData.projectOverallObjective?.overallObjective?.count() ?: 0
-                if (result.translatedValues.count() > numberOfLanguages || result.translatedValues.isResultNullOrEmptyOrMissingAnyDescription()) {
+                if (isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DESCRIPTION) &&
+                    result.translatedValues.isResultNullOrEmptyOrMissingAnyDescription(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.result.description.is.not.provided",
@@ -358,41 +368,51 @@ private fun checkIfResultContentIsProvided(mandatoryLanguages: Set<SystemLanguag
                     )
                 }
             }
-            buildErrorPreConditionCheckMessages("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c5.content",
-                messageArgs = emptyMap(),
-                errorMessages
-            )
+            if (errorMessages.count() > 0) {
+                buildErrorPreConditionCheckMessages(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.c5.content",
+                    messageArgs = emptyMap(),
+                    errorMessages
+                )
+            }
+            else
+            {
+                null
+            }
         }
         else -> null
     }
 
-private fun checkIfFinancialManagementIsProvided(mandatoryLanguages: Set<SystemLanguageData>, financialManagement: Set<InputTranslationData>?) =
+private fun checkIfFinancialManagementIsProvided(financialManagement: Set<InputTranslationData>?) =
     when {
-        financialManagement.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_FINANCIAL_MANAGEMENT_AND_REPORTING) -> null
+        financialManagement.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.financial.management.should.be.provided")
         else -> null
     }
 
 private fun checkIfSelectedCooperationCriteriaAreValid(cooperationCriteria: ProjectCooperationCriteriaData?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_COOPERATION_CRITERIA) -> null
         cooperationCriteria == null || !cooperationCriteria.projectJointDevelopment || !cooperationCriteria.projectJointImplementation ||
                 !(cooperationCriteria.projectJointFinancing || cooperationCriteria.projectJointStaffing) ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.selected.cooperation.criteria.are.not.valid")
         else -> null
     }
 
-private fun checkIfDescriptionForAllSelectedCooperationCriteriaIsProvided(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun checkIfDescriptionForAllSelectedCooperationCriteriaIsProvided(projectManagement: ProjectManagementData?) =
     when {
         projectManagement?.projectCooperationCriteria == null -> null
-        isJointDevelopmentSelectedAndHasMissingTranslation(mandatoryLanguages, projectManagement) ||
-                isJointImplementationSelectedAndHasMissingTranslation(mandatoryLanguages, projectManagement) ||
-                isJointStaffingSelectedAndHasMissingTranslation(mandatoryLanguages, projectManagement) ->
+        isJointDevelopmentSelectedAndHasMissingTranslation(projectManagement) ||
+                isJointImplementationSelectedAndHasMissingTranslation(projectManagement) ||
+                isJointStaffingSelectedAndHasMissingTranslation(projectManagement) ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.description.for.selected.cooperation.criteria.is.not.provided")
         else -> null
     }
 
 private fun checkIfTypeOfContributionsAreProvided(projectHorizontalPrinciples: ProjectHorizontalPrinciplesData?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_HORIZONTAL_PRINCIPLES) -> null
         projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == null ||
                 projectHorizontalPrinciples.equalOpportunitiesEffect == null ||
                 projectHorizontalPrinciples.sexualEqualityEffect == null ->
@@ -400,66 +420,74 @@ private fun checkIfTypeOfContributionsAreProvided(projectHorizontalPrinciples: P
         else -> null
     }
 
-private fun checkIfDescriptionForTypeOfContributionIsProvided(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun checkIfDescriptionForTypeOfContributionIsProvided(projectManagement: ProjectManagementData?) =
     when {
-        isSustainableDevelopmentCriteriaEffectNotNeutralAndHasMissingTranslation(mandatoryLanguages, projectManagement) ||
-                isEqualOpportunitiesEffectNotNeutralAndHasMissingTranslation(mandatoryLanguages, projectManagement) ||
-                isSexualEqualityEffectNotNeutralAndHasMissingTranslation(mandatoryLanguages, projectManagement) ->
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_HORIZONTAL_PRINCIPLES) -> null
+        isSustainableDevelopmentCriteriaEffectNotNeutralAndHasMissingTranslation(projectManagement) ||
+                isEqualOpportunitiesEffectNotNeutralAndHasMissingTranslation(projectManagement) ||
+                isSexualEqualityEffectNotNeutralAndHasMissingTranslation(projectManagement) ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.description.for.type.of.contribution.in.horizontal.principles.is.not.provided")
         else -> null
     }
 
-private fun checkIfCoordinateProjectIsValid(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun checkIfCoordinateProjectIsValid(projectManagement: ProjectManagementData?) =
     when {
-        projectManagement == null || projectManagement.projectCoordination.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_COORDINATION) -> null
+        projectManagement == null ||
+        projectManagement.projectCoordination.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c71.is.not.provided")
         else -> null
     }
 
-private fun checkIfMeasuresQualityIsValid(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun checkIfMeasuresQualityIsValid(projectManagement: ProjectManagementData?) =
     when {
-        projectManagement == null || projectManagement.projectQualityAssurance.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_QUALITY_MEASURES) -> null
+        projectManagement == null || projectManagement.projectQualityAssurance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c72.is.not.provided")
         else -> null
     }
 
-private fun checkIfCommunicationIsValid(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun checkIfCommunicationIsValid(projectManagement: ProjectManagementData?) =
     when {
-        projectManagement == null || projectManagement.projectCommunication.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_COMMUNICATION_APPROACH) -> null
+        projectManagement == null || projectManagement.projectCommunication.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c73.is.not.provided")
         else -> null
     }
 
-private fun checkIfOwnershipIsValid(mandatoryLanguages: Set<SystemLanguageData>, projectLongTermPlans: ProjectLongTermPlansData?) =
+private fun checkIfOwnershipIsValid(projectLongTermPlans: ProjectLongTermPlansData?) =
     when {
-        projectLongTermPlans == null || projectLongTermPlans.projectOwnership.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_OWNERSHIP) -> null
+        projectLongTermPlans == null || projectLongTermPlans.projectOwnership.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c81.is.not.provided")
         else -> null
     }
 
-private fun checkIfDurabilityIsValid(mandatoryLanguages: Set<SystemLanguageData>, projectLongTermPlans: ProjectLongTermPlansData?) =
+private fun checkIfDurabilityIsValid(projectLongTermPlans: ProjectLongTermPlansData?) =
     when {
-        projectLongTermPlans == null || projectLongTermPlans.projectDurability.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_DURABILITY) -> null
+        projectLongTermPlans == null || projectLongTermPlans.projectDurability.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c82.is.not.provided")
         else -> null
     }
 
-private fun checkIfTransferabilityIsValid(mandatoryLanguages: Set<SystemLanguageData>, projectLongTermPlans: ProjectLongTermPlansData?) =
+private fun checkIfTransferabilityIsValid(projectLongTermPlans: ProjectLongTermPlansData?) =
     when {
-        projectLongTermPlans == null || projectLongTermPlans.projectTransferability.isNotFullyTranslated(mandatoryLanguages)
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_TRANSFERABILITY) -> null
+        projectLongTermPlans == null || projectLongTermPlans.projectTransferability.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c83.is.not.provided")
         else -> null
     }
 
-private fun checkIfActivitiesAreValid(mandatoryLanguages: Set<SystemLanguageData>, activities: List<WorkPackageActivityData>): List<PreConditionCheckMessage> {
+private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<WorkPackageActivityData>): List<PreConditionCheckMessage> {
     val errorActivitiesMessages = mutableListOf<PreConditionCheckMessage>()
     if (activities.isNotEmpty()) {
         activities.forEach { activity ->
-            if (activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle()) {
+            if (activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages)) {
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.title.or.description.is.not.provided",
-                        mapOf("id" to (activity.activityNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString()))
                     )
                 )
             }
@@ -467,7 +495,7 @@ private fun checkIfActivitiesAreValid(mandatoryLanguages: Set<SystemLanguageData
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.start.period.is.not.provided",
-                        mapOf("id" to (activity.activityNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString()))
                     )
                 )
             }
@@ -475,7 +503,7 @@ private fun checkIfActivitiesAreValid(mandatoryLanguages: Set<SystemLanguageData
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.end.period.is.not.provided",
-                        mapOf("id" to (activity.activityNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString()))
                     )
                 )
             }
@@ -483,17 +511,20 @@ private fun checkIfActivitiesAreValid(mandatoryLanguages: Set<SystemLanguageData
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.deliverable.is.not.provided",
-                        mapOf("id" to (activity.activityNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString()))
                     )
                 )
             }
-            if (activity.deliverables.any {deliverable -> deliverable.period == null || deliverable.translatedValues.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle() }) {
-                errorActivitiesMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.delivery.period.or.description.is.not.provided",
-                        mapOf("id" to (activity.activityNumber.toString()))
+            if (activity.deliverables.any {deliverable -> deliverable.period == null ||
+                        deliverable.translatedValues.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages) }) {
+                activity.deliverables.forEach { deliverable ->
+                    errorActivitiesMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.deliverable.delivery.period.or.description.is.not.provided",
+                            mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString() + "." + deliverable.deliverableNumber.toString()))
+                        )
                     )
-                )
+                }
             }
         }
     } else {
@@ -505,15 +536,15 @@ private fun checkIfActivitiesAreValid(mandatoryLanguages: Set<SystemLanguageData
     return errorActivitiesMessages
 }
 
-private fun checkIfOutputsAreValid(mandatoryLanguages: Set<SystemLanguageData>, outputs: List<WorkPackageOutputData>): List<PreConditionCheckMessage> {
+private fun checkIfOutputsAreValid(workPackageNumber: Int, outputs: List<WorkPackageOutputData>): List<PreConditionCheckMessage> {
     val errorOutputsMessages = mutableListOf<PreConditionCheckMessage>()
     if (outputs.isNotEmpty()) {
         outputs.forEach { output ->
-            if (output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle()) {
+            if (output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages)) {
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output.title.is.not.provided",
-                        mapOf("id" to (output.outputNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + output.outputNumber.toString()))
                     )
                 )
             }
@@ -521,7 +552,7 @@ private fun checkIfOutputsAreValid(mandatoryLanguages: Set<SystemLanguageData>, 
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output.indicator.is.not.provided",
-                        mapOf("id" to (output.outputNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + output.outputNumber.toString()))
                     )
                 )
             }
@@ -529,7 +560,7 @@ private fun checkIfOutputsAreValid(mandatoryLanguages: Set<SystemLanguageData>, 
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output.value.is.not.provided",
-                        mapOf("id" to (output.outputNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + output.outputNumber.toString()))
                     )
                 )
             }
@@ -537,7 +568,7 @@ private fun checkIfOutputsAreValid(mandatoryLanguages: Set<SystemLanguageData>, 
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output.delivery.period.is.not.provided",
-                        mapOf("id" to (output.outputNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + output.outputNumber.toString()))
                     )
                 )
             }
@@ -551,79 +582,79 @@ private fun checkIfOutputsAreValid(mandatoryLanguages: Set<SystemLanguageData>, 
     return errorOutputsMessages
 }
 
-private fun checkIfInvestmentsAreValid(mandatoryLanguages: Set<SystemLanguageData>, investments: List<WorkPackageInvestmentData>): List<PreConditionCheckMessage> {
+private fun checkIfInvestmentsAreValid(workPackageNumber: Int, investments: List<WorkPackageInvestmentData>): List<PreConditionCheckMessage> {
     val errorInvestmentsMessages = mutableListOf<PreConditionCheckMessage>()
     if (investments.isNotEmpty()) {
         investments.forEach { investment ->
-            if (investment.title.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.title.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.justificationExplanation.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.justificationExplanation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.justification.explain.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.justificationBenefits.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.benefiting.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.justificationTransactionalRelevance.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.justificationTransactionalRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.transnational.relevance.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.ownershipSiteLocation.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.ownershipSiteLocation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.site.owner.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.ownershipRetain.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.ownershipRetain.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.end.project.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.ownershipMaintenance.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.maintenance.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.risk.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.risk.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.risk.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
-            if (investment.documentation.isNotFullyTranslated(mandatoryLanguages)) {
+            if (investment.documentation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorInvestmentsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.documentation.is.not.provided",
-                        mapOf("id" to (investment.investmentNumber.toString()))
+                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                     )
                 )
             }
@@ -632,79 +663,81 @@ private fun checkIfInvestmentsAreValid(mandatoryLanguages: Set<SystemLanguageDat
     return errorInvestmentsMessages
 }
 
-private fun checkIfProjectPpartnershipIsAdded(mandatoryLanguages: Set<SystemLanguageData>, projectPartnership: ProjectPartnershipData?) =
+private fun checkIfProjectPpartnershipIsAdded(projectPartnership: ProjectPartnershipData?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_PARTNERSHIP) -> null
         projectPartnership?.partnership == null ||
-        projectPartnership.partnership.isNotFullyTranslated(mandatoryLanguages)
+        projectPartnership.partnership.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.partnership.is.not.provided")
         else -> null
     }
 
-private fun isSustainableDevelopmentCriteriaEffectNotNeutralAndHasMissingTranslation(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun isSustainableDevelopmentCriteriaEffectNotNeutralAndHasMissingTranslation(projectManagement: ProjectManagementData?) =
     projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect != ProjectHorizontalPrinciplesEffectData.Neutral
-            && projectManagement?.sustainableDevelopmentDescription.isNotFullyTranslated(mandatoryLanguages)
+            && projectManagement?.sustainableDevelopmentDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
 
-private fun isEqualOpportunitiesEffectNotNeutralAndHasMissingTranslation(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun isEqualOpportunitiesEffectNotNeutralAndHasMissingTranslation(projectManagement: ProjectManagementData?) =
     projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect != ProjectHorizontalPrinciplesEffectData.Neutral
-            && projectManagement?.equalOpportunitiesDescription.isNotFullyTranslated(mandatoryLanguages)
+            && projectManagement?.equalOpportunitiesDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
 
-private fun isSexualEqualityEffectNotNeutralAndHasMissingTranslation(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData?) =
+private fun isSexualEqualityEffectNotNeutralAndHasMissingTranslation(projectManagement: ProjectManagementData?) =
     projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect != ProjectHorizontalPrinciplesEffectData.Neutral
-            && projectManagement?.sexualEqualityDescription.isNotFullyTranslated(mandatoryLanguages)
+            && projectManagement?.sexualEqualityDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
 
-private fun isJointDevelopmentSelectedAndHasMissingTranslation(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData) =
+private fun isJointDevelopmentSelectedAndHasMissingTranslation(projectManagement: ProjectManagementData) =
     projectManagement.projectCooperationCriteria?.projectJointDevelopment == true
-            && projectManagement.projectJointDevelopmentDescription.isNotFullyTranslated(mandatoryLanguages)
+            && projectManagement.projectJointDevelopmentDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
 
-private fun isJointImplementationSelectedAndHasMissingTranslation(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData) =
+private fun isJointImplementationSelectedAndHasMissingTranslation(projectManagement: ProjectManagementData) =
     projectManagement.projectCooperationCriteria?.projectJointImplementation == true
-            && projectManagement.projectJointImplementationDescription.isNotFullyTranslated(mandatoryLanguages)
+            && projectManagement.projectJointImplementationDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
 
-private fun isJointStaffingSelectedAndHasMissingTranslation(mandatoryLanguages: Set<SystemLanguageData>, projectManagement: ProjectManagementData) =
+private fun isJointStaffingSelectedAndHasMissingTranslation(projectManagement: ProjectManagementData) =
     projectManagement.projectCooperationCriteria?.projectJointStaffing == true
-            && projectManagement.projectJointStaffingDescription.isNotFullyTranslated(mandatoryLanguages)
+            && projectManagement.projectJointStaffingDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
 
-private fun isActivitiesContentMissing(mandatoryLanguages: Set<SystemLanguageData>, activities: List<WorkPackageActivityData>) =
+private fun isActivitiesContentMissing(activities: List<WorkPackageActivityData>) =
     activities.isEmpty() ||
         (activities.isNotEmpty() &&
             activities.any
             {
-                activity -> activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle() ||
+                activity -> activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages) ||
                 activity.startPeriod ?: 0 <= 0 ||
                 activity.endPeriod ?: 0 <= 0 ||
                     activity.deliverables.isEmpty()
             }
         )
 
-private fun isOutputsContentMissing(mandatoryLanguages: Set<SystemLanguageData>, outputs: List<WorkPackageOutputData>) =
+private fun isOutputsContentMissing(outputs: List<WorkPackageOutputData>) =
     outputs.isEmpty() ||
         (outputs.isNotEmpty() &&
             outputs.any
             {
-                output -> output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle() ||
+                output -> output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages) ||
                 output.targetValue ?: BigDecimal.ZERO <= BigDecimal.ZERO ||
                 output.periodNumber ?: 0 <= 0 ||
                 output.programmeOutputIndicatorId ?: 0 <= 0
             }
         )
 
-private fun isInvestmentsContentMissing(mandatoryLanguages: Set<SystemLanguageData>, investments: List<WorkPackageInvestmentData>) =
+private fun isInvestmentsContentMissing(investments: List<WorkPackageInvestmentData>) =
     investments.isEmpty() ||
         (investments.isNotEmpty() &&
             investments.any
             {
-                investment -> investment.title.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.justificationExplanation.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.justificationBenefits.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.justificationTransactionalRelevance.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.ownershipSiteLocation.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.ownershipRetain.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.ownershipMaintenance.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.risk.isNotFullyTranslated(mandatoryLanguages) ||
-                investment.documentation.isNotFullyTranslated(mandatoryLanguages)
+                investment -> investment.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.justificationExplanation.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.justificationTransactionalRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.ownershipSiteLocation.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.ownershipRetain.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.risk.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.documentation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         )
 
 private fun isFieldVisible(fieldId: ApplicationFormFieldId): Boolean {
-    return isFieldVisible(fieldId, _lifecycleData!!, _callData!!)
+    return isFieldVisible(fieldId, LifecycleDataContainer.get()!!, CallDataContainer.get())
 }
+

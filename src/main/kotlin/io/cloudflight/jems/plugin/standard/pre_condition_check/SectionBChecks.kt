@@ -13,19 +13,15 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.Proj
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerRoleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import java.math.BigDecimal
 
 private const val SECTION_B_MESSAGES_PREFIX = "$MESSAGES_PREFIX.section.b"
 private const val SECTION_B_ERROR_MESSAGES_PREFIX = "$SECTION_B_MESSAGES_PREFIX.error"
 private const val SECTION_B_INFO_MESSAGES_PREFIX = "$SECTION_B_MESSAGES_PREFIX.info"
 
-private var _lifecycleData: ProjectLifecycleData? = null
-private var _callData: CallDetailData? = null
-
-fun checkSectionB(sectionBData: ProjectDataSectionB, lifecycleData: ProjectLifecycleData, callData: CallDetailData): PreConditionCheckMessage {
-    _lifecycleData = lifecycleData
-    _callData = callData
-
+fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
         messageKey = "$SECTION_B_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
 
@@ -33,37 +29,37 @@ fun checkSectionB(sectionBData: ProjectDataSectionB, lifecycleData: ProjectLifec
 
         checkIfExactlyOneLeadPartnerIsAdded(sectionBData.partners),
 
-        checkIfTotalCoFinancingIsGreaterThanZero(sectionBData.partners),
-
-        checkIfCoFinancingContentIsProvided(sectionBData.partners),
-
-        checkIfTotalBudgetIsGreaterThanZero(sectionBData.partners),
-
-        checkIfPeriodsAmountSumUpToBudgetEntrySum(sectionBData.partners),
-
-        checkIfStaffContentIsProvided(callData.inputLanguages, sectionBData.partners),
-
-        checkIfTravelAndAccommodationContentIsProvided(callData.inputLanguages, sectionBData.partners),
-
-        checkIfExternalExpertiseAndServicesContentIsProvided(callData.inputLanguages, sectionBData.partners),
-
-        checkIfEquipmentContentIsProvided(callData.inputLanguages, sectionBData.partners),
-
-        checkIfInfrastructureAndWorksContentIsProvided(callData.inputLanguages, sectionBData.partners),
-
-        checkIfUnitCostsContentIsProvided(sectionBData.partners),
-
         checkIfPartnerIdentityContentIsProvided(sectionBData.partners),
 
         checkIfPartnerAddressContentIsProvided(sectionBData.partners),
 
         checkIfPartnerPersonContentIsProvided(sectionBData.partners),
 
-        checkIfPartnerMotivationContentIsProvided(callData.inputLanguages, sectionBData.partners),
+        checkIfPartnerMotivationContentIsProvided(sectionBData.partners),
 
-        checkIfPartnerContributionEqualsToBudget(sectionBData.partners),
+        checkIfPartnerAssociatedOrganisationIsProvided(sectionBData.associatedOrganisations),
 
-        checkIfPartnerAssociatedOrganisationIsProvided(callData.inputLanguages, sectionBData.associatedOrganisations)
+        checkIfStaffContentIsProvided(sectionBData.partners),
+
+        checkIfTravelAndAccommodationContentIsProvided(sectionBData.partners),
+
+        checkIfExternalExpertiseAndServicesContentIsProvided(sectionBData.partners),
+
+        checkIfEquipmentContentIsProvided(sectionBData.partners),
+
+        checkIfInfrastructureAndWorksContentIsProvided(sectionBData.partners),
+
+        checkIfUnitCostsContentIsProvided(sectionBData.partners),
+
+        checkIfTotalBudgetIsGreaterThanZero(sectionBData.partners),
+
+        checkIfPeriodsAmountSumUpToBudgetEntrySum(sectionBData.partners),
+
+        checkIfTotalCoFinancingIsGreaterThanZero(sectionBData.partners),
+
+        checkIfCoFinancingContentIsProvided(sectionBData.partners),
+
+        checkIfPartnerContributionEqualsToBudget(sectionBData.partners)
     )
 }
 
@@ -82,7 +78,7 @@ private fun checkIfExactlyOneLeadPartnerIsAdded(partners: Set<ProjectPartnerData
 
 private fun checkIfTotalCoFinancingIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
     when {
-        partners.sumOf { partner -> partner.budget.projectPartnerCoFinancing.partnerContributions.sumOf { it.amount } } <= BigDecimal.ZERO ->
+        partners.any { partner -> partner.budget.projectPartnerCoFinancing.finances.any {it.percentage <= BigDecimal.ZERO && it.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution  }} ->
             buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.co.financing.should.be.greater.than.zero")
         else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.co.financing.is.greater.than.zero")
     }
@@ -138,43 +134,49 @@ private fun checkIfCoFinancingContentIsProvided(partners: Set<ProjectPartnerData
         else -> null
     }
 
-private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartnerData>): PreConditionCheckMessage {
-    val errorMessages = mutableListOf<PreConditionCheckMessage>()
-    partners.forEach { partner ->
-        var fundsAmount = BigDecimal.ZERO
-        partner.budget.projectPartnerCoFinancing.finances.forEach { finance ->
-            if (finance.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution) {
-                fundsAmount += partner.budget.projectPartnerBudgetTotalCost.percentageDown(finance.percentage)
+private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartnerData>) =
+    when { partners.isNotEmpty()
+    -> {
+        val errorMessages = mutableListOf<PreConditionCheckMessage>()
+        partners.forEach { partner ->
+            var fundsAmount = BigDecimal.ZERO
+            partner.budget.projectPartnerCoFinancing.finances.forEach { finance ->
+                if (finance.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution) {
+                    fundsAmount += partner.budget.projectPartnerBudgetTotalCost.percentageDown(finance.percentage)
+                }
+            }
+            fundsAmount = partner.budget.projectPartnerBudgetTotalCost - fundsAmount
+
+            if (partner.budget.projectPartnerCoFinancing.finances.isEmpty() ||
+                fundsAmount !=
+                partner.budget.projectPartnerCoFinancing.partnerContributions.sumOf { it.amount }
+            ) {
+                errorMessages.add(
+                    buildErrorPreConditionCheckMessage(
+                        "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.partner.contribution.failed",
+                        mapOf("name" to (partner.abbreviation))
+                    )
+                )
             }
         }
-        fundsAmount = partner.budget.projectPartnerBudgetTotalCost - fundsAmount
-
-        if (partner.budget.projectPartnerCoFinancing.finances.isEmpty() ||
-            fundsAmount !=
-            partner.budget.projectPartnerCoFinancing.partnerContributions.sumOf { it.amount }
-        ) {
-            errorMessages.add(
-                buildErrorPreConditionCheckMessage(
-                    "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.partner.contribution.failed",
-                    mapOf("name" to (partner.abbreviation))
-                )
+        if (errorMessages.size > 0) {
+            buildErrorPreConditionCheckMessages(
+                "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.partner.contribution",
+                messageArgs = emptyMap(),
+                errorMessages
             )
         }
+        else
+        {
+            null
+        }
     }
-    if (errorMessages.size > 0) {
-        return buildErrorPreConditionCheckMessages(
-            "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.partner.contribution",
-            messageArgs = emptyMap(),
-            errorMessages
-        )
-    }
-    return buildInfoPreConditionCheckMessage(
-        "$SECTION_B_INFO_MESSAGES_PREFIX.budget.partner.contribution",
-    )
+    else -> null
 }
 
 private fun checkIfPeriodsAmountSumUpToBudgetEntrySum(partners: Set<ProjectPartnerData>) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_PERIODS) -> null
         partners.isNullOrEmpty() ||
             partners.any { partner ->
                 partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -> budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } ||
@@ -201,30 +203,37 @@ private fun checkIfPeriodsAmountSumUpToBudgetEntrySum(partners: Set<ProjectPartn
                     )
                 }
             }
-            buildErrorPreConditionCheckMessages(
-                "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.allocation.periods",
-                messageArgs = emptyMap(),
-                errorMessages
-            )
+            if (errorMessages.count() > 0) {
+                buildErrorPreConditionCheckMessages(
+                    "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.allocation.periods",
+                    messageArgs = emptyMap(),
+                    errorMessages
+                )
+            }
+            else
+            {
+                null
+            }
         }
         else -> null
     }
 
-private fun checkIfStaffContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, partners: Set<ProjectPartnerData>) =
+private fun checkIfStaffContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
             partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry ->
-                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages)) ||
+                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) ||
                         budgetEntry.numberOfUnits <= BigDecimal.ZERO ||
                         budgetEntry.pricePerUnit <= BigDecimal.ZERO ||
-                        budgetEntry.description.isNotFullyTranslated(mandatoryLanguages)
+                        budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.budget.projectPartnerBudgetCosts.staffCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.staffCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages) }
+                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
                 ) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
@@ -233,7 +242,8 @@ private fun checkIfStaffContentIsProvided(mandatoryLanguages: Set<SystemLanguage
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.no.is.not.provided",
@@ -241,7 +251,8 @@ private fun checkIfStaffContentIsProvided(mandatoryLanguages: Set<SystemLanguage
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_STAFF_COST_PRICE_PER_UNIT) &&
+                    partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.price.is.not.provided",
@@ -249,9 +260,10 @@ private fun checkIfStaffContentIsProvided(mandatoryLanguages: Set<SystemLanguage
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.staffCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION) &&
+                    partner.budget.projectPartnerBudgetCosts.staffCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(mandatoryLanguages) }) {
+                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.description.is.not.provided",
@@ -275,21 +287,22 @@ private fun checkIfStaffContentIsProvided(mandatoryLanguages: Set<SystemLanguage
         else -> null
     }
 
-private fun checkIfTravelAndAccommodationContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, partners: Set<ProjectPartnerData>) =
+private fun checkIfTravelAndAccommodationContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
             partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry ->
-                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages)) ||
+                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) ||
                         budgetEntry.numberOfUnits <= BigDecimal.ZERO ||
                         budgetEntry.pricePerUnit <= BigDecimal.ZERO ||
-                        budgetEntry.description.isNotFullyTranslated(mandatoryLanguages)
+                        budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.budget.projectPartnerBudgetCosts.travelCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.travelCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages) }
+                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
                 ) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
@@ -298,7 +311,8 @@ private fun checkIfTravelAndAccommodationContentIsProvided(mandatoryLanguages: S
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.no.is.not.provided",
@@ -306,7 +320,8 @@ private fun checkIfTravelAndAccommodationContentIsProvided(mandatoryLanguages: S
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_PRICE_PER_UNIT) &&
+                    partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.price.is.not.provided",
@@ -314,9 +329,10 @@ private fun checkIfTravelAndAccommodationContentIsProvided(mandatoryLanguages: S
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.travelCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION) &&
+                    partner.budget.projectPartnerBudgetCosts.travelCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(mandatoryLanguages) }) {
+                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.description.is.not.provided",
@@ -340,21 +356,22 @@ private fun checkIfTravelAndAccommodationContentIsProvided(mandatoryLanguages: S
         else -> null
     }
 
-private fun checkIfExternalExpertiseAndServicesContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, partners: Set<ProjectPartnerData>) =
+private fun checkIfExternalExpertiseAndServicesContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
             partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry ->
-                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages)) ||
+                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) ||
                         budgetEntry.numberOfUnits <= BigDecimal.ZERO ||
                         budgetEntry.pricePerUnit <= BigDecimal.ZERO ||
-                        budgetEntry.description.isNotFullyTranslated(mandatoryLanguages)
+                        budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.budget.projectPartnerBudgetCosts.externalCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EXTERNAL_EXPERTISE_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.externalCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages) }
+                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
                 ) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
@@ -363,7 +380,8 @@ private fun checkIfExternalExpertiseAndServicesContentIsProvided(mandatoryLangua
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EXTERNAL_EXPERTISE_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.no.is.not.provided",
@@ -371,7 +389,8 @@ private fun checkIfExternalExpertiseAndServicesContentIsProvided(mandatoryLangua
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EXTERNAL_EXPERTISE_PRICE_PER_UNIT) &&
+                    partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.price.is.not.provided",
@@ -379,9 +398,10 @@ private fun checkIfExternalExpertiseAndServicesContentIsProvided(mandatoryLangua
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.externalCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EXTERNAL_EXPERTISE_DESCRIPTION) &&
+                    partner.budget.projectPartnerBudgetCosts.externalCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(mandatoryLanguages) }) {
+                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.description.is.not.provided",
@@ -405,21 +425,22 @@ private fun checkIfExternalExpertiseAndServicesContentIsProvided(mandatoryLangua
         else -> null
     }
 
-private fun checkIfEquipmentContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, partners: Set<ProjectPartnerData>) =
+private fun checkIfEquipmentContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
             partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry ->
-                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages)) ||
+                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) ||
                         budgetEntry.numberOfUnits <= BigDecimal.ZERO ||
                         budgetEntry.pricePerUnit <= BigDecimal.ZERO ||
-                        budgetEntry.description.isNotFullyTranslated(mandatoryLanguages)
+                        budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.budget.projectPartnerBudgetCosts.equipmentCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EQUIPMENT_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.equipmentCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages) }
+                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
                 ) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
@@ -428,7 +449,8 @@ private fun checkIfEquipmentContentIsProvided(mandatoryLanguages: Set<SystemLang
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EQUIPMENT_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.no.is.not.provided",
@@ -436,7 +458,8 @@ private fun checkIfEquipmentContentIsProvided(mandatoryLanguages: Set<SystemLang
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EQUIPMENT_PRICE_PER_UNIT) &&
+                    partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.price.is.not.provided",
@@ -444,9 +467,10 @@ private fun checkIfEquipmentContentIsProvided(mandatoryLanguages: Set<SystemLang
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.equipmentCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_EQUIPMENT_DESCRIPTION) &&
+                    partner.budget.projectPartnerBudgetCosts.equipmentCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(mandatoryLanguages) }) {
+                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.description.is.not.provided",
@@ -470,21 +494,22 @@ private fun checkIfEquipmentContentIsProvided(mandatoryLanguages: Set<SystemLang
         else -> null
     }
 
-private fun checkIfInfrastructureAndWorksContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, partners: Set<ProjectPartnerData>) =
+private fun checkIfInfrastructureAndWorksContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
             partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry ->
-                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages)) ||
+                (budgetEntry.unitCostId == null && budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) ||
                         budgetEntry.numberOfUnits <= BigDecimal.ZERO ||
                         budgetEntry.pricePerUnit <= BigDecimal.ZERO ||
-                        budgetEntry.description.isNotFullyTranslated(mandatoryLanguages)
+                        budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (partner.budget.projectPartnerBudgetCosts.infrastructureCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.infrastructureCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(mandatoryLanguages) }
+                        .any { budgetEntry -> budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
                 ) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
@@ -493,7 +518,8 @@ private fun checkIfInfrastructureAndWorksContentIsProvided(mandatoryLanguages: S
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.no.is.not.provided",
@@ -501,7 +527,8 @@ private fun checkIfInfrastructureAndWorksContentIsProvided(mandatoryLanguages: S
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_PRICE_PER_UNIT) &&
+                    partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -> budgetEntry.pricePerUnit <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.price.is.not.provided",
@@ -509,9 +536,10 @@ private fun checkIfInfrastructureAndWorksContentIsProvided(mandatoryLanguages: S
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.infrastructureCosts
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_DESCRIPTION) &&
+                    partner.budget.projectPartnerBudgetCosts.infrastructureCosts
                         .filter { budgetEntry -> budgetEntry.unitCostId == null }
-                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(mandatoryLanguages) }) {
+                        .any { budgetEntry -> budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.description.is.not.provided",
@@ -553,7 +581,8 @@ private fun checkIfUnitCostsContentIsProvided(partners: Set<ProjectPartnerData>)
                         )
                     )
                 }
-                if (partner.budget.projectPartnerBudgetCosts.unitCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_UNIT_COSTS__UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                    partner.budget.projectPartnerBudgetCosts.unitCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.unit.no.is.not.provided",
@@ -681,7 +710,9 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                         "main"
                         else
                         "department"
-                    if (address.country.isNullOrBlank()) {
+                    var fieldId = if (address.type == ProjectPartnerAddressTypeData.Organization) ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS
+                        else ApplicationFormFieldId.PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS
+                    if (isFieldVisible(fieldId) && address.country.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.country.is.not.provided",
@@ -689,7 +720,7 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                             )
                         )
                     }
-                    if (address.nutsRegion2.isNullOrBlank()) {
+                    if (isFieldVisible(fieldId) && address.nutsRegion2.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.nuts2.is.not.provided",
@@ -697,7 +728,7 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                             )
                         )
                     }
-                    if (address.nutsRegion3.isNullOrBlank()) {
+                    if (isFieldVisible(fieldId) && address.nutsRegion3.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.nuts2.nuts3.is.not.provided",
@@ -705,7 +736,9 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                             )
                         )
                     }
-                    if (address.street.isNullOrBlank()) {
+                    fieldId = if (address.type == ProjectPartnerAddressTypeData.Organization) ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_STREET
+                        else ApplicationFormFieldId.PARTNER_SECONDARY_ADDRESS_STREET
+                    if (isFieldVisible(fieldId) && address.street.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.street.is.not.provided",
@@ -713,7 +746,9 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                             )
                         )
                     }
-                    if (address.houseNumber.isNullOrBlank()) {
+                    fieldId = if (address.type == ProjectPartnerAddressTypeData.Organization) ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_HOUSE_NUMBER
+                        else ApplicationFormFieldId.PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER
+                    if (isFieldVisible(fieldId) && address.houseNumber.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.house.is.not.provided",
@@ -721,7 +756,9 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                             )
                         )
                     }
-                    if (address.postalCode.isNullOrBlank()) {
+                    fieldId = if (address.type == ProjectPartnerAddressTypeData.Organization) ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_POSTAL_CODE
+                        else ApplicationFormFieldId.PARTNER_SECONDARY_ADDRESS_POSTAL_CODE
+                    if (isFieldVisible(fieldId) && address.postalCode.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.postal.is.not.provided",
@@ -729,7 +766,9 @@ private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerD
                             )
                         )
                     }
-                    if (address.city.isNullOrBlank()) {
+                    fieldId = if (address.type == ProjectPartnerAddressTypeData.Organization) ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_CITY
+                        else ApplicationFormFieldId.PARTNER_SECONDARY_ADDRESS_CITY
+                    if (isFieldVisible(fieldId) && address.city.isNullOrBlank()) {
                         errorMessages.add(
                             buildErrorPreConditionCheckMessage(
                                 "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.$messagePostfix.address.city.is.not.provided",
@@ -845,15 +884,15 @@ private fun checkIfPartnerPersonContentIsProvided(partners: Set<ProjectPartnerDa
         else -> null
     }
 
-private fun checkIfPartnerMotivationContentIsProvided(mandatoryLanguages: Set<SystemLanguageData>, partners: Set<ProjectPartnerData>) =
+private fun checkIfPartnerMotivationContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
-            partner.motivation?.organizationRelevance.isNotFullyTranslated(mandatoryLanguages) ||
-                    partner.motivation?.organizationRole.isNotFullyTranslated(mandatoryLanguages)
+            partner.motivation?.organizationRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                    partner.motivation?.organizationRole.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             partners.forEach { partner ->
-                if (isFieldVisible(ApplicationFormFieldId.PARTNER_MOTIVATION_COMPETENCES) && partner.motivation?.organizationRelevance.isNotFullyTranslated(mandatoryLanguages)) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_MOTIVATION_COMPETENCES) && partner.motivation?.organizationRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.motivation.thematic.competences.is.not.provided",
@@ -861,7 +900,7 @@ private fun checkIfPartnerMotivationContentIsProvided(mandatoryLanguages: Set<Sy
                         )
                     )
                 }
-                if (isFieldVisible(ApplicationFormFieldId.PARTNER_MOTIVATION_ROLE) && partner.motivation?.organizationRole.isNotFullyTranslated(mandatoryLanguages)) {
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_MOTIVATION_ROLE) && partner.motivation?.organizationRole.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.motivation.role.is.not.provided",
@@ -884,12 +923,13 @@ private fun checkIfPartnerMotivationContentIsProvided(mandatoryLanguages: Set<Sy
         else -> null
     }
 
-private fun checkIfPartnerAssociatedOrganisationIsProvided(mandatoryLanguages: Set<SystemLanguageData>, associatedOrganizations: Set<ProjectAssociatedOrganizationData>) =
+private fun checkIfPartnerAssociatedOrganisationIsProvided(associatedOrganizations: Set<ProjectAssociatedOrganizationData>) =
     when {
+        isFieldVisible(ApplicationFormFieldId.PARTNER_ASSOCIATED_ORGANIZATIONS) &&
         associatedOrganizations.any { associatedOrganization ->
             associatedOrganization.nameInOriginalLanguage.isNullOrBlank() ||
                     associatedOrganization.partner.id ?: 0 <= 0 ||
-                    associatedOrganization.roleDescription.isNotFullyTranslated(mandatoryLanguages) ||
+                    associatedOrganization.roleDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
                     (associatedOrganization.address != null &&
                             (associatedOrganization.address?.country.isNullOrBlank() ||
                                     associatedOrganization.address?.nutsRegion2.isNullOrBlank() ||
@@ -1098,7 +1138,7 @@ private fun checkIfPartnerAssociatedOrganisationIsProvided(mandatoryLanguages: S
                         }
                     }
                 }
-                if (associatedOrganization.roleDescription.isNotFullyTranslated(mandatoryLanguages)) {
+                if (associatedOrganization.roleDescription.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.associated.organisation.contact.person.role.is.not.provided",
@@ -1143,5 +1183,5 @@ private fun checkIfOneOfAddressFieldTouched(address: ProjectPartnerAddressData):
 }
 
 private fun isFieldVisible(fieldId: ApplicationFormFieldId): Boolean {
-    return isFieldVisible(fieldId, _lifecycleData!!, _callData!!)
+    return isFieldVisible(fieldId, LifecycleDataContainer.get()!!, CallDataContainer.get())
 }
