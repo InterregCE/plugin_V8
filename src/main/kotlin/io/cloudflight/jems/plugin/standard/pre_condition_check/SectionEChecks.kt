@@ -6,19 +6,15 @@ import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifec
 import io.cloudflight.jems.plugin.contract.models.project.sectionE.ProjectDataSectionE
 import io.cloudflight.jems.plugin.contract.models.project.sectionE.lumpsum.ProjectLumpSumData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import java.math.BigDecimal
 
 private const val SECTION_E_MESSAGES_PREFIX = "$MESSAGES_PREFIX.section.e"
 private const val SECTION_E_ERROR_MESSAGES_PREFIX = "$SECTION_E_MESSAGES_PREFIX.error"
 private const val SECTION_E_INFO_MESSAGES_PREFIX = "$SECTION_E_MESSAGES_PREFIX.info"
 
-private var _lifecycleData: ProjectLifecycleData? = null
-private var _callData: CallDetailData? = null
-
-fun checkSectionE(sectionEData: ProjectDataSectionE, lifecycleData: ProjectLifecycleData, callData: CallDetailData): PreConditionCheckMessage {
-    _lifecycleData = lifecycleData
-    _callData = callData
-
+fun checkSectionE(sectionEData: ProjectDataSectionE): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
         messageKey = "$SECTION_E_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
 
@@ -43,5 +39,6 @@ private fun checkIfLumpSumPeriodsProvided(lumpSums: List<ProjectLumpSumData>) =
     }
 
 private fun isFieldVisible(fieldId: ApplicationFormFieldId): Boolean {
-    return isFieldVisible(fieldId, _lifecycleData!!, _callData!!)
+    return isFieldVisible(fieldId, LifecycleDataContainer.get()!!, CallDataContainer.get())
 }
+

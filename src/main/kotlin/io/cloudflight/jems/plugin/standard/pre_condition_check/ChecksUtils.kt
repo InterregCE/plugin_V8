@@ -77,19 +77,35 @@ fun Set<InputTranslationData>?.isFullyTranslated(mandatoryLanguages: Set<SystemL
     return allLanguagesUsed && allLanguagesTranslated
 }
 
-// those should be replaced by Set<InputTranslationData>
-fun Set<ProjectResultTranslatedValueData>?.isResultNullOrEmptyOrMissingAnyDescription() =
-    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() }
+fun Set<ProjectResultTranslatedValueData>?.isResultNullOrEmptyOrMissingAnyDescription(mandatoryLanguages: Set<SystemLanguageData>) : Boolean {
+    if (this.isNullOrEmpty()) return true
+    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
+    val allLanguagesTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
+    return !allLanguagesUsed || !allLanguagesTranslated
+}
 
-fun Set<WorkPackageActivityTranslatedValueData>?.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle() =
-    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrBlank() }
+fun Set<WorkPackageActivityTranslatedValueData>?.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle(mandatoryLanguages: Set<SystemLanguageData>) : Boolean {
+    if (this.isNullOrEmpty()) return true
+    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
+    val allLanguagesDescriptionTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
+    val allLanguagesTitleTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.title.isNullOrBlank() }
+    return !allLanguagesUsed || !allLanguagesDescriptionTranslated || !allLanguagesTitleTranslated
+}
 
-fun Set<WorkPackageActivityDeliverableTranslatedValueData>?.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle() =
-    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() }
+fun Set<WorkPackageActivityDeliverableTranslatedValueData>?.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle(mandatoryLanguages: Set<SystemLanguageData>)  : Boolean {
+    if (this.isNullOrEmpty()) return true
+    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
+    val allLanguagesTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
+    return !allLanguagesUsed || !allLanguagesTranslated
+}
 
-fun Set<WorkPackageOutputTranslatedValueData>?.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle() =
-    this.isNullOrEmpty() || this.any { it.description.isNullOrBlank() || it.title.isNullOrBlank() }
-// ..or add mandatoryLanguages check
+fun Set<WorkPackageOutputTranslatedValueData>?.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle(mandatoryLanguages: Set<SystemLanguageData>) : Boolean {
+    if (this.isNullOrEmpty()) return true
+    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
+    val allLanguagesDescriptionTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
+    val allLanguagesTitleTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.title.isNullOrBlank() }
+    return !allLanguagesUsed || !allLanguagesDescriptionTranslated || !allLanguagesTitleTranslated
+}
 
 fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =
     this.map { fieldExtractor.invoke(it) ?: BigDecimal.ZERO }.fold(BigDecimal.ZERO, BigDecimal::add)
