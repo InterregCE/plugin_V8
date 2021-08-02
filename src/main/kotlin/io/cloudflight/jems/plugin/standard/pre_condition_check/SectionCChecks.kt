@@ -1,10 +1,7 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
-import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
-import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
-import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.longTermPlans.ProjectLongTermPlansData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectCooperationCriteriaData
@@ -207,7 +204,8 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
         workPackages != null &&
                 workPackages.any { workPackage ->
                     isActivitiesContentMissing(workPackage.activities) ||
-                    isOutputsContentMissing(workPackage.outputs)
+                    isOutputsContentMissing(workPackage.outputs) ||
+                    isInvestmentsContentMissing(workPackage.investments)
                 } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             workPackages.forEach { workPackage ->
@@ -250,10 +248,17 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
                     )
                 }
             }
-            buildErrorPreConditionCheckMessages("$SECTION_C_ERROR_MESSAGES_PREFIX.project.c4.content",
-                messageArgs = emptyMap(),
-                errorMessages
-            )
+            if (errorMessages.count() > 0) {
+                buildErrorPreConditionCheckMessages(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.c4.content",
+                    messageArgs = emptyMap(),
+                    errorMessages
+                )
+            }
+            else
+            {
+                null
+            }
         }
         else -> null
     }
@@ -267,9 +272,10 @@ private fun checkIfAtLeastOneWorkPackageIsAdded(workPackages: List<ProjectWorkPa
 
 private fun checkIfNamesOfWorkPackagesAreProvided(workPackages: List<ProjectWorkPackageData>?) =
     when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_WORK_PACKAGE_TITLE) -> null
         workPackages.isNullOrEmpty() -> null
         workPackages.any { it.name.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
-        -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.names.of.work.packages.should.be.added")
+            -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.names.of.work.packages.should.be.added")
         else -> null
     }
 
@@ -280,7 +286,8 @@ private fun checkIfObjectivesOfWorkPackagesAreProvided(workPackages: List<Projec
                 it.specificObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages) } -> {
             val errorMessages = mutableListOf<PreConditionCheckMessage>()
             workPackages.forEach { workPackage ->
-                if (workPackage.specificObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+                if (isFieldVisible(ApplicationFormFieldId.PROJECT_SPECIFIC_OBJECTIVE) &&
+                    workPackage.specificObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.specific.objective.is.not.provided",
@@ -288,7 +295,8 @@ private fun checkIfObjectivesOfWorkPackagesAreProvided(workPackages: List<Projec
                         )
                     )
                 }
-                if (workPackage.objectiveAndAudience.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+                if (isFieldVisible(ApplicationFormFieldId.PROJECT_COMMUNICATION_OBJECTIVES_AND_TARGET_AUDIENCE) &&
+                    workPackage.objectiveAndAudience.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
                             "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.audience.objective.is.not.provided",
@@ -297,10 +305,17 @@ private fun checkIfObjectivesOfWorkPackagesAreProvided(workPackages: List<Projec
                     )
                 }
             }
-            buildErrorPreConditionCheckMessages("$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.objectives",
-                messageArgs = emptyMap(),
-                errorMessages
-            )
+            if (errorMessages.count() > 0) {
+                buildErrorPreConditionCheckMessages(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.objectives",
+                    messageArgs = emptyMap(),
+                    errorMessages
+                )
+            }
+            else
+            {
+                null
+            }
         }
         else -> null
     }
@@ -483,7 +498,9 @@ private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<W
     val errorActivitiesMessages = mutableListOf<PreConditionCheckMessage>()
     if (activities.isNotEmpty()) {
         activities.forEach { activity ->
-            if (activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages)) {
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_TITLE) &&
+                isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_DESCRIPTION) &&
+                activity.translatedValues.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages)) {
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.title.or.description.is.not.provided",
@@ -491,7 +508,8 @@ private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<W
                     )
                 )
             }
-            if (activity.startPeriod ?: 0 <= 0) {
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_START_PERIOD) &&
+                activity.startPeriod ?: 0 <= 0) {
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.start.period.is.not.provided",
@@ -499,7 +517,8 @@ private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<W
                     )
                 )
             }
-            if (activity.endPeriod ?: 0 <= 0) {
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_END_PERIOD) &&
+                activity.endPeriod ?: 0 <= 0) {
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.end.period.is.not.provided",
@@ -507,7 +526,8 @@ private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<W
                     )
                 )
             }
-            if (activity.deliverables.isEmpty()) {
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_DELIVERABLES) &&
+                activity.deliverables.isEmpty()) {
                 errorActivitiesMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.deliverable.is.not.provided",
@@ -515,7 +535,8 @@ private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<W
                     )
                 )
             }
-            if (activity.deliverables.any {deliverable -> deliverable.period == null ||
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_DELIVERABLES) &&
+                activity.deliverables.any {deliverable -> deliverable.period == null ||
                         deliverable.translatedValues.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages) }) {
                 activity.deliverables.forEach { deliverable ->
                     errorActivitiesMessages.add(
@@ -540,7 +561,8 @@ private fun checkIfOutputsAreValid(workPackageNumber: Int, outputs: List<WorkPac
     val errorOutputsMessages = mutableListOf<PreConditionCheckMessage>()
     if (outputs.isNotEmpty()) {
         outputs.forEach { output ->
-            if (output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages)) {
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_OUTPUT_TITLE) &&
+                output.translatedValues.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle(CallDataContainer.get().inputLanguages)) {
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
                         "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.output.title.is.not.provided",
@@ -584,80 +606,90 @@ private fun checkIfOutputsAreValid(workPackageNumber: Int, outputs: List<WorkPac
 
 private fun checkIfInvestmentsAreValid(workPackageNumber: Int, investments: List<WorkPackageInvestmentData>): List<PreConditionCheckMessage> {
     val errorInvestmentsMessages = mutableListOf<PreConditionCheckMessage>()
-    if (investments.isNotEmpty()) {
-        investments.forEach { investment ->
-            if (investment.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.title.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+    if (investments.isEmpty()) {
+        return errorInvestmentsMessages;
+    }
+    investments.forEach { investment ->
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_TITLE) &&
+            investment.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.title.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.justificationExplanation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.justification.explain.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED) &&
+            investment.justificationExplanation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.justification.explain.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.benefiting.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_IS_BENEFITING) &&
+            investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.benefiting.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.justificationTransactionalRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.transnational.relevance.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT) &&
+            investment.justificationTransactionalRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.transnational.relevance.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.ownershipSiteLocation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.site.owner.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE) &&
+            investment.ownershipSiteLocation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.site.owner.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.ownershipRetain.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.end.project.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT) &&
+            investment.ownershipRetain.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.end.project.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.maintenance.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_MAINTENANCE) &&
+            investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.maintenance.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.risk.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.risk.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_RISK) &&
+            investment.risk.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.risk.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
-            if (investment.documentation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
-                errorInvestmentsMessages.add(
-                    buildErrorPreConditionCheckMessage(
-                        "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.documentation.is.not.provided",
-                        mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                    )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_DOCUMENTATION) &&
+            investment.documentation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.documentation.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
-            }
+            )
         }
     }
     return errorInvestmentsMessages
