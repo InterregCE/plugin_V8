@@ -8,10 +8,6 @@ import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ApplicationStatusData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
-import io.cloudflight.jems.plugin.contract.models.project.sectionC.results.ProjectResultTranslatedValueData
-import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityDeliverableTranslatedValueData
-import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityTranslatedValueData
-import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageOutputTranslatedValueData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
 import java.math.BigDecimal
@@ -75,36 +71,6 @@ fun Set<InputTranslationData>?.isFullyTranslated(mandatoryLanguages: Set<SystemL
     val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
     val allLanguagesTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.translation.isNullOrBlank() }
     return allLanguagesUsed && allLanguagesTranslated
-}
-
-fun Set<ProjectResultTranslatedValueData>?.isResultNullOrEmptyOrMissingAnyDescription(mandatoryLanguages: Set<SystemLanguageData>) : Boolean {
-    if (this.isNullOrEmpty()) return true
-    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
-    val allLanguagesTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
-    return !allLanguagesUsed || !allLanguagesTranslated
-}
-
-fun Set<WorkPackageActivityTranslatedValueData>?.isActivityNullOrEmptyOrMissingAnyDescriptionOrTitle(mandatoryLanguages: Set<SystemLanguageData>) : Boolean {
-    if (this.isNullOrEmpty()) return true
-    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
-    val allLanguagesDescriptionTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
-    val allLanguagesTitleTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.title.isNullOrBlank() }
-    return !allLanguagesUsed || !allLanguagesDescriptionTranslated || !allLanguagesTitleTranslated
-}
-
-fun Set<WorkPackageActivityDeliverableTranslatedValueData>?.isDeliverableNullOrEmptyOrMissingAnyDescriptionOrTitle(mandatoryLanguages: Set<SystemLanguageData>)  : Boolean {
-    if (this.isNullOrEmpty()) return true
-    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
-    val allLanguagesTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
-    return !allLanguagesUsed || !allLanguagesTranslated
-}
-
-fun Set<WorkPackageOutputTranslatedValueData>?.isOutputNullOrEmptyOrMissingAnyDescriptionOrTitle(mandatoryLanguages: Set<SystemLanguageData>) : Boolean {
-    if (this.isNullOrEmpty()) return true
-    val allLanguagesUsed = this.mapTo(HashSet()) { it.language }.containsAll(mandatoryLanguages)
-    val allLanguagesDescriptionTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.description.isNullOrBlank() }
-    val allLanguagesTitleTranslated = this.filter { mandatoryLanguages.contains(it.language) }.all { !it.title.isNullOrBlank() }
-    return !allLanguagesUsed || !allLanguagesDescriptionTranslated || !allLanguagesTitleTranslated
 }
 
 fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =

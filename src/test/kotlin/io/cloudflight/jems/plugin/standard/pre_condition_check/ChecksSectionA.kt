@@ -43,7 +43,7 @@ internal class ChecksSectionA {
             objectives  = emptyList(),
             strategies = emptyList(),
             funds = emptyList(),
-            flatRates = FlatRateSetupData(),
+            flatRates = FlatRateSetupData(null, null, null, null, null),
             lumpSums = emptyList(),
             unitCosts  = emptyList(),
             applicationFormFieldConfigurations =

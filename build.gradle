@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.13'
+version '1.0.14'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -30,7 +30,7 @@ if (isKotlinProject(project)) {
 
         constraints {
             implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0"
-            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.11')
+            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.15')
 
         }
     }
