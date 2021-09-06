@@ -33,6 +33,7 @@ private fun checkIfPartnersShareSumUpToTotalLumpSum(lumpSums: List<ProjectLumpSu
 
 private fun checkIfLumpSumPeriodsProvided(lumpSums: List<ProjectLumpSumData>) =
     when {
+        isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_PERIODS) &&
         lumpSums.any { lumpSum -> lumpSum.period == null } ->
             buildErrorPreConditionCheckMessage("$SECTION_E_ERROR_MESSAGES_PREFIX.lump.sum.periods.is.not.provided")
         else -> null
