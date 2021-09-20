@@ -587,7 +587,7 @@ private fun checkIfOutputsAreValid(workPackageNumber: Int, outputs: List<WorkPac
                     )
                 )
             }
-            if (isFieldVisible(ApplicationFormFieldId.PROJECT_OUTPUT_TITLE) &&
+            if (isFieldVisible(ApplicationFormFieldId.PROJECT_OUTPUT_DESCRIPTION) &&
                 output.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
                 errorOutputsMessages.add(
                     buildErrorPreConditionCheckMessage(
