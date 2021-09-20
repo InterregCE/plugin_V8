@@ -59,7 +59,9 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
 
         checkIfCoFinancingContentIsProvided(sectionBData.partners),
 
-        checkIfPartnerContributionEqualsToBudget(sectionBData.partners)
+        checkIfPartnerContributionEqualsToBudget(sectionBData.partners),
+
+        checkIfStateAidIsValid(sectionBData.partners)
     )
 }
 
@@ -78,6 +80,7 @@ private fun checkIfExactlyOneLeadPartnerIsAdded(partners: Set<ProjectPartnerData
 
 private fun checkIfTotalCoFinancingIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
     when {
+        partners.isNullOrEmpty() -> null
         partners.any { partner -> partner.budget.projectPartnerCoFinancing.finances.any {it.percentage <= BigDecimal.ZERO && it.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution  }} ->
             buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.co.financing.should.be.greater.than.zero")
         else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.co.financing.is.greater.than.zero")
@@ -1156,6 +1159,95 @@ private fun checkIfPartnerAssociatedOrganisationIsProvided(associatedOrganizatio
                 errorMessages
             )
         }
+        else -> null
+    }
+
+private fun checkIfStateAidIsValid(partners: Set<ProjectPartnerData>) =
+    when { partners.isNotEmpty()
+    -> {
+        val errorMessages = mutableListOf<PreConditionCheckMessage>()
+        partners.forEach { partner ->
+            if (partner.stateAid != null && isFieldVisible(ApplicationFormFieldId.PARTNER_STATE_AID_CRITERIA_SELF_CHECK))
+            {
+                if (partner.stateAid?.answer1 == null ||
+                    partner.stateAid?.justification1.isNotFullyTranslated(CallDataContainer.get().inputLanguages))
+                {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid.partner.criteria1.answer1.justification.failed",
+                            mapOf("name" to (partner.abbreviation))
+                        )
+                    )
+                }
+                if (partner.stateAid?.answer2 == null ||
+                    partner.stateAid?.justification2.isNotFullyTranslated(CallDataContainer.get().inputLanguages))
+                {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid.partner.criteria1.answer2.justification.failed",
+                            mapOf("name" to (partner.abbreviation))
+                        )
+                    )
+                }
+                if (partner.stateAid?.answer3 == null ||
+                    partner.stateAid?.justification3.isNotFullyTranslated(CallDataContainer.get().inputLanguages))
+                {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid.partner.criteria2.answer1.justification.failed",
+                            mapOf("name" to (partner.abbreviation))
+                        )
+                    )
+                }
+                if (partner.stateAid?.answer4 == null ||
+                    partner.stateAid?.justification4.isNotFullyTranslated(CallDataContainer.get().inputLanguages))
+                {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid.partner.criteria2.answer2.justification.failed",
+                            mapOf("name" to (partner.abbreviation))
+                        )
+                    )
+                }
+                if (partner.stateAid?.answer1 ?: false &&
+                    partner.stateAid?.answer2 ?: false &&
+                    partner.stateAid?.answer3 ?: false &&
+                    partner.stateAid?.answer4 ?: false &&
+                    partner.stateAid?.stateAidScheme == null &&
+                    isFieldVisible(ApplicationFormFieldId.PARTNER_STATE_AID_SCHEME))
+                {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid.partner.gber.scheme.failed",
+                            mapOf("name" to (partner.abbreviation))
+                        )
+                    )
+                }
+                if (partner.stateAid?.answer4 ?: false &&
+                    partner.stateAid?.activities.isNullOrEmpty() &&
+                    isFieldVisible(ApplicationFormFieldId.PARTNER_STATE_AID_RELEVANT_ACTIVITIES))
+                {
+                    errorMessages.add(
+                        buildErrorPreConditionCheckMessage(
+                            "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid.partner.activities.failed",
+                            mapOf("name" to (partner.abbreviation))
+                        )
+                    )
+                }
+            }
+        }
+        if (errorMessages.size > 0) {
+            buildErrorPreConditionCheckMessages(
+                "$SECTION_B_ERROR_MESSAGES_PREFIX.state.aid",
+                messageArgs = emptyMap(),
+                errorMessages
+            )
+        }
+        else
+        {
+            null
+        }
+    }
         else -> null
     }
 
