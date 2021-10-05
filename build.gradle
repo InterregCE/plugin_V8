@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.16'
+version '1.0.17'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -30,12 +30,16 @@ if (isKotlinProject(project)) {
 
         constraints {
             implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0"
-            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.18')
+            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.19')
+            implementation('com.opencsv:opencsv:5.5.2')
         }
     }
 }
 dependencies {
+    // load for local development (if projects are cloned in same root as jems)
+    // implementation files('../jems-plugin-contract/build/libs/jems-plugin-contract-1.0.19-SNAPSHOT.jar')
     implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
     implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation('com.opencsv:opencsv')
 }
 
