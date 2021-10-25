@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.17'
+version '1.0.18'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -18,28 +18,35 @@ if (isCloudflightBuild()) {
         enabled = false
     }
 }
+
+configurations {
+    provided
+    implementation.extendsFrom provided
+}
+
 jar {
     enabled = true
+    from { (configurations.compileClasspath - configurations.provided).collect { it.isDirectory() ? it : zipTree(it) } }
 }
+
 if (isKotlinProject(project)) {
     dependencies {
-        implementation platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
+        provided platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
         annotationProcessor platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
-        testImplementation platform("io.cloudflight.platform:platform-test-bom:$cloudflightPlatformVersion")
+        provided platform("io.cloudflight.platform:platform-test-bom:$cloudflightPlatformVersion")
         kapt platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
 
         constraints {
-            implementation "com.github.doyaaaaaken:kotlin-csv-jvm:0.15.0"
-            implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.19')
+            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.21')
             implementation('com.opencsv:opencsv:5.5.2')
         }
     }
 }
 dependencies {
     // load for local development (if projects are cloned in same root as jems)
-    // implementation files('../jems-plugin-contract/build/libs/jems-plugin-contract-1.0.19-SNAPSHOT.jar')
-    implementation('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
-    implementation('org.springframework.boot:spring-boot-starter-web')
+    // implementation files('../jems-plugin-contract/build/libs/jems-plugin-contract-1.0.20-SNAPSHOT.jar')
+    provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
+    provided('org.springframework.boot:spring-boot-starter-web')
     implementation('com.opencsv:opencsv')
 }
 

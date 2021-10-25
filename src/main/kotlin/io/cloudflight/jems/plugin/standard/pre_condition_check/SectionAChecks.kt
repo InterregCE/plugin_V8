@@ -1,13 +1,12 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
-import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammePriorityDataSimple
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
-import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
+import io.cloudflight.jems.plugin.standard.common.isFieldVisible
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 

@@ -59,6 +59,7 @@ internal class ChecksSectionA {
             inputLanguages = mandatoryLanguages)
         val projectLifecycleData = ProjectLifecycleData(status = ApplicationStatusData.DRAFT)
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro  = emptySet(),
             acronym = null,
@@ -142,6 +143,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Intro Is not fully Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro  = setOf(
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
@@ -162,6 +164,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Intro Is not fully Provided due to empty text`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro  = setOf(
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
@@ -183,6 +186,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Title Is not fully Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = setOf(
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
             ),
@@ -203,6 +207,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Title Is not fully Provided due to empty text`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = setOf(
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
                 InputTranslationData(SystemLanguageData.EN, ""),
@@ -224,6 +229,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project EN Intro Is Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro  = setOf(InputTranslationData(SystemLanguageData.EN, "TEST DATA")),
             acronym = null,
@@ -242,6 +248,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Intro Is fully Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro  = setOf(
                 InputTranslationData(SystemLanguageData.EN, "TEST DATA"),
@@ -263,6 +270,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Title Is fully Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = setOf(
                 InputTranslationData(SystemLanguageData.EN, "TEST DATA"),
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
@@ -284,6 +292,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Acronym Is fully Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro = emptySet(),
             acronym = "TEST DATA",
@@ -302,6 +311,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Duration Is Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro = emptySet(),
             acronym = null,
@@ -320,6 +330,7 @@ internal class ChecksSectionA {
     @Test
     fun `Project Priority Is Provided`() {
         val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
             title = emptySet(),
             intro = emptySet(),
             acronym = null,

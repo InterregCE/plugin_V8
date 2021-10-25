@@ -1,18 +1,14 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
-import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
-import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
-import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectContactTypeData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressTypeData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerRoleData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditionCheckMessage
+import io.cloudflight.jems.plugin.standard.common.isFieldVisible
+import io.cloudflight.jems.plugin.standard.common.percentageDown
+import io.cloudflight.jems.plugin.standard.common.sumOf
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import java.math.BigDecimal
@@ -88,7 +84,7 @@ private fun checkIfTotalCoFinancingIsGreaterThanZero(partners: Set<ProjectPartne
 
 private fun checkIfTotalBudgetIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
     when {
-        partners.sumOf { it.budget.projectPartnerBudgetTotalCost } <= BigDecimal.ZERO ->
+        partners.sumOf { it.budget.projectBudgetCostsCalculationResult.totalCosts } <= BigDecimal.ZERO ->
             buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.budget.should.be.greater.than.zero")
         else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.budget.is.greater.than.zero")
     }
@@ -145,10 +141,10 @@ private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartne
             var fundsAmount = BigDecimal.ZERO
             partner.budget.projectPartnerCoFinancing.finances.forEach { finance ->
                 if (finance.fundType != ProjectPartnerCoFinancingFundTypeData.PartnerContribution) {
-                    fundsAmount += partner.budget.projectPartnerBudgetTotalCost.percentageDown(finance.percentage)
+                    fundsAmount += partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageDown(finance.percentage)
                 }
             }
-            fundsAmount = partner.budget.projectPartnerBudgetTotalCost - fundsAmount
+           fundsAmount = partner.budget.projectBudgetCostsCalculationResult.totalCosts - fundsAmount
 
             if (partner.budget.projectPartnerCoFinancing.finances.isEmpty() ||
                 fundsAmount !=

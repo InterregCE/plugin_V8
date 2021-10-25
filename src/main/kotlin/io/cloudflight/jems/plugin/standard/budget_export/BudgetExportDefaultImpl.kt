@@ -3,51 +3,46 @@ package io.cloudflight.jems.plugin.standard.budget_export
 import io.cloudflight.jems.plugin.contract.budget_export.BudgetExportPlugin
 import io.cloudflight.jems.plugin.contract.budget_export.ExportResult
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressTypeData
+import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
-import io.cloudflight.jems.plugin.standard.common.CsvService
+import io.cloudflight.jems.plugin.standard.budget_export.models.CsvData
+import io.cloudflight.jems.plugin.standard.common.csv.CsvService
+import io.cloudflight.jems.plugin.standard.common.getMessage
+import io.cloudflight.jems.plugin.standard.common.toLocale
+import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 
 
 @Service
 open class BudgetExportDefaultImpl(
     val projectDataProvider: ProjectDataProvider,
-    val csvService: CsvService
+    val callDataProvider: CallDataProvider,
+    val csvService: CsvService,
+    private val messageSource: MessageSource,
 ) : BudgetExportPlugin {
     override fun export(
         projectId: Long, exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, version: String?
     ): ExportResult =
-        with(mutableListOf<List<String?>>()) {
+        with(CsvData()) {
             val projectData = projectDataProvider.getProjectDataForProjectId(projectId, version)
-            add(listOf("Budget and Lump sum Totals"))
-            add(
-                listOf(
-                    "Partner number",
-                    "Partner abbreviation",
-                    "Partner original language",
-                    "Country",
-                    "NUTS 3",
-                    "NUTS 2"
-                )
-            )
-            projectData.sectionB.partners.forEach {
-                val address = it.addresses.firstOrNull { it.type === ProjectPartnerAddressTypeData.Department }
-                add(
-                    listOf(
-                        it.sortNumber.toString(),
-                        it.abbreviation,
-                        it.nameInOriginalLanguage,
-                        address?.country,
-                        address?.nutsRegion3,
-                        address?.nutsRegion2
-                    )
-                )
-            }
+            val callData = callDataProvider.getCallDataByProjectId(projectId)
+            val exportLocale = exportLanguage.toLocale()
 
-            ExportResult(
+            addRow(getTitle(projectData, version))
+            addRow(getMessage("jems.standard.budget.export.budget.totals.header", exportLocale, messageSource))
+            addRows(BudgetAndLumpTotalsTableGenerator(projectData, callData, exportLanguage, messageSource).getData())
+            addEmptyRow()
+            addRow(getMessage("jems.standard.budget.export.budget.details.header", exportLocale, messageSource))
+            addRows(
+                BudgetDetailsTableGenerator(
+                    projectData, callData, exportLanguage, dataLanguage, messageSource
+                ).getData()
+            )
+
+            return ExportResult(
                 contentType = "text/csv",
-                fileName = "${projectData.sectionA?.acronym}($projectId)_Budget_Lumpsum.xls",
-                content = csvService.generateCsv(this)
+                fileName = "${projectData.sectionA?.acronym}($projectId)_Budget_Lumpsum.csv",
+                content = csvService.generateCsv(getContent())
             )
         }
 
