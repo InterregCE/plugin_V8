@@ -1,4 +1,4 @@
-package io.cloudflight.jems.plugin.standard.common
+package io.cloudflight.jems.plugin.standard.common.csv
 
 
 interface CsvService {

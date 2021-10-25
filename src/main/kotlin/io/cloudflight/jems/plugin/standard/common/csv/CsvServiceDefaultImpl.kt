@@ -1,4 +1,4 @@
-package io.cloudflight.jems.plugin.standard.common
+package io.cloudflight.jems.plugin.standard.common.csv
 
 import com.opencsv.CSVWriter
 import org.springframework.stereotype.Service
