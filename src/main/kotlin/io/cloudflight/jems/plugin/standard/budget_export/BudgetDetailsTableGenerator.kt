@@ -6,10 +6,7 @@ import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId.*
 import io.cloudflight.jems.plugin.contract.models.project.ProjectData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetGeneralCostEntryData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetPeriodData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetStaffCostEntryData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetTravelAndAccommodationCostEntryData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.ProjectWorkPackageData
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetDetailsRow
 import io.cloudflight.jems.plugin.standard.budget_export.models.PartnerInfo
@@ -46,7 +43,7 @@ open class BudgetDetailsTableGenerator(
 
     private val periodNumbers = listOf(
         PREPARATION_PERIOD,
-        *(1..(projectData.sectionA?.duration ?: 0) / (callData.lengthOfPeriod ?: 1)).toList().toTypedArray(),
+        *(1.. Math.ceil((projectData.sectionA?.duration?.toDouble() ?: 0.toDouble()).div((callData.lengthOfPeriod ?: 1))).toInt()).toList().toTypedArray(),
         CLOSURE_PERIOD
     )
     private val exportLocale = exportLanguage.toLocale()
@@ -71,8 +68,10 @@ open class BudgetDetailsTableGenerator(
             )
             it.addAll(
                 getMessagesWithoutArgs(
-                    messageSource, exportLocale,
-                    "jems.standard.budget.export.cost.category", "jems.standard.budget.export.unit.cost"
+                    messageSource,
+                    exportLocale,
+                    "jems.standard.budget.export.cost.category", "jems.standard.budget.export.flat.rate",
+                    "jems.standard.budget.export.unit.cost"
                 )
             )
             if (isUnitTypeAndNumberOfUnitColumnsVisible)
@@ -120,6 +119,7 @@ open class BudgetDetailsTableGenerator(
                     )
                 )
                 it.add(row.costCategory)
+                it.add((row.flatRate ?: "").toString())
                 it.add(row.unitCost)
                 if (isUnitTypeAndNumberOfUnitColumnsVisible)
                     it.addAll(listOf(row.unitType, (row.numberOfUnits ?: "").toString()))
@@ -139,13 +139,13 @@ open class BudgetDetailsTableGenerator(
 
             val numberOfHiddenColumns = listOf(
                 isNameInOriginalLanguageVisible, isNameInEnglishVisible,
-                isCountryAndNutsVisible, isCountryAndNutsVisible,isCountryAndNutsVisible,
+                isCountryAndNutsVisible, isCountryAndNutsVisible, isCountryAndNutsVisible,
                 isUnitTypeAndNumberOfUnitColumnsVisible, isUnitTypeAndNumberOfUnitColumnsVisible,
                 isPricePerUnitColumnVisible, isDescriptionColumnVisible, isCommentColumnVisible,
                 isAwardProcedureColumnVisible, isInvestmentColumnVisible
             ).filter { visible -> !visible }.size
 
-            it.addAll((1..(15 - numberOfHiddenColumns)).map { "" })
+            it.addAll((1..(16 - numberOfHiddenColumns)).map { "" })
             if (arePeriodColumnsVisible) {
                 it.addAll(
                     rows.flatMap { it.periodAmounts }.groupBy({ it.periodNumber }, { it.periodAmount })
@@ -159,8 +159,16 @@ open class BudgetDetailsTableGenerator(
             val partnerInfo = getPartnerInfo(partner)
             val workPackages = projectData.sectionC.projectWorkPackages
             listOf(
-                *getStaffCostData(partnerInfo, partner.budget.projectPartnerBudgetCosts.staffCosts),
-                *getTravelCostsData(partnerInfo, partner.budget.projectPartnerBudgetCosts.travelCosts),
+                *getStaffCostData(
+                    partnerInfo, partner.budget.projectPartnerBudgetCosts.staffCosts,
+                    partner.budget.projectPartnerOptions?.staffCostsFlatRate,
+                    partner.budget.projectBudgetCostsCalculationResult.staffCosts
+                ),
+                *getTravelCostsData(
+                    partnerInfo, partner.budget.projectPartnerBudgetCosts.travelCosts,
+                    partner.budget.projectPartnerOptions?.travelAndAccommodationOnStaffCostsFlatRate,
+                    partner.budget.projectBudgetCostsCalculationResult.travelCosts
+                ),
                 *getGeneralCostData(
                     "jems.standard.budget.export.cost.category.external.costs", partnerInfo, workPackages,
                     partner.budget.projectPartnerBudgetCosts.externalCosts,
@@ -188,16 +196,26 @@ open class BudgetDetailsTableGenerator(
                     shouldBeVisible(PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_AWARD_PROCEDURE),
                     shouldBeVisible(PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_INVESTMENT),
                 ),
-                getOfficeCostData(
+                *getOfficeCostData(
                     partnerInfo, partner.budget.projectBudgetCostsCalculationResult.officeAndAdministrationCosts,
+                    partner.budget.projectPartnerOptions?.officeAndAdministrationOnDirectCostsFlatRate
+                        ?: partner.budget.projectPartnerOptions?.officeAndAdministrationOnDirectCostsFlatRate
                 ),
-                getPartnerLumpSumData(partner.id, partnerInfo)
+                getPartnerLumpSumData(partner.id, partnerInfo),
+                *getMultiCategoryUnitCostData(partnerInfo, partner.budget.projectPartnerBudgetCosts.unitCosts),
+                *getOtherCostData(
+                    partnerInfo, partner.budget.projectBudgetCostsCalculationResult.otherCosts,
+                    partner.budget.projectPartnerOptions?.otherCostsOnStaffCostsFlatRate
+                )
             )
         }
 
     }
 
-    private fun getStaffCostData(partnerInfo: PartnerInfo, staffCostData: List<BudgetStaffCostEntryData>) =
+    private fun getStaffCostData(
+        partnerInfo: PartnerInfo, staffCostData: List<BudgetStaffCostEntryData>,
+        flatRate: Int?, staffCostTotal: BigDecimal
+    ) =
         staffCostData.map { budget ->
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
@@ -211,9 +229,9 @@ open class BudgetDetailsTableGenerator(
                 unitType = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS))
                     budget.unitType.getTranslationFor(dataLanguage) else "",
                 numberOfUnits = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS)
-                ) budget.numberOfUnits else BigDecimal.ZERO,
+                ) budget.numberOfUnits else null,
                 pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_PRICE_PER_UNIT)
-                ) budget.pricePerUnit else BigDecimal.ZERO,
+                ) budget.pricePerUnit else null,
                 description = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION))
                     budget.description.getTranslationFor(dataLanguage) else "",
                 comment = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_COMMENT))
@@ -222,10 +240,27 @@ open class BudgetDetailsTableGenerator(
                     getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
                 total = budget.budgetPeriods.sumOf { it.amount }
             )
+        }.toMutableList().also {
+            if (flatRate != null) {
+                it.add(
+                    BudgetDetailsRow(
+                        partnerInfo = partnerInfo,
+                        costCategory = getMessage(
+                            "jems.standard.budget.export.cost.category.staff.costs.flat.rate",
+                            exportLocale, messageSource
+                        ),
+                        flatRate = flatRate,
+                        periodAmounts = if (arePeriodColumnsVisible)
+                            periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) } else emptyList(),
+                        total = staffCostTotal
+                    )
+                )
+            }
         }.toTypedArray()
 
     private fun getTravelCostsData(
-        partnerInfo: PartnerInfo, travelCostsData: List<BudgetTravelAndAccommodationCostEntryData>
+        partnerInfo: PartnerInfo, travelCostsData: List<BudgetTravelAndAccommodationCostEntryData>,
+        flatRate: Int?, travelCostTotal: BigDecimal
     ) = travelCostsData.map { budget ->
         BudgetDetailsRow(
             partnerInfo = partnerInfo,
@@ -239,15 +274,31 @@ open class BudgetDetailsTableGenerator(
             unitType = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS))
                 budget.unitType.getTranslationFor(dataLanguage) else "",
             numberOfUnits = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS))
-                budget.numberOfUnits else BigDecimal.ZERO,
+                budget.numberOfUnits else null,
             pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_PRICE_PER_UNIT))
-                budget.pricePerUnit else BigDecimal.ZERO,
+                budget.pricePerUnit else null,
             description = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION))
                 budget.description.getTranslationFor(dataLanguage) else "",
             periodAmounts = if (arePeriodColumnsVisible)
                 getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
             total = budget.budgetPeriods.sumOf { it.amount }
         )
+    }.toMutableList().also {
+        if (flatRate != null) {
+            it.add(
+                BudgetDetailsRow(
+                    partnerInfo = partnerInfo,
+                    costCategory = getMessage(
+                        "jems.standard.budget.export.cost.category.travel.costs.flat.rate",
+                        exportLocale, messageSource
+                    ),
+                    flatRate = flatRate,
+                    periodAmounts = if (arePeriodColumnsVisible)
+                        periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) } else emptyList(),
+                    total = travelCostTotal
+                )
+            )
+        }
     }.toTypedArray()
 
     private fun getGeneralCostData(
@@ -264,8 +315,8 @@ open class BudgetDetailsTableGenerator(
                     dataLanguage
                 ) ?: "",
                 unitType = if (isUnitTypeAndNumberOfUnitsVisible) budget.unitType.getTranslationFor(dataLanguage) else "",
-                numberOfUnits = if (isUnitTypeAndNumberOfUnitsVisible) budget.numberOfUnits else BigDecimal.ZERO,
-                pricePerUnit = if (isPricePerUnitVisible) budget.pricePerUnit else BigDecimal.ZERO,
+                numberOfUnits = if (isUnitTypeAndNumberOfUnitsVisible) budget.numberOfUnits else null,
+                pricePerUnit = if (isPricePerUnitVisible) budget.pricePerUnit else null,
                 description = if (isDescriptionVisible) budget.description.getTranslationFor(dataLanguage) else "",
                 awardProcedure = if (isAwardProcedureVisible) budget.awardProcedures.getTranslationFor(dataLanguage) else "",
                 investmentNumber = if (isInvestmentVisible)
@@ -276,19 +327,23 @@ open class BudgetDetailsTableGenerator(
             )
         }.toTypedArray()
 
-    private fun getOfficeCostData(partnerInfo: PartnerInfo, total: BigDecimal?): BudgetDetailsRow =
-        BudgetDetailsRow(
-            partnerInfo = partnerInfo,
-            costCategory = getMessage(
-                "jems.standard.budget.export.cost.category.office.costs", exportLocale, messageSource
-            ),
-            periodAmounts = if (arePeriodColumnsVisible)
-                mutableListOf(PeriodInfo(PREPARATION_PERIOD, total ?: BigDecimal.ZERO)).also {
-                    it.addAll(periodNumbers.filter { number -> number == PREPARATION_PERIOD }
-                        .map { PeriodInfo(it, BigDecimal.ZERO) })
-                } else emptyList(),
-            total = total ?: BigDecimal.ZERO
-        )
+    private fun getOfficeCostData(
+        partnerInfo: PartnerInfo,
+        total: BigDecimal?,
+        flatRate: Int?
+    ): Array<BudgetDetailsRow> =
+        if (flatRate != null) {
+            arrayOf(BudgetDetailsRow(
+                partnerInfo = partnerInfo,
+                costCategory = getMessage(
+                    "jems.standard.budget.export.cost.category.office.costs", exportLocale, messageSource
+                ),
+                flatRate = flatRate,
+                periodAmounts = if (arePeriodColumnsVisible) periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) }
+                else emptyList(),
+                total = total ?: BigDecimal.ZERO
+            ))
+        } else emptyArray()
 
     private fun getPartnerLumpSumData(partnerId: Long?, partnerInfo: PartnerInfo): BudgetDetailsRow =
         BudgetDetailsRow(
@@ -312,6 +367,46 @@ open class BudgetDetailsTableGenerator(
                 .filter { it.partnerId == partnerId }
                 .sumOf { it.amount }
         )
+
+    private fun getMultiCategoryUnitCostData(partnerInfo: PartnerInfo, unitCostsData: List<BudgetUnitCostEntryData>) =
+        unitCostsData.map { budget ->
+            val callUnitCost = callData.unitCosts.firstOrNull { it.id == budget.unitCostId }
+            BudgetDetailsRow(
+                partnerInfo = partnerInfo,
+                costCategory = getMessage(
+                    "jems.standard.budget.export.cost.category.unit.costs",
+                    exportLocale, messageSource
+                ),
+                unitCost = callUnitCost?.name?.getTranslationFor(dataLanguage) ?: "",
+                unitType = if (shouldBeVisible(PARTNER_BUDGET_UNIT_COSTS_UNIT_TYPE_AND_NUMBER_OF_UNITS))
+                    callUnitCost?.type?.getTranslationFor(dataLanguage) ?: "" else "",
+                numberOfUnits = if (shouldBeVisible(PARTNER_BUDGET_UNIT_COSTS_UNIT_TYPE_AND_NUMBER_OF_UNITS))
+                    budget.numberOfUnits else null,
+                pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_UNIT_COSTS_PRICE_PER_UNIT))
+                    callUnitCost?.costPerUnit else null,
+                description = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION))
+                    callUnitCost?.description?.getTranslationFor(dataLanguage) ?: "" else "",
+                periodAmounts = if (arePeriodColumnsVisible)
+                    getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
+                total = budget.budgetPeriods.sumOf { it.amount }
+            )
+        }.toTypedArray()
+
+    private fun getOtherCostData(
+        partnerInfo: PartnerInfo, otherCosts: BigDecimal, flatRate: Int?
+    ): Array<BudgetDetailsRow> =
+        if (flatRate != null)
+            arrayOf(BudgetDetailsRow(
+                partnerInfo = partnerInfo,
+                costCategory = getMessage(
+                    "jems.standard.budget.export.cost.category.other.costs.flat.rate",
+                    exportLocale, messageSource
+                ),
+                flatRate = flatRate,
+                periodAmounts = if (arePeriodColumnsVisible) periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) }
+                else emptyList(),
+                total = otherCosts
+            )) else arrayOf()
 
     private fun getInvestmentNumber(investmentId: Long?, workPackages: List<ProjectWorkPackageData>): String =
         with(workPackages.firstOrNull { workPackage ->

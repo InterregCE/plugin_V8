@@ -16,13 +16,18 @@ val FALL_BACK_LANGUAGE = SystemLanguageData.EN
 const val PREPARATION_PERIOD = 0
 const val CLOSURE_PERIOD = 255
 
-fun getTitle(projectData: ProjectData, version: String?) =
+fun getTitle(projectData: ProjectData, version: String?, exportationDateTime: ZonedDateTime) =
     (version ?: (projectData.versions.maxByOrNull { it.createdAt }?.version?.toFloatOrNull()?.plus(1)
         ?: 1.0).toString()).let { versionToShow ->
         "${projectData.sectionA?.customIdentifier} - ${projectData.sectionA?.acronym} - V$versionToShow - ${
-            ZonedDateTime.now().format(DateTimeFormatter.ofPattern("y.d.M - H:m:ss"))
+            exportationDateTime.format(
+                DateTimeFormatter.ofPattern("y.M.d - H:m:ss")
+            )
         }"
     }
+
+fun getFileName(projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime): String =
+    "$projectAcronym($projectCustomIdentifier)_Budget_Lumpsum_${exportationDateTime.format(DateTimeFormatter.ofPattern("yMdHmss"))}.csv"
 
 fun getPartnerHeaders(
     isNameInOriginalLanguageVisible: Boolean, isNameInEnglishVisible: Boolean, isCountryAndNutsVisible: Boolean,
