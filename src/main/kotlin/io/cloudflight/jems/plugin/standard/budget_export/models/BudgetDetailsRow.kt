@@ -6,6 +6,7 @@ open class BudgetDetailsRow(
     val partnerInfo: PartnerInfo,
     val costCategory: String = "",
     val unitCost: String = "N/A",
+    val flatRate: Int? = null,
     val unitType: String = "",
     val numberOfUnits: BigDecimal? = null,
     val pricePerUnit: BigDecimal? = null,

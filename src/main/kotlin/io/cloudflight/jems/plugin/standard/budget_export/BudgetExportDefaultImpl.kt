@@ -11,6 +11,7 @@ import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
+import java.time.ZonedDateTime
 
 
 @Service
@@ -27,8 +28,9 @@ open class BudgetExportDefaultImpl(
             val projectData = projectDataProvider.getProjectDataForProjectId(projectId, version)
             val callData = callDataProvider.getCallDataByProjectId(projectId)
             val exportLocale = exportLanguage.toLocale()
+            val exportationTime = ZonedDateTime.now()
 
-            addRow(getTitle(projectData, version))
+            addRow(getTitle(projectData, version, exportationTime))
             addRow(getMessage("jems.standard.budget.export.budget.totals.header", exportLocale, messageSource))
             addRows(BudgetAndLumpTotalsTableGenerator(projectData, callData, exportLanguage, messageSource).getData())
             addEmptyRow()
@@ -41,11 +43,10 @@ open class BudgetExportDefaultImpl(
 
             return ExportResult(
                 contentType = "text/csv",
-                fileName = "${projectData.sectionA?.acronym}($projectId)_Budget_Lumpsum.csv",
+                fileName = getFileName(projectData.sectionA?.acronym, projectData.sectionA?.customIdentifier,exportationTime),
                 content = csvService.generateCsv(getContent())
             )
         }
-
 
     override fun getDescription(): String =
         "Standard implementation for budget exportation"

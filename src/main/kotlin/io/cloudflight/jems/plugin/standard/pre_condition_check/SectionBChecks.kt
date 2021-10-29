@@ -580,7 +580,7 @@ private fun checkIfUnitCostsContentIsProvided(partners: Set<ProjectPartnerData>)
                         )
                     )
                 }
-                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_UNIT_COSTS__UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
+                if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_UNIT_COSTS_UNIT_TYPE_AND_NUMBER_OF_UNITS) &&
                     partner.budget.projectPartnerBudgetCosts.unitCosts.any { budgetEntry -> budgetEntry.numberOfUnits <= BigDecimal.ZERO }) {
                     errorMessages.add(
                         buildErrorPreConditionCheckMessage(
