@@ -199,7 +199,7 @@ open class BudgetDetailsTableGenerator(
                 *getOfficeCostData(
                     partnerInfo, partner.budget.projectBudgetCostsCalculationResult.officeAndAdministrationCosts,
                     partner.budget.projectPartnerOptions?.officeAndAdministrationOnDirectCostsFlatRate
-                        ?: partner.budget.projectPartnerOptions?.officeAndAdministrationOnDirectCostsFlatRate
+                        ?: partner.budget.projectPartnerOptions?.officeAndAdministrationOnStaffCostsFlatRate
                 ),
                 getPartnerLumpSumData(partner.id, partnerInfo),
                 *getMultiCategoryUnitCostData(partnerInfo, partner.budget.projectPartnerBudgetCosts.unitCosts),

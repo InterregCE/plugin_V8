@@ -10,6 +10,7 @@ open class BudgetAndLumpSumTotalsRow(
     val automaticPublicContribution: BigDecimal,
     val privateContribution: BigDecimal,
     val totalEligibleBudget: BigDecimal,
+    val totalEligibleBudgetPercentage: BigDecimal,
     val staffCostTotals: BudgetTotalCostInfo,
     val officeCostTotals: BigDecimal,
     val officeCostFlatRatesTotals: BigDecimal,

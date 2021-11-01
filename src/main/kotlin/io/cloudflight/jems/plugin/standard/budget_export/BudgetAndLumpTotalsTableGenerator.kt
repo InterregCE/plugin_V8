@@ -106,7 +106,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                         row.privateContribution.toString(),
                         row.getTotalPartnerContribution().toString(),
                         row.totalEligibleBudget.toString(),
-                        "100"
+                        row.totalEligibleBudgetPercentage.toString()
                     )
                 )
                 it.addAll(row.staffCostTotals.toStringList())
@@ -166,8 +166,9 @@ open class BudgetAndLumpTotalsTableGenerator(
 
         }
 
-    private fun generateBudgetAndLumpSumTotalsTableData(): List<BudgetAndLumpSumTotalsRow> =
-        projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
+    private fun generateBudgetAndLumpSumTotalsTableData(): List<BudgetAndLumpSumTotalsRow> {
+        val partnersTotalEligibleBudget = projectData.sectionB.partners.sumOf { it.budget.projectBudgetCostsCalculationResult.totalCosts }
+        return projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
             BudgetAndLumpSumTotalsRow(
                 partnerInfo = getPartnerInfo(partner),
                 fundInfoList = getFoundInfoList(partner.budget),
@@ -178,6 +179,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                 privateContribution = partner.budget.projectPartnerCoFinancing.partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Private }
                     .sumOf { it.amount ?: BigDecimal.ZERO },
                 totalEligibleBudget = partner.budget.projectBudgetCostsCalculationResult.totalCosts,
+                totalEligibleBudgetPercentage = partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageTo(partnersTotalEligibleBudget),
                 staffCostTotals = getStaffCostTotals(
                     partner.budget.projectPartnerBudgetCosts.staffCosts,
                     partner.budget.projectBudgetCostsCalculationResult.staffCosts,
@@ -199,6 +201,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                 lumpSumsCoveringMultipleCostCategories = projectData.sectionE.projectLumpSums.flatMap { it.lumpSumContributions }
                     .filter { it.partnerId == partner.id }.sumOf { it.amount }
             )
+        }
         }
 
     private fun getGeneralBudgetCostTotalsFor(budgetCosts: List<BudgetGeneralCostEntryData>): GeneralBudgetTotalCostInfo =
