@@ -36,10 +36,8 @@ fun BigDecimal.truncate(): BigDecimal =
 fun BigDecimal.truncateDown(): BigDecimal =
     setScale(2, RoundingMode.DOWN)
 
-fun BigDecimal.percentage(percentage: Int): BigDecimal =
-    multiply(BigDecimal.valueOf(percentage.toLong()))
-        .divide(BigDecimal(100))
-        .truncate()
+fun BigDecimal.percentageTo(total: BigDecimal): BigDecimal =
+    if (total > BigDecimal.ZERO) BigDecimal(100).multiply(this).div(total).truncate() else BigDecimal.ZERO
 
 fun BigDecimal.percentageDown(percentage: BigDecimal): BigDecimal =
     multiply(percentage)
