@@ -546,11 +546,12 @@ private fun checkIfActivitiesAreValid(workPackageNumber: Int, activities: List<W
             }
             if (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_DELIVERABLES) &&
                 activity.deliverables.any {deliverable -> deliverable.period == null ||
-                        deliverable.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }) {
+                        deliverable.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                        deliverable.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages)}) {
                 activity.deliverables.forEach { deliverable ->
                     errorActivitiesMessages.add(
                         buildErrorPreConditionCheckMessage(
-                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.deliverable.delivery.period.or.description.is.not.provided",
+                            "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.activity.deliverable.title.description.or.delivery.period.is.not.provided",
                             mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString() + "." + deliverable.deliverableNumber.toString()))
                         )
                     )
