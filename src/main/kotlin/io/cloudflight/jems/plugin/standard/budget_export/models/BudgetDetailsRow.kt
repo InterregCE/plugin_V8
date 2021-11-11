@@ -11,7 +11,7 @@ open class BudgetDetailsRow(
     val numberOfUnits: BigDecimal? = null,
     val pricePerUnit: BigDecimal? = null,
     val description: String = "",
-    val comment: String = "",
+    val comments: String = "",
     val awardProcedure: String = "",
     val investmentNumber: String = "",
     val periodAmounts: List<PeriodInfo>,

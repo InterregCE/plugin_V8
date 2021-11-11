@@ -125,7 +125,7 @@ open class BudgetDetailsTableGenerator(
                     it.addAll(listOf(row.unitType, (row.numberOfUnits ?: "").toString()))
                 if (isPricePerUnitColumnVisible) it.add((row.pricePerUnit ?: "").toString())
                 if (isDescriptionColumnVisible) it.add((row.description))
-                if (isCommentColumnVisible) it.add((row.comment))
+                if (isCommentColumnVisible) it.add((row.comments))
                 if (isAwardProcedureColumnVisible) it.add((row.awardProcedure))
                 if (isInvestmentColumnVisible) it.add((row.investmentNumber))
                 if (arePeriodColumnsVisible) it.addAll(row.periodAmounts.map { it.toStringList() })
@@ -234,8 +234,8 @@ open class BudgetDetailsTableGenerator(
                 ) budget.pricePerUnit else null,
                 description = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION))
                     budget.description.getTranslationFor(dataLanguage) else "",
-                comment = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_COMMENT))
-                    budget.comment.getTranslationFor(dataLanguage) else "",
+                comments = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_COMMENT))
+                    budget.comments.getTranslationFor(dataLanguage) else "",
                 periodAmounts = if (arePeriodColumnsVisible)
                     getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
                 total = budget.budgetPeriods.sumOf { it.amount }
