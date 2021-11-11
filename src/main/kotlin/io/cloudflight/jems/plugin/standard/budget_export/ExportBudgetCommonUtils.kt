@@ -27,7 +27,7 @@ fun getTitle(projectData: ProjectData, version: String?, exportationDateTime: Zo
     }
 
 fun getFileName(projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime): String =
-    "$projectAcronym($projectCustomIdentifier)_Budget_Lumpsum_${exportationDateTime.format(DateTimeFormatter.ofPattern("yMdHmss"))}.csv"
+    "${projectCustomIdentifier}_${projectAcronym}_Budget_${exportationDateTime.format(DateTimeFormatter.ofPattern("yyMd_Hmss"))}.csv"
 
 fun getPartnerHeaders(
     isNameInOriginalLanguageVisible: Boolean, isNameInEnglishVisible: Boolean, isCountryAndNutsVisible: Boolean,

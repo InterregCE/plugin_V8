@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="associatedOrganizations" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
+          th:href="@{./../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)"
+          clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+    <th:block th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(associatedOrganizations)}"
+              th:object="${associatedOrganization}">
+        <table class="default-vertical-table">
+            <thead class="table-header">
+            <tr class="sub-heading-2">
+                <td colspan="2"
+                    th:with="associatedOrganizationTitle = #{jems.standard.application.form.export.associated.organization(${associatedOrganization.nameInOriginalLanguage}, ${associatedOrganization.sortNumber})}"
+                    th:text="${associatedOrganizationTitle}"
+                    th:id="${associatedOrganizationTitle}"
+                >
+                    Associated organization title
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.partner.detail.number}">Number</th>
+                <td th:text="*{'AO'+partner.sortNumber}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.common.label.name.of.organization.in.original.language}">
+                    Name in original language
+                </th>
+                <td th:text="*{nameInOriginalLanguage}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.common.label.name.of.organization.in.english}">
+                    Name in english
+                </th>
+                <td th:text="*{nameInEnglish}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.common.label.country}">Country</th>
+                <td th:text="*{address?.country}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.common.label.region}">Region</th>
+                <td th:text="*{address?.nutsRegion2}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.common.label.sub.region}">Sub region</th>
+                <td th:text="*{address?.nutsRegion3}"></td>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.common.label.address.detail}">Address details
+                </th>
+                <td>
+                    <div>
+                        <span th:text="*{address?.street} "></span>
+                        <span th:text="*{address?.houseNumber}"></span>
+                    </div>
+                    <div>
+                        <span th:text="*{address?.postalCode} "></span>
+                        <span th:text="*{address?.city}"></span>
+                    </div>
+                </td>
+            </tr>
+            <th:block
+                    th:with="legalRepresentative=${clfUtils.getLegalRepresentative(associatedOrganization?.contacts)}">
+                <tr>
+                    <th th:text="#{jems.standard.application.form.export.common.label.legal.representative}">Legal
+                        representative
+                    </th>
+                    <td>
+                        <span th:text="${legalRepresentative?.firstName} "></span>
+                        <span th:text="${legalRepresentative?.lastName}"></span>
+                    </td>
+                </tr>
+            </th:block>
+            <th:block th:with="contactPerson=${clfUtils.getContactPerson(associatedOrganization.contacts)}">
+                <tr>
+                    <th th:text="#{jems.standard.application.form.export.common.label.contact.person}">Contact person
+                    </th>
+                    <td>
+                        <span th:text="${contactPerson?.firstName} "></span>
+                        <span th:text="${contactPerson?.lastName}"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <th th:text="#{jems.standard.application.form.export.common.label.email}">Email</th>
+                    <td th:text="${contactPerson?.email}"></td>
+                </tr>
+                <tr>
+                    <th th:text="#{jems.standard.application.form.export.common.label.phone}">Phone</th>
+                    <td th:text="${contactPerson?.telephone}"></td>
+                </tr>
+            </th:block>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.associated.organization.role.description}">Role
+                    description
+                </th>
+                <td clf:textTranslationByDataLanguage="*{roleDescription}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div th:if="${rowStat.last == false }" class="page-break-after"></div>
+    </th:block>
+</th:block>
+</body>
+</html>

@@ -43,7 +43,8 @@ open class BudgetDetailsTableGenerator(
 
     private val periodNumbers = listOf(
         PREPARATION_PERIOD,
-        *(1.. Math.ceil((projectData.sectionA?.duration?.toDouble() ?: 0.toDouble()).div((callData.lengthOfPeriod ?: 1))).toInt()).toList().toTypedArray(),
+        *(1..Math.ceil((projectData.sectionA?.duration?.toDouble() ?: 0.toDouble()).div((callData.lengthOfPeriod ?: 1)))
+            .toInt()).toList().toTypedArray(),
         CLOSURE_PERIOD
     )
     private val exportLocale = exportLanguage.toLocale()
@@ -217,13 +218,15 @@ open class BudgetDetailsTableGenerator(
         flatRate: Int?, staffCostTotal: BigDecimal
     ) =
         staffCostData.map { budget ->
+            val unitCost =
+                if (budget.unitCostId != null) callData.unitCosts.firstOrNull { it.id == budget.unitCostId } else null
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
                     "jems.standard.budget.export.cost.category.staff.costs",
                     exportLocale, messageSource
                 ),
-                unitCost = if (budget.unitCostId == null) "N/A" else callData.unitCosts.firstOrNull { it.id == budget.unitCostId }?.name?.getTranslationFor(
+                unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(
                     dataLanguage
                 ) ?: "",
                 unitType = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS))
@@ -232,13 +235,16 @@ open class BudgetDetailsTableGenerator(
                 ) budget.numberOfUnits else null,
                 pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_PRICE_PER_UNIT)
                 ) budget.pricePerUnit else null,
-                description = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION))
-                    budget.description.getTranslationFor(dataLanguage) else "",
+                description = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION)) {
+                    if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage) else unitCost?.description?.getTranslationFor(
+                        dataLanguage
+                    ) ?: ""
+                } else "",
                 comments = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_COMMENT))
                     budget.comments.getTranslationFor(dataLanguage) else "",
                 periodAmounts = if (arePeriodColumnsVisible)
                     getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
-                total = budget.budgetPeriods.sumOf { it.amount }
+                total = budget.rowSum ?: BigDecimal.ZERO
             )
         }.toMutableList().also {
             if (flatRate != null) {
@@ -262,13 +268,15 @@ open class BudgetDetailsTableGenerator(
         partnerInfo: PartnerInfo, travelCostsData: List<BudgetTravelAndAccommodationCostEntryData>,
         flatRate: Int?, travelCostTotal: BigDecimal
     ) = travelCostsData.map { budget ->
+        val unitCost =
+            if (budget.unitCostId != null) callData.unitCosts.firstOrNull { it.id == budget.unitCostId } else null
         BudgetDetailsRow(
             partnerInfo = partnerInfo,
             costCategory = getMessage(
                 "jems.standard.budget.export.cost.category.travel.costs",
                 exportLocale, messageSource
             ),
-            unitCost = if (budget.unitCostId == null) "N/A" else callData.unitCosts.firstOrNull { it.id == budget.unitCostId }?.name?.getTranslationFor(
+            unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(
                 dataLanguage
             ) ?: "",
             unitType = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS))
@@ -277,11 +285,14 @@ open class BudgetDetailsTableGenerator(
                 budget.numberOfUnits else null,
             pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_PRICE_PER_UNIT))
                 budget.pricePerUnit else null,
-            description = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION))
-                budget.description.getTranslationFor(dataLanguage) else "",
+            description = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION)) {
+                if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage) else unitCost?.description?.getTranslationFor(
+                    dataLanguage
+                ) ?: ""
+            } else "",
             periodAmounts = if (arePeriodColumnsVisible)
                 getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
-            total = budget.budgetPeriods.sumOf { it.amount }
+            total = budget.rowSum ?: BigDecimal.ZERO
         )
     }.toMutableList().also {
         if (flatRate != null) {
@@ -308,22 +319,27 @@ open class BudgetDetailsTableGenerator(
         isDescriptionVisible: Boolean, isAwardProcedureVisible: Boolean, isInvestmentVisible: Boolean
     ): Array<BudgetDetailsRow> =
         generalCostData.map { budget ->
+            val unitCost =
+                if (budget.unitCostId != null) callData.unitCosts.firstOrNull { it.id == budget.unitCostId } else null
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(typeTranslationKey, exportLocale, messageSource),
-                unitCost = if (budget.unitCostId == null) "N/A" else callData.unitCosts.firstOrNull { it.id == budget.unitCostId }?.name?.getTranslationFor(
-                    dataLanguage
-                ) ?: "",
+                unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(dataLanguage)
+                    ?: "",
                 unitType = if (isUnitTypeAndNumberOfUnitsVisible) budget.unitType.getTranslationFor(dataLanguage) else "",
                 numberOfUnits = if (isUnitTypeAndNumberOfUnitsVisible) budget.numberOfUnits else null,
                 pricePerUnit = if (isPricePerUnitVisible) budget.pricePerUnit else null,
-                description = if (isDescriptionVisible) budget.description.getTranslationFor(dataLanguage) else "",
+                description = if (isDescriptionVisible) {
+                    if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage) else unitCost?.description?.getTranslationFor(
+                        dataLanguage
+                    ) ?: ""
+                } else "",
                 awardProcedure = if (isAwardProcedureVisible) budget.awardProcedures.getTranslationFor(dataLanguage) else "",
                 investmentNumber = if (isInvestmentVisible)
                     getInvestmentNumber(budget.investmentId, workPackages) else "",
                 periodAmounts = if (arePeriodColumnsVisible)
                     getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
-                total = budget.budgetPeriods.sumOf { it.amount }
+                total = budget.rowSum ?: BigDecimal.ZERO
             )
         }.toTypedArray()
 
@@ -388,7 +404,7 @@ open class BudgetDetailsTableGenerator(
                     callUnitCost?.description?.getTranslationFor(dataLanguage) ?: "" else "",
                 periodAmounts = if (arePeriodColumnsVisible)
                     getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
-                total = budget.budgetPeriods.sumOf { it.amount }
+                total = budget.rowSum ?: BigDecimal.ZERO
             )
         }.toTypedArray()
 

@@ -20,6 +20,12 @@ fun isFieldVisible(
     }
 }
 
+fun isAnyFieldVisible(
+    fieldIds: Set<ApplicationFormFieldId>, lifecycleData: ProjectLifecycleData, callData: CallDetailData
+): Boolean =
+    fieldIds.any { isFieldVisible(it, lifecycleData, callData) }
+
+
 fun isInvestmentSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
     listOf(
         ApplicationFormFieldId.PROJECT_INVESTMENT_TITLE,

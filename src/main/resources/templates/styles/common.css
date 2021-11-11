@@ -1,0 +1,83 @@
+html, body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+}
+
+.headline {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+.title {
+    font-size: 18px;
+    margin: 8px 0;
+}
+
+.sub-heading-2 {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 4px 0;
+}
+
+.sub-heading-1 {
+    font-size: 16px;
+}
+
+.xs-column {
+    width: 30px;
+}
+
+.default-table .row-bordered td, .default-table .row-bordered th, .default-vertical-table .table-body .row-bordered td, .default-vertical-table .table-body .row-bordered th{
+    border-top: 1px solid #d2dade;
+    border-bottom: 1px solid #d2dade;
+}
+
+.page-break-after {
+    display: block;
+    clear: both;
+    page-break-after: always;
+}
+
+
+tr, td, th, .table-header {
+    page-break-inside: avoid;
+}
+
+.default-table, .default-vertical-table {
+    width: 100%;
+    border: 1px solid #d2dade;
+    text-align: left;
+    border-collapse: collapse;
+    -fs-table-paginate: paginate;
+
+}
+
+.default-table th, .default-table td, .default-vertical-table th, .default-vertical-table td {
+    padding: 8px;
+    border: 0;
+    vertical-align: top;
+}
+
+.default-table .table-body tr:nth-child(odd), .default-vertical-table .table-body tr:nth-child(odd) {
+    background-color: #f4fafe;
+}
+
+.default-table .table-header th {
+    border-bottom: 1px solid #d2dade;
+    border-top: 1px solid #d2dade;
+    color: #8a8a8a;
+}
+
+.default-vertical-table .table-body th {
+    border-right: 1px solid #d2dade;
+    border-bottom: 0;
+    border-top: 0;
+    width: 300px;
+    color: #8a8a8a;
+}
+
+.default-vertical-table .table-header td, .default-vertical-table .table-header td {
+    border-bottom: 1px solid #d2dade;
+    border-top: 1px solid #d2dade;
+}
