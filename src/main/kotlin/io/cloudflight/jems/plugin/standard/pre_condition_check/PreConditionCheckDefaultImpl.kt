@@ -48,5 +48,5 @@ open class PreConditionCheckDefaultImpl(
         "Standard pre condition check"
 
     override fun getVersion(): String =
-        "1.0.17"
+        "1.0.18"
 }
