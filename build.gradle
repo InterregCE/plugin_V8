@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.21'
+version '1.0.22'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -37,16 +37,26 @@ if (isKotlinProject(project)) {
         kapt platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
 
         constraints {
-            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.24')
+            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.0.25')
             implementation('com.opencsv:opencsv:5.5.2')
+            implementation("com.openhtmltopdf:openhtmltopdf-core:1.0.10")
+            implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10")
+            implementation("com.openhtmltopdf:openhtmltopdf-java2d:1.0.10")
+            implementation("com.openhtmltopdf:openhtmltopdf-rtl-support:1.0.10")
         }
     }
 }
 dependencies {
     // load for local development (if projects are cloned in same root as jems)
-    // implementation files('../jems-plugin-contract/build/libs/jems-plugin-contract-1.0.20-SNAPSHOT.jar')
+    // implementation files('../jems-plugin-contract/build/libs/jems-plugin-contract-1.0.25-SNAPSHOT.jar')
     provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
     provided('org.springframework.boot:spring-boot-starter-web')
+    provided('org.springframework.boot:spring-boot-starter-thymeleaf')
+
+    implementation('com.openhtmltopdf:openhtmltopdf-core')
+    implementation('com.openhtmltopdf:openhtmltopdf-java2d')
+    implementation('com.openhtmltopdf:openhtmltopdf-pdfbox')
+    implementation('com.openhtmltopdf:openhtmltopdf-rtl-support')
     implementation('com.opencsv:opencsv')
 }
 

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
+          th:href="@{./../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="partnerDetailTable(projectDataSectionB)">
+    <th:block th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
+              th:object="${partner}">
+        <div class="page-break-after"></div>
+        <table class="default-vertical-table">
+            <thead class="table-header">
+            <tr class="sub-heading-2">
+                <td colspan="2"
+                    th:with="partnerTitle=*{role?.isLead()} ? #{jems.standard.application.form.export.partner.detail.lead.partner.title}            : #{jems.standard.application.form.export.partner.detail.project.partner.title(*{sortNumber})}"
+                    th:text="${partnerTitle}"
+                    th:id="${partnerTitle}"
+                >
+                    Partner title
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.partner.detail.number}">Number</th>
+                <td th:text="*{sortNumber}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_ROLE">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.role}">Role</th>
+                <td th:text="*{role?.isLead()}? 'LP' : 'PP'"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_ORIGINAL_NAME_OF_ORGANISATION">
+                <th th:text="#{jems.standard.application.form.export.common.label.name.of.organization.in.original.language}">
+                    Partner name in original language
+                </th>
+                <td th:text="*{nameInOriginalLanguage}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION">
+                <th th:text="#{jems.standard.application.form.export.common.label.name.of.organization.in.english}">
+                    Partner name in english
+                </th>
+                <td th:text="*{nameInEnglish}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.abbreviation}">Abbreviation</th>
+                <td th:text="*{abbreviation}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_DEPARTMENT_UNIT_DIVISION">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.department}">
+                    Department/unit/division
+                </th>
+                <td clf:textTranslationByDataLanguage="*{department}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="default-vertical-table"
+               clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS,PARTNER_MAIN_ADDRESS_HOMEPAGE,PARTNER_MAIN_ADDRESS_STREET,PARTNER_MAIN_ADDRESS_HOUSE_NUMBER,PARTNER_MAIN_ADDRESS_POSTAL_CODE,PARTNER_MAIN_ADDRESS_CITY"
+               th:with="mainAddress=${clfUtils.getMainAddress(partner.addresses)}">
+            <thead class="table-header">
+            <tr class="sub-heading-1">
+                <td colspan="2" th:text="#{jems.standard.application.form.export.partner.detail.main.address}">Main
+                    address
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS">
+                <th th:text="#{jems.standard.application.form.export.common.label.country}">Country</th>
+                <td th:text="${mainAddress?.country}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS">
+                <th th:text="#{jems.standard.application.form.export.common.label.region}">Region</th>
+                <td th:text="${mainAddress?.nutsRegion2}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS">
+                <th th:text="#{jems.standard.application.form.export.common.label.sub.region}">Sub region</th>
+                <td th:text="${mainAddress?.nutsRegion3}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_STREET,PARTNER_MAIN_ADDRESS_HOUSE_NUMBER,PARTNER_MAIN_ADDRESS_POSTAL_CODE,PARTNER_MAIN_ADDRESS_CITY">
+                <th th:text="#{jems.standard.application.form.export.common.label.address.detail}">Address details
+                </th>
+                <td>
+                    <div clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_STREET,PARTNER_MAIN_ADDRESS_HOUSE_NUMBER">
+                        <span clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_STREET"
+                              th:text="${mainAddress?.street} "></span>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_HOUSE_NUMBER"
+                              th:text="${mainAddress?.houseNumber}"></span>
+                    </div>
+                    <div clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_POSTAL_CODE,PARTNER_MAIN_ADDRESS_CITY">
+                        <span clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_POSTAL_CODE"
+                              th:text="${mainAddress?.postalCode} "></span>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_CITY"
+                              th:text="${mainAddress?.city}"></span>
+                    </div>
+                </td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_HOMEPAGE">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.homepage}">Homepage</th>
+                <td th:text="${mainAddress?.homepage}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="default-vertical-table"
+               clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS,PARTNER_SECONDARY_ADDRESS_STREET,PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER,PARTNER_SECONDARY_ADDRESS_POSTAL_CODE,PARTNER_SECONDARY_ADDRESS_CITY,PARTNER_CONTACT_PERSON_TELEPHONE,PARTNER_MOTIVATION_ROLE"
+               th:with="departmentAddress=${clfUtils.getDepartmentAddress(partner.addresses)}">
+            <thead class="table-header">
+            <tr class="sub-heading-1">
+                <td colspan="2"
+                    th:text="#{jems.standard.application.form.export.partner.detail.department.address}">
+                    Department Address
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS">
+                <th th:text="#{jems.standard.application.form.export.common.label.country}">Country</th>
+                <td th:text="${departmentAddress?.country}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS">
+                <th th:text="#{jems.standard.application.form.export.common.label.region}">Region</th>
+                <td th:text="${departmentAddress?.nutsRegion2}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS">
+                <th th:text="#{jems.standard.application.form.export.common.label.sub.region}">Sub region</th>
+                <td th:text="${departmentAddress?.nutsRegion3}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_STREET,PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER,PARTNER_SECONDARY_ADDRESS_POSTAL_CODE,PARTNER_SECONDARY_ADDRESS_CITY">
+                <th th:text="#{jems.standard.application.form.export.common.label.address.detail}">Address details
+                </th>
+                <td>
+                    <div clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_STREET,PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER">
+                        <span clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_STREET"
+                              th:text="${departmentAddress?.street} "></span>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER"
+                              th:text="${departmentAddress?.houseNumber}"></span>
+                    </div>
+                    <div clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_POSTAL_CODE,PARTNER_SECONDARY_ADDRESS_CITY">
+                        <span clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_POSTAL_CODE"
+                              th:text="${departmentAddress?.postalCode} "></span>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_CITY"
+                              th:text="${departmentAddress?.city}"></span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="default-vertical-table"
+               clf:ifAnyFieldIsVisible="PARTNER_TYPE,PARTNER_SUB_TYPE,PARTNER_LEGAL_STATUS,PARTNER_NACE_GROUP_LEVEL,PARTNER_VAT_IDENTIFIER,PARTNER_VAT_RECOVERY,PARTNER_OTHER_IDENTIFIER_NUMBER_AND_DESCRIPTION,PARTNER_PIC,PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME,PARTNER_CONTACT_PERSON_EMAIL,PARTNER_CONTACT_PERSON_TELEPHONE,PARTNER_MOTIVATION_COMPETENCES">
+            <thead class="table-header">
+            <tr class="sub-heading-1">
+                <td colspan="2"
+                    th:text="#{jems.standard.application.form.export.partner.detail.legal.and.financial.information}">
+                    Legal and financial information
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr clf:ifAnyFieldIsVisible="PARTNER_TYPE">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.type}">Partner type</th>
+                <td th:text="*{partnerType}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_SUB_TYPE">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.sub.type}">Partner sub type</th>
+                <td th:text="*{partnerSubType}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_STATUS">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.legal.status}">Legal status</th>
+                <td clf:texttranslationbyexportlanguage="*{legalStatusDescription}">legal status description</td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_NACE_GROUP_LEVEL">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.nace}">NACE</th>
+                <td th:text="*{nace}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_IDENTIFIER">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.vat}">Vat number</th>
+                <td th:text="*{vat}"></td>
+            </tr>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_RECOVERY">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.is.entitled.to.recover.vat}">Vat
+                    recovery
+                </th>
+                <td th:text="*{vatRecovery}"></td>
+            </tr>
+            <th:block clf:ifAnyFieldIsVisible="PARTNER_OTHER_IDENTIFIER_NUMBER_AND_DESCRIPTION">
+                <tr>
+                    <th th:text="#{jems.standard.application.form.export.partner.detail.other.identifier.number}">Other
+                        identifier number
+                    </th>
+                    <td th:text="*{otherIdentifierNumber}"></td>
+                </tr>
+                <tr>
+                    <th th:text="#{jems.standard.application.form.export.partner.detail.other.identifier.description}">
+                        Other
+                        identifier description
+                    </th>
+                    <td clf:textTranslationByDataLanguage="*{otherIdentifierDescription}"></td>
+                </tr>
+            </th:block>
+            <tr clf:ifAnyFieldIsVisible="PARTNER_PIC">
+                <th th:text="#{jems.standard.application.form.export.partner.detail.pic}">PIC</th>
+                <td th:text="*{pic}"></td>
+            </tr>
+            <th:block th:with="legalRepresentative=${clfUtils.getLegalRepresentative(partner.contacts)}">
+                <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME">
+                    <th th:text="#{jems.standard.application.form.export.common.label.legal.representative}">Legal
+                        representative
+                    </th>
+                    <td>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME"
+                              th:text="${legalRepresentative?.firstName} "></span>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME"
+                              th:text="${legalRepresentative?.lastName}"></span>
+                    </td>
+                </tr>
+            </th:block>
+            <th:block th:with="contactPerson=${clfUtils.getContactPerson(partner.contacts)}">
+                <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME">
+                    <th th:text="#{jems.standard.application.form.export.common.label.contact.person}">Contact person
+                    </th>
+                    <td>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_FIRST_NAME"
+                              th:text="${contactPerson?.firstName} "></span>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_LAST_NAME"
+                              th:text="${contactPerson?.lastName}"></span>
+                    </td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_EMAIL">
+                    <th th:text="#{jems.standard.application.form.export.common.label.email}">Email</th>
+                    <td th:text="${contactPerson?.email}"></td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TELEPHONE">
+                    <th th:text="#{jems.standard.application.form.export.common.label.phone}">Phone</th>
+                    <td th:text="${contactPerson?.telephone}"></td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_COMPETENCES">
+                    <th th:text="#{jems.standard.application.form.export.partner.detail.relevant.competences.and.experiences}">
+                        Competences and experiences
+                    </th>
+                    <td clf:textTranslationByDataLanguage="*{motivation?.organizationRelevance}"></td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_ROLE">
+                    <th th:text="#{jems.standard.application.form.export.partner.detail.organization.role}">Organization
+                        role
+                    </th>
+                    <td clf:textTranslationByDataLanguage="*{motivation?.organizationRole}"></td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PARTNER_ROLE_EXPERIENCE">
+                    <th th:text="#{jems.standard.application.form.export.partner.detail.organization.experience}">
+                        Organization experience
+                    </th>
+                    <td clf:textTranslationByDataLanguage="*{motivation?.organizationExperience}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+        <div th:insert="~{fragments/partner-co-financing-table.html :: partnerCoFinancingTable(${partner?.budget})}"></div>
+        <div th:insert="~{fragments/partner-state-aid-table.html :: partnerStateAidTable(${partner?.stateAid})}"></div>
+    </th:block>
+</th:block>
+</body>
+</html>

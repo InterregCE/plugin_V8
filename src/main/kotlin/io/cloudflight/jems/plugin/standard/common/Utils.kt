@@ -6,6 +6,7 @@ import io.cloudflight.jems.plugin.standard.budget_export.FALL_BACK_LANGUAGE
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.NumberFormat
 import java.util.Locale
 
 
@@ -30,16 +31,16 @@ fun getMessage(key: String, exportLocale: Locale, messageSource: MessageSource, 
 fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =
     this.map { fieldExtractor.invoke(it) ?: BigDecimal.ZERO }.fold(BigDecimal.ZERO, BigDecimal::add)
 
-fun BigDecimal.truncate(): BigDecimal =
-    setScale(2, RoundingMode.FLOOR)
-
-fun BigDecimal.truncateDown(): BigDecimal =
-    setScale(2, RoundingMode.DOWN)
-
-fun BigDecimal.percentageTo(total: BigDecimal): BigDecimal =
-    if (total > BigDecimal.ZERO) BigDecimal(100).multiply(this).div(total).truncate() else BigDecimal.ZERO
+fun BigDecimal.percentageDownTo(total: BigDecimal): BigDecimal =
+    if (total > BigDecimal.ZERO) BigDecimal(100).multiply(this).divide(total, RoundingMode.DOWN) else BigDecimal.ZERO
 
 fun BigDecimal.percentageDown(percentage: BigDecimal): BigDecimal =
     multiply(percentage)
-        .divide(BigDecimal(100))
-        .truncateDown()
+        .divide(BigDecimal(100), RoundingMode.DOWN)
+
+fun BigDecimal.format(locale: Locale) : String =
+    NumberFormat.getInstance(locale).apply {
+        maximumFractionDigits = 2
+        minimumFractionDigits = 2
+        isGroupingUsed = true
+    }.format(this)

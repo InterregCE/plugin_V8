@@ -179,7 +179,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                 privateContribution = partner.budget.projectPartnerCoFinancing.partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Private }
                     .sumOf { it.amount ?: BigDecimal.ZERO },
                 totalEligibleBudget = partner.budget.projectBudgetCostsCalculationResult.totalCosts,
-                totalEligibleBudgetPercentage = partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageTo(partnersTotalEligibleBudget),
+                totalEligibleBudgetPercentage = partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageDownTo(partnersTotalEligibleBudget),
                 staffCostTotals = getStaffCostTotals(
                     partner.budget.projectPartnerBudgetCosts.staffCosts,
                     partner.budget.projectBudgetCostsCalculationResult.staffCosts,

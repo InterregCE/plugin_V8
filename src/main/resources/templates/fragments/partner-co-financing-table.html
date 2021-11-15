@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="partnerBudgetData" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.PartnerBudgetData"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
+          th:href="@{./../styles/common.css}"/>
+</head>
+<body>
+
+<th:block th:fragment="partnerCoFinancingTable(partnerBudgetData)">
+    <th:block clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING"
+            th:if="${#lists.size(partnerBudgetData.projectPartnerCoFinancing.finances) > 0}">
+    <table class="default-table">
+        <thead class="table-header">
+        <tr class="sub-heading-1">
+            <td colspan="3" th:text="#{jems.standard.application.form.export.partner.detail.co.financing}">
+                Co-financing
+            </td>
+        </tr>
+        <tr>
+            <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.source}">Source</th>
+            <th th:text="#{jems.standard.application.form.export.common.label.amount}">Amount</th>
+            <th th:text="#{jems.standard.application.form.export.common.label.percentage}">Percentage</th>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr th:each="finance, rowStat: ${partnerBudgetData.projectPartnerCoFinancing.finances}"
+            th:object="${finance}">
+            <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
+                clf:textTranslationByExportLanguage="*{fund?.abbreviation}"></td>
+            <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
+                th:text="${partnerBudgetData.projectPartnerCoFinancing.partnerAbbreviation}">Partner abbreviation
+            </td>
+            <td clf:number="${clfUtils.percentageDown(finance?.percentage, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                47593
+            </td>
+            <td clf:percentage="*{percentage}">80%</td>
+        </tr>
+        <tr class="row-bordered">
+            <td th:text="#{jems.standard.application.form.export.partner.detail.total.eligible.budget}">Partner total eligible budget
+            </td>
+            <td clf:number="${partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts}">
+                47593
+            </td>
+            <td clf:percentage="100.00">80%</td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="default-table">
+        <thead class="table-header">
+        <tr class="sub-heading-1">
+            <td colspan="4" th:text="#{jems.standard.application.form.export.partner.detail.co.financing.origin}">Origin
+                of partner contribution
+            </td>
+        </tr>
+        <tr>
+            <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.source.of.contribution}">
+                Source of contribution
+            </th>
+            <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.legal.status.of.contribution}">
+                Legal status of contribution
+            </th>
+            <th th:text="#{jems.standard.application.form.export.common.label.amount}">Amount</th>
+            <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.percentage.of.total.partner.budget}">
+                % of total partner budget
+            </th>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr th:each="partnerContribution, rowStat: ${partnerBudgetData.projectPartnerCoFinancing.partnerContributions}"
+            th:object="${partnerContribution}">
+            <td th:if="*{isPartner}" th:text="${partnerBudgetData.projectPartnerCoFinancing.partnerAbbreviation}">name</td>
+            <td th:unless="*{isPartner}" th:text="*{name}">name</td>
+            <td th:text="*{status}">private</td>
+            <td clf:number="*{amount}">45900</td>
+            <td clf:percentage="${clfUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                34.00
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <table clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN" class="default-vertical-table">
+        <thead class="table-header">
+        <tr class="sub-heading-1">
+            <td colspan="3"
+                th:text="#{jems.standard.application.form.export.partner.detail.partner.total.contributions}">total
+                contributions
+            </td>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr th:with="publicAmount = ${clfUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <th th:text="#{jems.standard.application.form.export.partner.detail.partner.sub.total.public.contribution}">
+                Sub-total public contribution
+            </th>
+            <td clf:number="${publicAmount}">34</td>
+            <td clf:percentage="${clfUtils.percentageDownTo(publicAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                55%
+            </td>
+        </tr>
+        <tr th:with="automaticPublicAmount = ${clfUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <th th:text="#{jems.standard.application.form.export.partner.detail.partner.sub.total.automatic.public.contribution}">
+                Sub-total automatic public
+                contribution
+            </th>
+            <td clf:number="${automaticPublicAmount}">124</td>
+            <td clf:percentage="${clfUtils.percentageDownTo(automaticPublicAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                10%
+            </td>
+        </tr>
+        <tr th:with="privateAmount = ${clfUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <th th:text="#{jems.standard.application.form.export.partner.detail.partner.sub.total.private.contribution}">
+                Sub-total private contribution
+            </th>
+            <td clf:number="${privateAmount}">5455</td>
+            <td clf:percentage="${clfUtils.percentageDownTo(privateAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                32%
+            </td>
+        </tr>
+        <tr class="row-bordered" th:with="total = ${clfUtils.getContributionTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <th th:text="#{jems.standard.application.form.export.common.label.total}">total</th>
+            <td clf:number="${total}">4757</td>
+            <td clf:percentage="${clfUtils.percentageDownTo(total, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                100%
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </th:block>
+</th:block>
+</body>
+</html>
