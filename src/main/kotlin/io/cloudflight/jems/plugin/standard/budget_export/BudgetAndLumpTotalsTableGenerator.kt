@@ -12,6 +12,7 @@ import io.cloudflight.jems.plugin.standard.budget_export.models.GeneralBudgetTot
 import io.cloudflight.jems.plugin.standard.common.*
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.collections.sumOf
 
 open class BudgetAndLumpTotalsTableGenerator(
@@ -179,7 +180,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                 privateContribution = partner.budget.projectPartnerCoFinancing.partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Private }
                     .sumOf { it.amount ?: BigDecimal.ZERO },
                 totalEligibleBudget = partner.budget.projectBudgetCostsCalculationResult.totalCosts,
-                totalEligibleBudgetPercentage = partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageDownTo(partnersTotalEligibleBudget),
+                totalEligibleBudgetPercentage = partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageTo(partnersTotalEligibleBudget, RoundingMode.HALF_UP),
                 staffCostTotals = getStaffCostTotals(
                     partner.budget.projectPartnerBudgetCosts.staffCosts,
                     partner.budget.projectBudgetCostsCalculationResult.staffCosts,

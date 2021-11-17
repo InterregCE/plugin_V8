@@ -149,7 +149,7 @@
             </tbody>
         </table>
         <table class="default-vertical-table"
-               clf:ifAnyFieldIsVisible="PARTNER_TYPE,PARTNER_SUB_TYPE,PARTNER_LEGAL_STATUS,PARTNER_NACE_GROUP_LEVEL,PARTNER_VAT_IDENTIFIER,PARTNER_VAT_RECOVERY,PARTNER_OTHER_IDENTIFIER_NUMBER_AND_DESCRIPTION,PARTNER_PIC,PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME,PARTNER_CONTACT_PERSON_EMAIL,PARTNER_CONTACT_PERSON_TELEPHONE,PARTNER_MOTIVATION_COMPETENCES">
+               clf:ifAnyFieldIsVisible="PARTNER_TYPE,PARTNER_SUB_TYPE,PARTNER_LEGAL_STATUS,PARTNER_NACE_GROUP_LEVEL,PARTNER_VAT_IDENTIFIER,PARTNER_VAT_RECOVERY,PARTNER_OTHER_IDENTIFIER_NUMBER_AND_DESCRIPTION,PARTNER_PIC">
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2"
@@ -204,12 +204,28 @@
                 <th th:text="#{jems.standard.application.form.export.partner.detail.pic}">PIC</th>
                 <td th:text="*{pic}"></td>
             </tr>
+            </tbody>
+        </table>
+        <table class="default-vertical-table"
+               clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME,PARTNER_CONTACT_PERSON_EMAIL,PARTNER_CONTACT_PERSON_TELEPHONE">
+            <thead class="table-header">
+            <tr class="sub-heading-1">
+                <td colspan="2"
+                    th:text="#{jems.standard.application.form.export.partner.detail.contact}">
+                    Contact
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
             <th:block th:with="legalRepresentative=${clfUtils.getLegalRepresentative(partner.contacts)}">
-                <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME">
+                <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_TITLE,PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME">
                     <th th:text="#{jems.standard.application.form.export.common.label.legal.representative}">Legal
                         representative
                     </th>
                     <td>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_TITLE"
+                              th:unless="${legalRepresentative?.title == null}"
+                              th:text="${legalRepresentative?.title} "></span>
                         <span clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME"
                               th:text="${legalRepresentative?.firstName} "></span>
                         <span clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME"
@@ -218,10 +234,13 @@
                 </tr>
             </th:block>
             <th:block th:with="contactPerson=${clfUtils.getContactPerson(partner.contacts)}">
-                <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME">
+                <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TITLE,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME">
                     <th th:text="#{jems.standard.application.form.export.common.label.contact.person}">Contact person
                     </th>
                     <td>
+                        <span clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TITLE"
+                              th:unless="${contactPerson?.title == null}"
+                              th:text="${contactPerson?.title} "></span>
                         <span clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_FIRST_NAME"
                               th:text="${contactPerson?.firstName} "></span>
                         <span clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_LAST_NAME"
@@ -236,6 +255,20 @@
                     <th th:text="#{jems.standard.application.form.export.common.label.phone}">Phone</th>
                     <td th:text="${contactPerson?.telephone}"></td>
                 </tr>
+            </th:block>
+            </tbody>
+        </table>
+        <table class="default-vertical-table"
+               clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_COMPETENCES,PARTNER_MOTIVATION_ROLE,PARTNER_ROLE_EXPERIENCE">
+            <thead class="table-header">
+            <tr class="sub-heading-1">
+                <td colspan="2"
+                    th:text="#{jems.standard.application.form.export.partner.detail.motivation.and.contribution}">
+                    Partner motivation and contribution
+                </td>
+            </tr>
+            </thead>
+            <tbody class="table-body">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_COMPETENCES">
                     <th th:text="#{jems.standard.application.form.export.partner.detail.relevant.competences.and.experiences}">
                         Competences and experiences
@@ -254,9 +287,9 @@
                     </th>
                     <td clf:textTranslationByDataLanguage="*{motivation?.organizationExperience}"></td>
                 </tr>
-            </th:block>
             </tbody>
         </table>
+
         <div th:insert="~{fragments/partner-co-financing-table.html :: partnerCoFinancingTable(${partner?.budget})}"></div>
         <div th:insert="~{fragments/partner-state-aid-table.html :: partnerStateAidTable(${partner?.stateAid})}"></div>
     </th:block>

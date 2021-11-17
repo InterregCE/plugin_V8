@@ -7,7 +7,7 @@ import org.springframework.context.MessageSource
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 
 
 fun SystemLanguageData.toLocale() =
@@ -31,14 +31,14 @@ fun getMessage(key: String, exportLocale: Locale, messageSource: MessageSource, 
 fun <T> Iterable<T>.sumOf(fieldExtractor: (T) -> BigDecimal?): BigDecimal =
     this.map { fieldExtractor.invoke(it) ?: BigDecimal.ZERO }.fold(BigDecimal.ZERO, BigDecimal::add)
 
-fun BigDecimal.percentageDownTo(total: BigDecimal): BigDecimal =
-    if (total > BigDecimal.ZERO) BigDecimal(100).multiply(this).divide(total, RoundingMode.DOWN) else BigDecimal.ZERO
+fun BigDecimal.percentageTo(total: BigDecimal, roundingMode: RoundingMode = RoundingMode.DOWN): BigDecimal =
+    if (total > BigDecimal.ZERO) BigDecimal(100).multiply(this).divide(total, 2, roundingMode) else BigDecimal.ZERO
 
 fun BigDecimal.percentageDown(percentage: BigDecimal): BigDecimal =
     multiply(percentage)
-        .divide(BigDecimal(100), RoundingMode.DOWN)
+        .divide(BigDecimal(100), 2, RoundingMode.DOWN)
 
-fun BigDecimal.format(locale: Locale) : String =
+fun BigDecimal.format(locale: Locale): String =
     NumberFormat.getInstance(locale).apply {
         maximumFractionDigits = 2
         minimumFractionDigits = 2
