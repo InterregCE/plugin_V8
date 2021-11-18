@@ -147,8 +147,7 @@ private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartne
            fundsAmount = partner.budget.projectBudgetCostsCalculationResult.totalCosts - fundsAmount
 
             if (partner.budget.projectPartnerCoFinancing.finances.isEmpty() ||
-                fundsAmount !=
-                partner.budget.projectPartnerCoFinancing.partnerContributions.sumOf { it.amount }
+                fundsAmount.compareTo(partner.budget.projectPartnerCoFinancing.partnerContributions.sumOf { it.amount }) != 0
             ) {
                 errorMessages.add(
                     buildErrorPreConditionCheckMessage(
