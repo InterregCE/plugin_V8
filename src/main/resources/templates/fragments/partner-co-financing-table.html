@@ -10,8 +10,7 @@
 <body>
 
 <th:block th:fragment="partnerCoFinancingTable(partnerBudgetData)">
-    <th:block clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING"
-            th:if="${#lists.size(partnerBudgetData.projectPartnerCoFinancing.finances) > 0}">
+    <th:block clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING">
     <table class="default-table">
         <thead class="table-header">
         <tr class="sub-heading-1">
@@ -26,12 +25,13 @@
         </tr>
         </thead>
         <tbody class="table-body">
+        <tr th:if="${partnerBudgetData.projectPartnerCoFinancing.finances.size() == 0}"><td colspan="3"></td></tr>
         <tr th:each="finance, rowStat: ${partnerBudgetData.projectPartnerCoFinancing.finances}"
             th:object="${finance}">
             <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
                 clf:textTranslationByExportLanguage="*{fund?.abbreviation}"></td>
             <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
-                th:text="${partnerBudgetData.projectPartnerCoFinancing.partnerAbbreviation}">Partner abbreviation
+                th:text="#{jems.standard.application.form.export.partner.detail.co.financing.partner.contributions}">Partner contribution
             </td>
             <td clf:number="${clfUtils.percentageDown(finance?.percentage, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                 47593
@@ -69,10 +69,11 @@
         </tr>
         </thead>
         <tbody class="table-body">
+        <tr th:if="${partnerBudgetData.projectPartnerCoFinancing.partnerContributions.size() == 0}"><td colspan="4"></td></tr>
         <tr th:each="partnerContribution, rowStat: ${partnerBudgetData.projectPartnerCoFinancing.partnerContributions}"
             th:object="${partnerContribution}">
             <td th:if="*{isPartner}" th:text="${partnerBudgetData.projectPartnerCoFinancing.partnerAbbreviation}">name</td>
-            <td th:unless="*{isPartner}" th:text="*{name}">name</td>
+            <td class="break-long-word" th:unless="*{isPartner}" th:text="*{name}">name</td>
             <td th:text="*{status}">private</td>
             <td clf:number="*{amount}">45900</td>
             <td clf:percentage="${clfUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">

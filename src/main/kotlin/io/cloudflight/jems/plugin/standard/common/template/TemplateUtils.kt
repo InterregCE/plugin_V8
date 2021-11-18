@@ -5,7 +5,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
 import io.cloudflight.jems.plugin.standard.common.percentageDown
-import io.cloudflight.jems.plugin.standard.common.percentageDownTo
+import io.cloudflight.jems.plugin.standard.common.percentageTo
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.standard.expression.IStandardExpression
@@ -59,7 +59,7 @@ class TemplateUtils {
 
     // it is used in the templates
     fun percentageDownTo(amount: BigDecimal, total: BigDecimal) =
-        amount.percentageDownTo(total)
+        amount.percentageTo(total)
 
     fun getStateAidCheckResultTranslationKey(stateAidData: ProjectPartnerStateAidData) =
         if (stateAidData.answer1 == null || stateAidData.answer2 == null || stateAidData.answer3 == null || stateAidData.answer4 == null)

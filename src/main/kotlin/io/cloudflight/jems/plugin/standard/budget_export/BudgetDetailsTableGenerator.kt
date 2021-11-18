@@ -229,12 +229,16 @@ open class BudgetDetailsTableGenerator(
                 unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(
                     dataLanguage
                 ) ?: "",
-                unitType = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS))
-                    budget.unitType.getTranslationFor(dataLanguage) else "",
+                unitType = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS)) {
+                    if (budget.unitCostId == null) budget.unitType.getTranslationFor(dataLanguage) else unitCost?.type?.getTranslationFor(
+                        dataLanguage
+                    ) ?: ""
+                } else "",
                 numberOfUnits = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_UNIT_TYPE_AND_NUMBER_OF_UNITS)
                 ) budget.numberOfUnits else null,
-                pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_PRICE_PER_UNIT)
-                ) budget.pricePerUnit else null,
+                pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_PRICE_PER_UNIT)){
+                        if (budget.unitCostId == null) budget.pricePerUnit else unitCost?.costPerUnit
+                    } else null,
                 description = if (shouldBeVisible(PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION)) {
                     if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage) else unitCost?.description?.getTranslationFor(
                         dataLanguage
@@ -279,12 +283,16 @@ open class BudgetDetailsTableGenerator(
             unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(
                 dataLanguage
             ) ?: "",
-            unitType = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS))
-                budget.unitType.getTranslationFor(dataLanguage) else "",
+            unitType = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS)) {
+                if (budget.unitCostId == null) budget.unitType.getTranslationFor(dataLanguage) else unitCost?.type?.getTranslationFor(
+                    dataLanguage
+                ) ?: ""
+            } else "",
             numberOfUnits = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_UNIT_TYPE_AND_NUMBER_OF_UNITS))
                 budget.numberOfUnits else null,
-            pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_PRICE_PER_UNIT))
-                budget.pricePerUnit else null,
+            pricePerUnit = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_PRICE_PER_UNIT)){
+                if (budget.unitCostId == null) budget.pricePerUnit else unitCost?.costPerUnit
+            } else null,
             description = if (shouldBeVisible(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION)) {
                 if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage) else unitCost?.description?.getTranslationFor(
                     dataLanguage
@@ -326,9 +334,15 @@ open class BudgetDetailsTableGenerator(
                 costCategory = getMessage(typeTranslationKey, exportLocale, messageSource),
                 unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(dataLanguage)
                     ?: "",
-                unitType = if (isUnitTypeAndNumberOfUnitsVisible) budget.unitType.getTranslationFor(dataLanguage) else "",
+                unitType = if (isUnitTypeAndNumberOfUnitsVisible) {
+                    if (budget.unitCostId == null) budget.unitType.getTranslationFor(dataLanguage) else unitCost?.type?.getTranslationFor(
+                        dataLanguage
+                    ) ?: ""
+                } else "",
                 numberOfUnits = if (isUnitTypeAndNumberOfUnitsVisible) budget.numberOfUnits else null,
-                pricePerUnit = if (isPricePerUnitVisible) budget.pricePerUnit else null,
+                pricePerUnit = if (isPricePerUnitVisible) {
+                    if (budget.unitCostId == null) budget.pricePerUnit else unitCost?.costPerUnit
+                } else null,
                 description = if (isDescriptionVisible) {
                     if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage) else unitCost?.description?.getTranslationFor(
                         dataLanguage
