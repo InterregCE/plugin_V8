@@ -88,3 +88,24 @@ tr, td, th, .table-header {
     border-bottom: 1px solid #d2dade;
     border-top: 1px solid #d2dade;
 }
+
+.mt {
+    margin-top: 50px;
+}
+
+.text-box {
+    width: 100%;
+    border: 1px solid #d2dade;
+    text-align: left;
+}
+
+.text-box > * {
+    padding-left: 8px;
+    padding-right: 8px;
+    border: 0;
+}
+
+.text-box ul {
+    padding-left: 30px;
+}
+

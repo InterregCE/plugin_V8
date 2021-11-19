@@ -1,9 +1,12 @@
 package io.cloudflight.jems.plugin.standard.common.template
 
+import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
+import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
+import io.cloudflight.jems.plugin.standard.common.getTranslationFor
 import io.cloudflight.jems.plugin.standard.common.percentageDown
 import io.cloudflight.jems.plugin.standard.common.percentageTo
 import org.thymeleaf.IEngineConfiguration
@@ -22,6 +25,8 @@ const val CLF_UTILS = "clfUtils"
 class TemplateUtils {
     fun sortPartnersBySortNumber(partners: Set<ProjectPartnerData>) =
         partners.sortedBy { it.sortNumber }
+
+    fun getLeadPartner(partners: Set<ProjectPartnerData>) = partners.firstOrNull { it.role.isLead }
 
     fun sortAssociatedOrganizationsBySortNumber(associatedOrganizations: Set<ProjectAssociatedOrganizationData>) =
         associatedOrganizations.sortedBy { it.sortNumber }
@@ -71,6 +76,7 @@ class TemplateUtils {
         else
             "project.partner.state.aid.no.risk.of.state.aid"
 
+    fun getEnglishTranslation(translationData: Set<InputTranslationData>) = translationData.getTranslationFor(SystemLanguageData.EN)
 }
 
 fun <T> parseAttributeValue(attributeValue: String, context: ITemplateContext, defaultValue: T): T {
