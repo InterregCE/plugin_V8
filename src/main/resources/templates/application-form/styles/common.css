@@ -64,6 +64,14 @@ html, body {
     border-right: 1px solid #d2dade !important;
 }
 
+.bottom-border {
+    border-bottom: 1px solid #d2dade !important;
+}
+
+.top-border {
+    border-top: 1px solid #d2dade !important;
+}
+
 .break-long-word {
     max-width: 800px;
     word-wrap: break-word;
@@ -147,5 +155,13 @@ tr, td, th, .table-header {
 
 .text-box ul {
     padding-left: 30px;
+}
+
+.remove-zebra.default-table .table-body tr:nth-child(odd), .remove-zebra.default-vertical-table .table-body tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.default-table td[rowspan="0"], .default-vertical-table td[rowspan="0"] {
+    display: none;
 }
 

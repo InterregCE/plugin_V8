@@ -28,7 +28,9 @@ class NumberProcessor(defaultDialectPrefix: String) : AbstractAttributeTagProces
             structureHandler.setAttribute("class", currentClasses.plus(" number").trim())
             structureHandler.setBody(
                 HtmlEscape.escapeHtml5(
-                    parseAttributeValue(attributeValue, context, BigDecimal.ZERO).format(context.locale)
+                    parseAttributeValue(attributeValue, context)?.let {
+                        (it as BigDecimal).format(context.locale)
+                    } ?: ""
                 ), false
             )
         }

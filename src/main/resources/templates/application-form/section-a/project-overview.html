@@ -42,22 +42,25 @@
         </tr>
         <tr>
             <th th:text="#{jems.standard.application.form.export.project.acronym}">Project acronym</th>
-            <td th:text="${projectDataSectionA.acronym}"></td>
+            <td th:text="${projectDataSectionA?.acronym}"></td>
         </tr>
         <tr>
             <th th:text="#{jems.standard.application.form.export.programme.priority}">Programme priority</th>
-            <td clf:textTranslationByDataLanguage="${projectDataSectionA.programmePriority.title}"></td>
+            <td clf:textTranslationByDataLanguage="${projectDataSectionA.programmePriority?.title}"></td>
         </tr>
         <tr>
             <th th:text="#{jems.standard.application.form.export.programme.priority.objective}">Programme priority
                 specific objective
             </th>
-            <td th:text="${#messages.msg('programme.policy.' + projectDataSectionA.specificObjective.programmeObjectivePolicy)}"></td>
+            <td >
+                <span th:if="${projectDataSectionA.specificObjective?.programmeObjectivePolicy != null}" th:text="${#messages.msg('programme.policy.' + projectDataSectionA.specificObjective?.programmeObjectivePolicy)}">
+                </span>
+            </td>
         </tr>
         <tr>
             <th th:text="#{jems.standard.application.form.export.project.duration}">Project duration (nr. of months)
             </th>
-            <td th:text="${projectDataSectionA.duration}"></td>
+            <td th:text="${projectDataSectionA?.duration}"></td>
         </tr>
         </tbody>
     </table>
