@@ -1,6 +1,29 @@
+@page {
+    size: A4 portrait;
+    margin: 20mm 15mm;
+    @bottom-right {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-size: 14px;
+        content: counter(page);
+    }
+
+}
+
+@page landscape {
+    margin: 20mm 15mm;
+    size: A4 landscape;
+}
+
 html, body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
     font-size: 14px;
+}
+
+.landscape {
+    /*we need to set this because openPdfToHtml uses A4 width as the width of body*/
+    /* this is 297mm (A4 landscape width) - 30mm(margins) - 2mm (to make borders visible)*/
+    width: 265mm;
+    page: landscape
 }
 
 .headline {
@@ -28,14 +51,31 @@ html, body {
     width: 30px;
 }
 
-.break-long-word{
+.text-center {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+.text-right{
+    text-align: right;
+}
+
+.right-border {
+    border-right: 1px solid #d2dade !important;
+}
+
+.break-long-word {
     max-width: 800px;
     word-wrap: break-word;
 }
 
-.default-table .row-bordered td, .default-table .row-bordered th, .default-vertical-table .table-body .row-bordered td, .default-vertical-table .table-body .row-bordered th{
+.default-table .row-bordered td, .default-table .row-bordered th, .default-vertical-table .table-body .row-bordered td, .default-vertical-table .table-body .row-bordered th {
     border-top: 1px solid #d2dade;
     border-bottom: 1px solid #d2dade;
+}
+
+.default-table .number, .default-table .percentage, .default-vertical-table .number, .default-vertical-table .percentage{
+    text-align: right;
 }
 
 .page-break-after {

@@ -7,22 +7,19 @@ import io.cloudflight.jems.plugin.contract.models.call.FieldVisibilityStatusData
 import io.cloudflight.jems.plugin.contract.models.call.flatrate.FlatRateSetupData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
-import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundData
-import io.cloudflight.jems.plugin.contract.models.programme.lumpsum.ProgrammeLumpSumListData
-import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammePriorityData
 import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammePriorityDataSimple
-import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammeSpecificObjectiveData
-import io.cloudflight.jems.plugin.contract.models.programme.strategy.ProgrammeStrategyData
-import io.cloudflight.jems.plugin.contract.models.programme.unitcost.ProgrammeUnitCostListData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ApplicationStatusData
-import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
-import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverview
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.ProjectResultIndicatorOverview
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
+import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -58,6 +55,26 @@ internal class ChecksSectionA {
                 ),
             inputLanguages = mandatoryLanguages)
         val projectLifecycleData = ProjectLifecycleData(status = ApplicationStatusData.DRAFT)
+        val coFinancingOverview = ProjectCoFinancingOverview(
+            emptyList(),
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO,
+            BigDecimal.ZERO
+        )
+        val resultIndicatorOverview = ProjectResultIndicatorOverview(emptyList())
         val sectionAData = ProjectDataSectionA(
             customIdentifier = "BP4500492",
             title = emptySet(),
@@ -65,7 +82,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
     }
 
     @Test
@@ -151,7 +171,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -173,7 +196,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -194,7 +220,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -216,7 +245,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -235,7 +267,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -257,7 +292,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -279,7 +317,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -298,7 +339,10 @@ internal class ChecksSectionA {
             acronym = "TEST DATA",
             duration = null,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -317,7 +361,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = 12,
             specificObjective = null,
-            programmePriority = null)
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)
@@ -336,7 +383,10 @@ internal class ChecksSectionA {
             acronym = null,
             duration = null,
             specificObjective = null,
-            programmePriority = ProgrammePriorityDataSimple(code = "TEST_DATA"))
+            programmePriority = ProgrammePriorityDataSimple(code = "TEST_DATA"),
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
         CallDataContainer.set(onceStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
         val verification = checkSectionA(sectionAData)

@@ -4,12 +4,16 @@
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 
 <head>
-    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
-          th:href="@{./../styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
 </head>
 <body>
 <th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)"
           clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+    <div class="title" id="associated-organizations"
+         th:text="#{jems.standard.application.form.export.associated.organizations}">Associated
+        organizations
+    </div>
     <th:block th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(associatedOrganizations)}"
               th:object="${associatedOrganization}">
         <table class="default-vertical-table">

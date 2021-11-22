@@ -2,6 +2,8 @@ package io.cloudflight.jems.plugin.standard.common.template
 
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
+import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundTypeData
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingByFundOverview
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
@@ -66,6 +68,12 @@ class TemplateUtils {
     fun percentageDownTo(amount: BigDecimal, total: BigDecimal) =
         amount.percentageTo(total)
 
+    fun getEuFundsOverview(fundOverviews: List<ProjectCoFinancingByFundOverview>) =
+        fundOverviews.filter { it.fundType != ProgrammeFundTypeData.OTHER }
+
+    fun getOtherFundsOverview(fundOverviews: List<ProjectCoFinancingByFundOverview>) =
+        fundOverviews.filter { it.fundType == ProgrammeFundTypeData.OTHER }
+
     fun getStateAidCheckResultTranslationKey(stateAidData: ProjectPartnerStateAidData) =
         if (stateAidData.answer1 == null || stateAidData.answer2 == null || stateAidData.answer3 == null || stateAidData.answer4 == null)
             "project.partner.state.aid.complete.form.first"
@@ -76,7 +84,8 @@ class TemplateUtils {
         else
             "project.partner.state.aid.no.risk.of.state.aid"
 
-    fun getEnglishTranslation(translationData: Set<InputTranslationData>) = translationData.getTranslationFor(SystemLanguageData.EN)
+    fun getEnglishTranslation(translationData: Set<InputTranslationData>) =
+        translationData.getTranslationFor(SystemLanguageData.EN)
 }
 
 fun <T> parseAttributeValue(attributeValue: String, context: ITemplateContext, defaultValue: T): T {

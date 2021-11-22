@@ -39,7 +39,7 @@ open class ApplicationFormExportDefaultImpl(
             ),
             content = pdfService.generatePdfFromHtml(
                 templateEngine.process(
-                    "application-form-export-template",
+                    "application-form/application-form-export-template",
                     Context().also {
                         it.locale = exportLanguage.toLocale()
                         it.setVariable(PROJECT_DATA, projectData)

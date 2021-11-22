@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="sectionB(projectDataSectionB)">
+    <div class="headline" id="section-b" th:text="#{jems.standard.application.form.export.section.b.partners}">
+        Section B - partners
+    </div>
+
+    <div th:insert="~{application-form/section-b/partners-overview-table.html :: partnersOverviewTable(${projectDataSectionB})}"></div>
+
+    <div class="page-break-after"></div>
+
+    <div th:insert="~{application-form/section-b/partner-detail-table.html :: partnerDetailTable(${projectDataSectionB})}"></div>
+
+    <div class="page-break-after"></div>
+
+    <div th:insert="~{application-form/section-b/partner-associated-organizations-table.html :: partnerAssociatedOrganizationTable(${projectDataSectionB.associatedOrganisations})}"></div>
+
+</th:block>
+</body>
+</html>

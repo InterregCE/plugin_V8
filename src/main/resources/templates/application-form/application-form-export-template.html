@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="projectData" type="io.cloudflight.jems.plugin.contract.models.project.ProjectData"*/-->
+<!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="application-form/styles/common.css"
+          th:href="@{application-form/styles/common.css}"/>
+    <th:block
+            th:insert="~{application-form/application-form-index.html :: applicationFormIndex(${projectData}, ${callData})}"></th:block>
+</head>
+
+<body id="first-page">
+    <div th:insert="~{application-form/section-a/section-a.html :: sectionA(${projectData.sectionA}, ${projectData.sectionB.partners}, ${callData})}"></div>
+    <div class="page-break-after"></div>
+    <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
+</body>
+</html>
