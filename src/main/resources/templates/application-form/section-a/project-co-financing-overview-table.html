@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectCoFinancingOverview" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverview"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="projectCofinancingOverviewTable(projectCoFinancingOverview)">
+    <div id="section-a-3" class="landscape" clf:ifAnyFieldIsVisible="PROJECT_A3">
+        <div class="title" th:text="#{jems.standard.application.form.export.project.budget.overview.title}"></div>
+        <table class="default-table">
+            <thead class="table-header">
+            <tr>
+                <th class="text-center right-border" colspan="3"
+                    th:text="#{jems.standard.application.form.export.project.budget.overview.funding.programme.funding}">
+                    Programme funding
+                </th>
+
+                <th class="text-center right-border" colspan="5"
+                    th:text="#{jems.standard.application.form.export.project.budget.overview.funding.contribution}">
+                    Contribution
+                </th>
+
+                <th class="text-center right-border" rowspan="2"
+                    th:text="#{jems.standard.application.form.export.common.label.total}">
+                    Total
+                </th>
+            </tr>
+            <tr>
+                <th th:text="#{jems.standard.application.form.export.project.budget.overview.funding.source}">Funding
+                    source
+                </th>
+                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.funding.amount}">Funding
+                    amount
+                </th>
+                <th class="right-border text-right"
+                    th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.rate}">
+                    Co-financing rate (%)
+                </th>
+
+                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.automatic.public.contribution}">
+                    Automatic public contribution
+                </th>
+                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.other.public.contribution}">
+                    Other public contribution
+                </th>
+                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.public.contribution}">
+                    Total public contribution
+                </th>
+                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.private.contribution}">
+                    Private contribution
+                </th>
+                <th class="right-border text-right"
+                    th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.contribution}">
+                    Total contribution
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <th:block th:with="euFundOverviews = ${clfUtils.getEuFundsOverview(projectCoFinancingOverview.fundOverviews)}">
+                <tr th:if="${euFundOverviews.size() == 0}">
+                    <td class="right-border" colspan="3"></td>
+                    <td class="right-border" colspan="5"></td>
+                    <td></td>
+                </tr>
+                <tr th:each="euFundOverview, rowStat: ${euFundOverviews}" th:object="${euFundOverview}">
+                    <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
+                    <td clf:number="*{fundingAmount}"></td>
+                    <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
+
+                    <td clf:number="*{autoPublicContribution}"></td>
+                    <td clf:number="*{otherPublicContribution}"></td>
+                    <td clf:number="*{totalPublicContribution}"></td>
+                    <td clf:number="*{privateContribution}"></td>
+                    <td class="right-border" clf:number="*{totalContribution}"></td>
+
+                    <td clf:number="*{totalFundAndContribution}"></td>
+                </tr>
+                <tr class="row-bordered">
+                    <td th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.eu.funds}"></td>
+                    <td clf:number="${totalEuFundingAmount}"></td>
+                    <td class="right-border" clf:percentage="${averageEuFinancingRate}"></td>
+
+                    <td clf:number="${totalEuAutoPublicContribution}"></td>
+                    <td clf:number="${totalEuOtherPublicContribution}"></td>
+                    <td clf:number="${totalEuPublicContribution}"></td>
+                    <td clf:number="${totalEuPrivateContribution}"></td>
+                    <td class="right-border" clf:number="${totalEuContribution}"></td>
+
+                    <td clf:number="${totalEuFundAndContribution}"></td>
+                </tr>
+            </th:block>
+            <th:block
+                    th:with="otherFundOverviews = ${clfUtils.getOtherFundsOverview(projectCoFinancingOverview.fundOverviews)}">
+                <tr th:if="${otherFundOverviews.size() == 0}">
+                    <td class="right-border" colspan="3"></td>
+                    <td class="right-border" colspan="5"></td>
+                    <td></td>
+                </tr>
+                <tr th:each="otherFundOverview, rowStat: ${otherFundOverviews}" th:object="${otherFundOverview}">
+                    <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
+                    <td clf:number="*{fundingAmount}"></td>
+                    <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
+
+                    <td clf:number="*{autoPublicContribution}"></td>
+                    <td clf:number="*{otherPublicContribution}"></td>
+                    <td clf:number="*{totalPublicContribution}"></td>
+                    <td clf:number="*{privateContribution}"></td>
+                    <td class="right-border" clf:number="*{totalContribution}"></td>
+
+                    <td clf:number="*{totalFundAndContribution}"></td>
+                </tr>
+                <tr class="row-bordered">
+                    <td th:text="#{jems.standard.application.form.export.common.label.total}"></td>
+                    <td clf:number="${totalFundingAmount}"></td>
+                    <td class="right-border" clf:percentage="${averageCoFinancingRate}"></td>
+
+                    <td clf:number="${totalAutoPublicContribution}"></td>
+                    <td clf:number="${totalOtherPublicContribution}"></td>
+                    <td clf:number="${totalPublicContribution}"></td>
+                    <td clf:number="${totalPrivateContribution}"></td>
+                    <td class="right-border" clf:number="${totalContribution}"></td>
+
+                    <td clf:number="${totalFundAndContribution}"></td>
+
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+</body>
+</html>

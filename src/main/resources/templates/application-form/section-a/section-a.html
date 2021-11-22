@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="sectionA(projectDataSectionA, projectPartners, callData)">
+    <div id="section-a" class="headline" th:text="#{jems.standard.application.form.export.section.a.project.overview}">
+        SECTION A - Project overview
+    </div>
+
+    <div th:insert="~{application-form/section-a/project-overview.html :: projectOverview(${projectDataSectionA}, ${projectPartners})}"></div>
+
+    <div class="page-break-after"></div>
+
+    <div th:if="${callData.isAdditionalFundAllowed == false}"
+         th:insert="~{application-form/section-a/project-co-financing-overview-table.html :: projectCofinancingOverviewTable(${projectDataSectionA?.coFinancingOverview})}"></div>
+</th:block>
+</body>
+</html>

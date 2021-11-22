@@ -15,7 +15,7 @@ class PercentageProcessor(defaultDialectPrefix: String) : AbstractAttributeTagPr
     TemplateMode.HTML, defaultDialectPrefix,
     null, true,
     "percentage", true,
-    StandardDialect.PROCESSOR_PRECEDENCE, true
+    StandardDialect.PROCESSOR_PRECEDENCE - 50, true
 ) {
 
     override fun doProcess(
@@ -24,6 +24,8 @@ class PercentageProcessor(defaultDialectPrefix: String) : AbstractAttributeTagPr
         structureHandler: IElementTagStructureHandler?
     ) {
         if (context != null && attributeValue != null && structureHandler != null) {
+            val currentClasses = tag?.getAttribute("class")?.value ?: ""
+            structureHandler.setAttribute("class", currentClasses.plus(" percentage").trim())
             structureHandler.setBody(
                 HtmlEscape.escapeHtml5(
                     parseAttributeValue(attributeValue, context, BigDecimal.ZERO).format(context.locale) + " %"

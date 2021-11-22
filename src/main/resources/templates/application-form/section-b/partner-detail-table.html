@@ -4,14 +4,13 @@
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 
 <head>
-    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
-          th:href="@{./../styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
 </head>
 <body>
 <th:block th:fragment="partnerDetailTable(projectDataSectionB)">
     <th:block th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
               th:object="${partner}">
-        <div class="page-break-after"></div>
         <table class="default-vertical-table">
             <thead class="table-header">
             <tr class="sub-heading-2">
@@ -289,9 +288,9 @@
                 </tr>
             </tbody>
         </table>
-
-        <div th:insert="~{fragments/partner-co-financing-table.html :: partnerCoFinancingTable(${partner?.budget})}"></div>
-        <div th:insert="~{fragments/partner-state-aid-table.html :: partnerStateAidTable(${partner?.stateAid})}"></div>
+        <div th:insert="~{application-form/section-b/partner-co-financing-table.html :: partnerCoFinancingTable(${partner?.budget})}"></div>
+        <div th:insert="~{application-form/section-b/partner-state-aid-table.html :: partnerStateAidTable(${partner?.stateAid})}"></div>
+        <div th:if="${rowStat.last == false }" class="page-break-after"></div>
     </th:block>
 </th:block>
 </body>

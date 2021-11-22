@@ -4,8 +4,8 @@
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 
 <head>
-    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
-          th:href="@{./../styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
 </head>
 <body>
 
@@ -20,8 +20,8 @@
         </tr>
         <tr>
             <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.source}">Source</th>
-            <th th:text="#{jems.standard.application.form.export.common.label.amount}">Amount</th>
-            <th th:text="#{jems.standard.application.form.export.common.label.percentage}">Percentage</th>
+            <th class="text-right" th:text="#{jems.standard.application.form.export.common.label.amount}">Amount</th>
+            <th class="text-right" th:text="#{jems.standard.application.form.export.common.label.percentage}">Percentage</th>
         </tr>
         </thead>
         <tbody class="table-body">
@@ -62,8 +62,8 @@
             <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.legal.status.of.contribution}">
                 Legal status of contribution
             </th>
-            <th th:text="#{jems.standard.application.form.export.common.label.amount}">Amount</th>
-            <th th:text="#{jems.standard.application.form.export.partner.detail.co.financing.percentage.of.total.partner.budget}">
+            <th class="text-right" th:text="#{jems.standard.application.form.export.common.label.amount}">Amount</th>
+            <th class="text-right" th:text="#{jems.standard.application.form.export.partner.detail.co.financing.percentage.of.total.partner.budget}">
                 % of total partner budget
             </th>
         </tr>

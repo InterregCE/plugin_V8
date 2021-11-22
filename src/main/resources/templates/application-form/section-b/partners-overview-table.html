@@ -4,13 +4,15 @@
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 
 <head>
-    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
-          th:href="@{./../styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
 </head>
 <body>
 <th:block th:fragment="partnersOverviewTable(projectDataSectionB)">
-    <table class="default-table"
-           th:if="${#lists.size(projectDataSectionB.partners) > 0}">
+    <div class="title" id="partners-overview" th:text="#{jems.standard.application.form.export.partner.overview}">
+        Partners overview
+    </div>
+    <table class="default-table">
         <thead class="table-header">
         <tr>
             <th th:text="#{jems.standard.application.form.export.partner.number}">Number</th>
@@ -40,6 +42,9 @@
         </tr>
         </thead>
         <tbody class="table-body">
+        <tr th:if="${projectDataSectionB.partners.size() == 0}">
+            <td colspan="6"></td>
+        </tr>
         <tr th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
             th:object="${partner}">
             <td th:text="*{sortNumber}"></td>

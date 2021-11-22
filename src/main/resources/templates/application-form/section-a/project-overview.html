@@ -4,13 +4,16 @@
 <!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <head>
-    <link rel="stylesheet" type="text/css" media="all" href="./../styles/common.css"
-          th:href="@{./../styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
 </head>
 <body>
 <th:block th:fragment="projectOverview(projectDataSectionA, projectPartners)">
     <!--A.1 Project identification-->
-    <p class="title" th:text="#{jems.standard.application.form.export.section.a.project.identification}">A.1 Project identification</p>
+    <div id="section-a-1" class="title"
+         th:text="#{jems.standard.application.form.export.section.a.project.identification}">
+        A.1 Project identification
+    </div>
     <table class="default-vertical-table">
         <tbody class="table-body">
         <tr>
@@ -21,16 +24,16 @@
         </tr>
         <th:block th:with="leadPartner=${clfUtils.getLeadPartner(projectPartners)}">
             <tr>
-                <th th:text="#{jems.standard.application.form.export.partner.detail.role.lead.organization.name.original}">Name of the lead partner
-                    organisation /original language
+                <th th:text="#{jems.standard.application.form.export.partner.detail.role.lead.organization.name.original}">
+                    Name of the lead partner organisation /original language
                 </th>
-                <td th:text="${leadPartner.nameInOriginalLanguage}"></td>
+                <td th:text="${leadPartner?.nameInOriginalLanguage}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.partner.detail.role.lead.organization.name.english}">Name of the lead partner
-                    organisation/English
+                <th th:text="#{jems.standard.application.form.export.partner.detail.role.lead.organization.name.english}">
+                    Name of the lead partner organisation/English
                 </th>
-                <td th:text="${leadPartner.nameInEnglish}"></td>
+                <td th:text="${leadPartner?.nameInEnglish}"></td>
             </tr>
         </th:block>
         <tr>
@@ -60,24 +63,24 @@
     </table>
 
     <!--A.2 Project summary-->
-    <div class="mt">
-        <p class="title" th:text="#{jems.standard.application.form.export.section.a.project.summary}">A.2 Project summary</p>
-        <div class="text-box">
-            <p th:text="#{project.application.form.summary.intro.row.one}"></p>
-            <ul>
-                <li><p th:text="#{project.application.form.summary.intro.row.two}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.three}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.four}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.five}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.six}"></p></li>
-            </ul>
-        </div>
-        <div class="text-box">
-            <p clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></p>
-        </div>
-        <div class="text-box" th:if="${dataLanguage.name != 'EN'}">
-            <p th:text="${clfUtils.getEnglishTranslation(projectDataSectionA.intro)}"></p>
-        </div>
+    <div id="section-a-2" class="title mt" th:text="#{jems.standard.application.form.export.section.a.project.summary}">
+        A.2 Project summary
+    </div>
+    <div class="text-box">
+        <p th:text="#{project.application.form.summary.intro.row.one}"></p>
+        <ul>
+            <li><p th:text="#{project.application.form.summary.intro.row.two}"></p></li>
+            <li><p th:text="#{project.application.form.summary.intro.row.three}"></p></li>
+            <li><p th:text="#{project.application.form.summary.intro.row.four}"></p></li>
+            <li><p th:text="#{project.application.form.summary.intro.row.five}"></p></li>
+            <li><p th:text="#{project.application.form.summary.intro.row.six}"></p></li>
+        </ul>
+    </div>
+    <div class="text-box">
+        <p clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></p>
+    </div>
+    <div class="text-box" th:if="${dataLanguage.name != 'EN'}">
+        <p th:text="${clfUtils.getEnglishTranslation(projectDataSectionA.intro)}"></p>
     </div>
 </th:block>
 </body>

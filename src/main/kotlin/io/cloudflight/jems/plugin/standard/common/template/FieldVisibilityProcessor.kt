@@ -16,7 +16,7 @@ class FieldVisibilityProcessor(defaultDialectPrefix: String) : AbstractAttribute
     TemplateMode.HTML, defaultDialectPrefix,
     null, true,
     "ifAnyFieldIsVisible", true,
-    StandardDialect.PROCESSOR_PRECEDENCE + 2, true
+    StandardDialect.PROCESSOR_PRECEDENCE + 100, true
 ) {
 
     override fun doProcess(
