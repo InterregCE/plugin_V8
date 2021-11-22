@@ -4,6 +4,7 @@ import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingByFundOverview
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
@@ -23,8 +24,11 @@ const val CALL_DATA = "callData"
 const val DATA_LANGUAGE = "dataLanguage"
 const val EXPORT_LANGUAGE = "exportLanguage"
 const val CLF_UTILS = "clfUtils"
+const val MAX_INDICATOR_ID_FROM_DB = 1_000_000_000_000
+const val MAX_INDICATOR_FAKE_ID = 3_000_000_000_000
 
 class TemplateUtils {
+
     fun sortPartnersBySortNumber(partners: Set<ProjectPartnerData>) =
         partners.sortedBy { it.sortNumber }
 
@@ -74,6 +78,16 @@ class TemplateUtils {
     fun getOtherFundsOverview(fundOverviews: List<ProjectCoFinancingByFundOverview>) =
         fundOverviews.filter { it.fundType == ProgrammeFundTypeData.OTHER }
 
+    fun getLinesSorted(resultLines: List<IndicatorOverviewLine>) =
+        transformIdsOfIndicatorsToRowIds(resultLines)
+            .sortedWith(compareBy({it.resultIndicatorId}, {it.outputIndicatorId}))
+
+    fun getResultIndicatorSpan(data: List<IndicatorOverviewLine>) =
+        getRowSpanPlanForIndicatorOverviewLines(listOf("resultIndicatorId"), data)
+
+    fun getOutputIndicatorSpan(data: List<IndicatorOverviewLine>) =
+        getRowSpanPlanForIndicatorOverviewLines(listOf("resultIndicatorId","outputIndicatorId"), data)
+
     fun getStateAidCheckResultTranslationKey(stateAidData: ProjectPartnerStateAidData) =
         if (stateAidData.answer1 == null || stateAidData.answer2 == null || stateAidData.answer3 == null || stateAidData.answer4 == null)
             "project.partner.state.aid.complete.form.first"
@@ -86,15 +100,72 @@ class TemplateUtils {
 
     fun getEnglishTranslation(translationData: Set<InputTranslationData>) =
         translationData.getTranslationFor(SystemLanguageData.EN)
+
+    private fun transformIdsOfIndicatorsToRowIds(data: List<IndicatorOverviewLine>): List<IndicatorOverviewLine> =
+        data.mapIndexed {
+                index, indicatorOverviewLine ->
+            generateIdsForNotExistingIds(indicatorOverviewLine, index) }
+
+    private fun generateIdsForNotExistingIds(
+        indicatorOverviewLine: IndicatorOverviewLine,
+        index: Int
+    ): IndicatorOverviewLine {
+        if (indicatorOverviewLine.onlyResultWithoutOutputs) {
+            return indicatorOverviewLine.copy(
+                outputIndicatorId = MAX_INDICATOR_FAKE_ID + index,
+                resultIndicatorId = MAX_INDICATOR_FAKE_ID + index,
+            )
+        }
+
+        val outputIndicatorId = indicatorOverviewLine.outputIndicatorId ?: (MAX_INDICATOR_ID_FROM_DB + index)
+
+        return indicatorOverviewLine.copy(
+            outputIndicatorId = outputIndicatorId,
+            resultIndicatorId = indicatorOverviewLine.resultIndicatorId ?: (MAX_INDICATOR_ID_FROM_DB + outputIndicatorId)
+        )
+    }
+
+    private fun getRowSpanPlanForIndicatorOverviewLines(attributes: List<String>, data: List<IndicatorOverviewLine>): List<Long> {
+
+        // if we do not go deeper, stop recursion and fill row-spans for this group
+        if (attributes.isEmpty()) {
+            return data.mapIndexed { index, _ -> if (index == 0) data.size.toLong() else 0}
+        }
+
+        val attributesToFollow = attributes.subList(1, attributes.size)
+        val attribute = attributes.first()
+        val uniqueRowsWithinGroup = data.associateBy { getValueForIndicatorIds(attribute, it) }.values
+
+        return uniqueRowsWithinGroup
+            .map {
+                this.getRowSpanPlanForIndicatorOverviewLines(
+                    attributesToFollow,
+                    data.filter {
+                            item -> this.getValueForIndicatorIds(attribute, it) == this.getValueForIndicatorIds(attribute, item)
+                    })
+            }
+            .flatten()
+    }
+
+    private fun getValueForIndicatorIds(attribute: String, from: IndicatorOverviewLine): Long? =
+        when (attribute) {
+            "outputIndicatorId" ->
+                from.outputIndicatorId;
+            "resultIndicatorId" ->
+                from.resultIndicatorId;
+            else ->
+                -1
+        }
 }
 
-fun <T> parseAttributeValue(attributeValue: String, context: ITemplateContext, defaultValue: T): T {
+fun <T> parseAttributeValue(attributeValue: String, context: ITemplateContext, defaultValue: T): T =
+    parseAttributeValue(attributeValue, context)?.let {
+            it as T
+        } ?: defaultValue
+
+fun parseAttributeValue(attributeValue: String, context: ITemplateContext): Any? {
     val configuration: IEngineConfiguration = context.configuration
     val parser: IStandardExpressionParser = StandardExpressions.getExpressionParser(configuration)
     val expression: IStandardExpression = parser.parseExpression(context, attributeValue)
-    return runCatching {
-        expression.execute(context)?.let {
-            it as T
-        } ?: defaultValue
-    }.getOrThrow()
+    return expression.execute(context)
 }

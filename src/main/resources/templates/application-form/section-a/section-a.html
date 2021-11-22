@@ -20,6 +20,8 @@
 
     <div th:if="${callData.isAdditionalFundAllowed == false}"
          th:insert="~{application-form/section-a/project-co-financing-overview-table.html :: projectCofinancingOverviewTable(${projectDataSectionA?.coFinancingOverview})}"></div>
+
+    <div th:insert="~{application-form/section-a/project-outputs-and-results-overview.html :: projectOutputsAndResultsOverviewTable(${projectDataSectionA})}"></div>
 </th:block>
 </body>
 </html>

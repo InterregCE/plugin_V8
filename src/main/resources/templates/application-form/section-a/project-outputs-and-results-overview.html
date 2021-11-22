@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="projectOutputsAndResultsOverviewTable(projectDataSectionA)">
+    <div id="section-a-4" class="landscape" clf:ifAnyFieldIsVisible="PROJECT_A4">
+        <div class="title" th:text="#{jems.standard.application.form.export.project.output.and.results.overview}"></div>
+        <table class="remove-zebra default-table" th:if="${#lists.size(projectDataSectionA.resultIndicatorOverview.indicatorLines) > 0}">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.work.package.output.programme.output.indicator}">
+                    Programme Output Indicator
+                </th>
+
+                <th class="text-right" th:text="#{project.application.form.a4.table.aggregated.value}">
+                    Aggregated value per Programme output indicator
+                </th>
+
+                <th th:text="#{project.application.form.work.package.output.measurement.unit}">
+                    Measurement Unit
+                </th>
+
+                <th th:text="#{project.application.form.work.package.output}">
+                    Output
+                </th>
+
+                <th th:text="#{project.application.form.work.package.output.title}">
+                    Output Title
+                </th>
+
+                <th class="text-right" th:text="#{project.application.form.a4.table.output.target.value}">
+                    Output target value
+                </th>
+
+                <th th:text="#{project.results.result.indicator}">
+                    Programme result indicator
+                </th>
+
+                <th th:text="#{project.results.result.baseline}">
+                    Baseline
+                </th>
+
+                <th class="text-right" th:text="#{project.application.form.a4.table.result.indicator.value}">
+                    Result indicator target value
+                </th>
+
+                <th th:text="#{project.results.result.measurement.unit}">
+                    Measurement Unit
+                </th>
+            </tr>
+            </thead>
+            <th:block th:with="linesSorted=${clfUtils.getLinesSorted(projectDataSectionA.resultIndicatorOverview.indicatorLines)}">
+                <th:block
+                        th:with="resultIndicatorSpan=${clfUtils.getResultIndicatorSpan(linesSorted)}">
+                    <th:block
+                        th:with="outputIndicatorSpan=${clfUtils.getOutputIndicatorSpan(linesSorted)}">
+                        <tbody class="table-body">
+                            <tr th:each="indicatorLine, rowStat: ${linesSorted}"
+                                th:object="${indicatorLine}">
+                                <td class="bottom-border" clf:textTranslationByDataLanguage="*{outputIndicatorName}" th:rowspan="${outputIndicatorSpan[rowStat.index]}"></td>
+                                <td class="bottom-border" clf:number="*{outputIndicatorTargetValueSumUp}" th:rowspan="${outputIndicatorSpan[rowStat.index]}"></td>
+                                <td class="bottom-border right-border" clf:textTranslationByDataLanguage="*{outputIndicatorMeasurementUnit}" th:rowspan="${outputIndicatorSpan[rowStat.index]}"></td>
+                                <td class="bottom-border">
+                                    <span th:if="${indicatorLine.projectOutputNumber != null}"
+                                          th:text="#{jems.standard.application.form.export.project.application.form.work.package.output(${indicatorLine.projectOutputNumber})}">
+                                    </span>
+                                </td>
+                                <td class="bottom-border" clf:textTranslationByDataLanguage="*{projectOutputTitle}"></td>
+                                <td class="bottom-border right-border" clf:number="*{projectOutputTargetValue}"></td>
+                                <td class="bottom-border" clf:textTranslationByDataLanguage="*{resultIndicatorName}" th:rowspan="${resultIndicatorSpan[rowStat.index]}"></td>
+                                <td class="bottom-border" th:rowspan="${resultIndicatorSpan[rowStat.index]}">
+                                    <th:block th:each="baseline, baselineRowStat: *{resultIndicatorBaseline}">
+                                        <div clf:number="${baseline}"></div>
+                                    </th:block>
+                                </td>
+                                <td class="bottom-border" clf:number="*{resultIndicatorTargetValueSumUp}" th:rowspan="${resultIndicatorSpan[rowStat.index]}"></td>
+                                <td class="bottom-border" clf:textTranslationByDataLanguage="*{resultIndicatorMeasurementUnit}" th:rowspan="${resultIndicatorSpan[rowStat.index]}"></td>
+                            </tr>
+                        </tbody>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </table>
+    </div>
+</th:block>
+</body>
+</html>

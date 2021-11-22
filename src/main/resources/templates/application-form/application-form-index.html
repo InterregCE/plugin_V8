@@ -17,6 +17,8 @@
                     clf:ifAnyFieldIsVisible="PROJECT_A3"
                     th:if="${callData.isAdditionalFundAllowed == false}"
                     th:name="#{jems.standard.application.form.export.project.budget.overview.title}" href="#section-a-3"></bookmark>
+            <bookmark clf:ifAnyFieldIsVisible="PROJECT_A4"
+                      th:name="#{jems.standard.application.form.export.project.output.and.results.overview}" href="#section-a-4"></bookmark>
         </bookmark>
 
         <th:block th:object="${projectData}">
