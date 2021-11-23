@@ -12,7 +12,9 @@
         >
         <bookmark th:name="#{jems.standard.application.form.export.section.a.project.overview}" href="#section-a">
             <bookmark th:name="#{jems.standard.application.form.export.section.a.project.identification}" href="#section-a-1"></bookmark>
-            <bookmark th:name="#{jems.standard.application.form.export.section.a.project.summary}" href="#section-a-2"></bookmark>
+            <bookmark
+                    clf:ifAnyFieldIsVisible="PROJECT_SUMMARY"
+                    th:name="#{jems.standard.application.form.export.section.a.project.summary}" href="#section-a-2"></bookmark>
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_A3"
                     th:if="${callData.isAdditionalFundAllowed == false}"
