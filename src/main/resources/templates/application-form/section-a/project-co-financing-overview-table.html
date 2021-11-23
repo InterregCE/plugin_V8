@@ -79,20 +79,20 @@
 
                     <td clf:number="*{totalFundAndContribution}"></td>
                 </tr>
-                <tr class="row-bordered">
-                    <td th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.eu.funds}"></td>
-                    <td clf:number="${totalEuFundingAmount}"></td>
-                    <td class="right-border" clf:percentage="${averageEuFinancingRate}"></td>
-
-                    <td clf:number="${totalEuAutoPublicContribution}"></td>
-                    <td clf:number="${totalEuOtherPublicContribution}"></td>
-                    <td clf:number="${totalEuPublicContribution}"></td>
-                    <td clf:number="${totalEuPrivateContribution}"></td>
-                    <td class="right-border" clf:number="${totalEuContribution}"></td>
-
-                    <td clf:number="${totalEuFundAndContribution}"></td>
-                </tr>
             </th:block>
+            <tr class="row-bordered">
+                <td th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.eu.funds}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalEuFundingAmount}"></td>
+                <td class="right-border" clf:percentage="${projectCoFinancingOverview.averageEuFinancingRate}"></td>
+
+                <td clf:number="${projectCoFinancingOverview.totalEuAutoPublicContribution}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalEuOtherPublicContribution}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalEuPublicContribution}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalEuPrivateContribution}"></td>
+                <td class="right-border" clf:number="${projectCoFinancingOverview.totalEuContribution}"></td>
+
+                <td clf:number="${projectCoFinancingOverview.totalEuFundAndContribution}"></td>
+            </tr>
             <th:block
                     th:with="otherFundOverviews = ${clfUtils.getOtherFundsOverview(projectCoFinancingOverview.fundOverviews)}">
                 <tr th:if="${otherFundOverviews.size() == 0}">
@@ -113,21 +113,21 @@
 
                     <td clf:number="*{totalFundAndContribution}"></td>
                 </tr>
-                <tr class="row-bordered">
-                    <td th:text="#{jems.standard.application.form.export.common.label.total}"></td>
-                    <td clf:number="${totalFundingAmount}"></td>
-                    <td class="right-border" clf:percentage="${averageCoFinancingRate}"></td>
-
-                    <td clf:number="${totalAutoPublicContribution}"></td>
-                    <td clf:number="${totalOtherPublicContribution}"></td>
-                    <td clf:number="${totalPublicContribution}"></td>
-                    <td clf:number="${totalPrivateContribution}"></td>
-                    <td class="right-border" clf:number="${totalContribution}"></td>
-
-                    <td clf:number="${totalFundAndContribution}"></td>
-
-                </tr>
             </th:block>
+            <tr class="row-bordered">
+                <td th:text="#{jems.standard.application.form.export.common.label.total}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalFundingAmount}"></td>
+                <td class="right-border" clf:percentage="${projectCoFinancingOverview.averageCoFinancingRate}"></td>
+
+                <td clf:number="${projectCoFinancingOverview.totalAutoPublicContribution}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalOtherPublicContribution}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalPublicContribution}"></td>
+                <td clf:number="${projectCoFinancingOverview.totalPrivateContribution}"></td>
+                <td class="right-border" clf:number="${projectCoFinancingOverview.totalContribution}"></td>
+
+                <td clf:number="${projectCoFinancingOverview.totalFundAndContribution}"></td>
+
+            </tr>
             </tbody>
         </table>
     </div>
