@@ -11,7 +11,9 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrg
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
-import io.cloudflight.jems.plugin.standard.common.*
+import io.cloudflight.jems.plugin.standard.common.getTranslationFor
+import io.cloudflight.jems.plugin.standard.common.percentageDown
+import io.cloudflight.jems.plugin.standard.common.percentageTo
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.standard.expression.IStandardExpression
