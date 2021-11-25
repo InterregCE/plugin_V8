@@ -13,5 +13,7 @@
     <div th:insert="~{application-form/section-a/section-a.html :: sectionA(${projectData.sectionA}, ${projectData.sectionB.partners}, ${callData})}"></div>
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
+    <div class="page-break-after"></div>
+    <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC})}"></div>
 </body>
 </html>
