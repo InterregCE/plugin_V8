@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="projectOutput(workPackage)" th:each="output, rowStat: ${workPackage.outputs}"
+      th:object="${output}">
+
+
+    <table class="default-vertical-table">
+        <thead>
+            <th class="grey-background sub-heading-1" colspan="2"
+                th:text="#{jems.standard.application.form.export.section.c.output} + ${workPackage.workPackageNumber} + '.' + ${output.outputNumber}">
+                Output
+            </th>
+        </thead>
+
+        <tbody class="colored-table-body">
+            <tr>
+                <td th:text="#{jems.standard.application.form.export.common.label.title}"></td>
+                <td clf:textTranslationByDataLanguage="${output.title}"></td>
+            </tr>
+
+            <tr>
+                <td th:text="#{jems.standard.application.form.export.section.c.output.indicator}"></td>
+                <td th:text="${output.programmeOutputIndicatorIdentifier}"></td>
+            </tr>
+
+            <tr>
+                <td th:text="#{jems.standard.application.form.export.section.c.measurement.unit}"></td>
+                <td  clf:textTranslationByDataLanguage="${output.description}"></td>
+            </tr>
+
+            <tr>
+                <td th:text="#{jems.standard.application.form.export.section.c.target.value}"></td>
+                <td th:text=="${output.targetValue}"></td>
+            </tr>
+
+            <tr>
+                <td th:text="#{jems.standard.application.form.export.section.c.deliverables.period}"></td>
+                <td th:text=="${output.periodNumber}"></td>
+            </tr>
+
+            <tr>
+                <td th:text="#{jems.standard.application.form.export.common.label.description}"></td>
+                <td clf:textTranslationByDataLanguage="${output.description}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</th:block>
+</body>
+</html>

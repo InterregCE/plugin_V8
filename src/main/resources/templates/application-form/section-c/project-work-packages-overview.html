@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="projectWorkPackagesOverview(projectDataSectionC)">
+
+    <div id="section-c-4" class="title"
+         th:text="#{project.application.form.section.part.c.subsection.four}">
+    </div>
+
+    <table class="default-vertical-table" clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE">
+        <thead class="table-header grey-background">
+        <tr class="sub-heading-2">
+            <th class="xs-column text-center" th:text="#{jems.standard.application.form.export.common.label.number}">
+                Number
+            </th>
+
+            <th class="text-center" th:text="#{jems.standard.application.form.export.section.c.work.package.name}">
+                Work package name
+            </th>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
+            th:object="${workPackage}">
+            <td class="xs-column" th:text="${workPackage.workPackageNumber}">Number</td>
+            <td clf:textTranslationByDataLanguage="${workPackage.name}" ></td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+</body>
+</html>

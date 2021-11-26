@@ -119,7 +119,7 @@ tr, td, th, .table-header {
 
 .default-table th, .default-table td, .default-vertical-table th, .default-vertical-table td {
     padding: 8px;
-    border: 0;
+    /*border: 0;*/
     vertical-align: top;
     overflow-x: hidden;
     word-break: break-word;
@@ -130,9 +130,23 @@ tr, td, th, .table-header {
 }
 
 .default-table .table-header th {
-    border-bottom: 1px solid #d2dade;
-    border-top: 1px solid #d2dade;
     color: #8a8a8a;
+}
+
+.grey-background {
+    background-color: #c9c9c9;
+}
+
+td, th, .row{
+    border: 1px solid black;
+}
+
+.colored-table-body > tr:nth-child(odd) {
+    background-color: #c9c9c9 !important;
+}
+
+.colored-table-body-left > tr > td:first-child{
+    background-color: #c9c9c9 !important;
 }
 
 .default-vertical-table .table-body th {

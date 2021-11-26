@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="projectInvestment(workPackage)" th:each="investment, rowStat: ${workPackage.investments}"
+          th:object="${investment}">
+
+
+    <table class="default-vertical-table"
+           clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_TITLE,PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED,PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT,PROJECT_INVESTMENT_WHO_IS_BENEFITING,PROJECT_INVESTMENT_PILOT_CLARIFICATION,PROJECT_INVESTMENT_COUNTRY,PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY,PROJECT_INVESTMENT_COUNTRY,PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY,        PROJECT_INVESTMENT_RISK,PROJECT_INVESTMENT_DOCUMENTATION,PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE,PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT,PROJECT_INVESTMENT_MAINTENANCE">
+        <thead>
+        <th class="grey-background sub-heading-1" colspan="2"
+            th:text="#{jems.standard.application.form.export.section.c.investment} + ${workPackage.workPackageNumber} + '.' + ${investment.investmentNumber}">
+            Output
+        </th>
+        </thead>
+
+        <tbody class="colored-table-body-left">
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_TITLE">
+            <td th:text="#{jems.standard.application.form.export.common.label.title}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.title}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED" class="grey-background">
+            <td colspan="2"
+                th:text="#{jems.standard.application.form.export.section.c.investment.justification.label}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED">
+            <td th:text="#{project.application.form.workpackage.investment.justification.explanation}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.justificationExplanation}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT">
+            <td th:text="#{project.application.form.workpackage.investment.justification.transactional.relevance}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.justificationTransactionalRelevance}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_IS_BENEFITING">
+            <td th:text="#{project.application.form.workpackage.investment.justification.benefits}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.justificationBenefits}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_PILOT_CLARIFICATION">
+            <td th:text="#{project.application.form.workpackage.investment.justification.pilot}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.justificationPilot}"></td>
+        </tr>
+
+        <!--        Physical location of investment-->
+        <tr class="grey-background"
+            clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY,PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY">
+            <td colspan="2"
+                th:text="#{jems.standard.application.form.export.section.c.investment.physical.location}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
+            <td th:text="#{jems.standard.application.form.export.section.c.investment.physical.country}"></td>
+            <td th:text="${investment.address.country}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
+            <td th:text="#{jems.standard.application.form.export.section.c.investment.physical.region}"></td>
+            <td th:text="${investment.address.nutsRegion2}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
+            <td th:text="#{jems.standard.application.form.export.section.c.investment.physical.subregion}"></td>
+            <td th:text="${investment.address.nutsRegion3}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY">
+            <td th:text="#{jems.standard.application.form.export.section.c.investment.physical.address}"></td>
+            <td th:text="${investment.address.street} + ' ' + ${investment.address.houseNumber} + ' ' + ${investment.address.postalCode}  + ' ' + ${investment.address.city}"></td>
+        </tr>
+
+        <!--        Risk associated with the investment-->
+        <tr class="grey-background" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_RISK">
+            <td colspan="2"
+                th:text="#{jems.standard.application.form.export.section.c.investment.risk.associated.label}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_RISK">
+            <td th:text="#{project.application.form.workpackage.investment.risk.description}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.risk}"></td>
+        </tr>
+
+        <!--        Investment documentation-->
+        <tr class="grey-background" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION">
+            <td colspan="2"
+                th:text="#{jems.standard.application.form.export.section.c.investment.risk.documentation.label}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION">
+            <td th:text="#{project.application.form.workpackage.investment.documentation.description.line.1}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.documentation}"></td>
+        </tr>
+
+        <!--        Ownership-->
+        <tr class="grey-background"
+            clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE,PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT,PROJECT_INVESTMENT_MAINTENANCE">
+            <td colspan="2"
+                th:text="#{jems.standard.application.form.export.section.c.investment.risk.ownership.label}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE">
+            <td th:text="#{project.application.form.workpackage.investment.ownership.site.location}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.ownershipSiteLocation}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT">
+            <td th:text="#{project.application.form.workpackage.investment.ownership.retain}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.ownershipRetain}"></td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_MAINTENANCE">
+            <td th:text="#{project.application.form.workpackage.investment.ownership.maintenance}"></td>
+            <td clf:textTranslationByDataLanguage="${investment.ownershipMaintenance}"></td>
+        </tr>
+
+        </tbody>
+    </table>
+
+</th:block>
+</body>
+</html>
