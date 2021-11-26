@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionC" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="sectionC5(projectDataSectionC)">
+    <th:block clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT,PROJECT_RESULTS_TARGET_VALUE,PROJECT_RESULTS_BASELINE,PROJECT_RESULTS_DELIVERY_PERIOD,PROJECT_RESULTS_DESCRIPTION">
+
+        <div class="title" id="section-c-5" th:text="#{project.application.form.section.part.c.subsection.five}">
+            results
+        </div>
+        <span th:text="#{project.results.intro}">intro text</span>
+
+        <th:block th:each="result, rowStat: ${projectDataSectionC.projectResults}"
+                  th:object="${result}">
+
+            <table class="default-vertical-table">
+                <thead class="table-header">
+                <tr class="sub-heading-2">
+                    <td colspan="2">
+                        <span th:text="#{project.results.result.title}">rslt</span>
+                        <span th:text=" *{resultNumber}">x</span>
+                    </td>
+                </tr>
+                </thead>
+                <tbody class="table-body">
+                <tr>
+                    <th th:text="#{project.results.result.indicator}">Indicatr</th>
+                    <td clf:textTranslationByExportLanguage="*{programmeResultName}">indic name</td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">
+                    <th th:text="#{project.results.result.measurement.unit}">measure_unit</th>
+                    <td clf:textTranslationByExportLanguage="*{programmeResultMeasurementUnit}">unit</td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_BASELINE">
+                    <th th:text="#{project.results.result.baseline}">bsln</th>
+                    <td clf:number="*{baseline}">12345</td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_TARGET_VALUE">
+                    <th th:text="#{project.results.result.target.value}">trgt</th>
+                    <td clf:number="*{targetValue}">12345</td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_DELIVERY_PERIOD">
+                    <th th:text="#{project.results.result.delivery.period}">period</th>
+                    <td>
+                    <span th:unless="*{periodNumber == null}">
+                        <span th:text="#{project.partner.budget.table.period}">Per</span>
+                        <span th:text=" *{periodNumber}">x</span><span>, </span>
+                        <span th:text="*{periodStartMonth}">x</span>
+                        <span> - </span>
+                        <span th:text="*{periodEndMonth}">x</span>
+                    </span>
+                    </td>
+                </tr>
+                <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_DESCRIPTION">
+                    <th th:text="#{project.results.result.description}">Desc</th>
+                    <td clf:textTranslationByDataLanguage="*{description}">lorem ipsum</td>
+                </tr>
+                </tbody>
+            </table>
+
+        </th:block>
+    </th:block>
+
+</th:block>
+</body>
+</html>
