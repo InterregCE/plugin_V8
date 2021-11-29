@@ -1,21 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionC" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC"*/-->
-
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="sectionC(projectDataSectionC)">
-    <div class="headline" id="section-c" th:text="#{jems.standard.application.form.export.section.c.project.description}">
-        Section C - Project description
+<th:block th:fragment="sectionC(projectDataSectionC,specificObjective)">
+    <div id="section-c" class="headline" th:text="#{project.application.form.section.part.c}">
+        SECTION C - Project description
     </div>
+    <!-- C1 -->
+    <div clf:ifAnyFieldIsVisible="PROJECT_OVERALL_OBJECTIVE"
+            th:insert="~{application-form/section-c/project-objective.html :: projectObjective(${projectDataSectionC}, ${specificObjective})}"></div>
+    <div class="page-break-after"></div>
+    <!-- C2 -->
+    <div th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
+            th:insert="~{application-form/section-c/project-relevance-and-context.html :: projectRelevanceAndContext(${projectDataSectionC})}"></div>
+    <div class="page-break-after"></div>
+    <!-- C3 -->
+    <div  clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
+          th:insert="~{application-form/section-c/project-partnership.html :: projectPartnership(${projectDataSectionC})}"></div>
 
+    <!-- C5 -->
     <div th:insert="~{application-form/section-c/section-c-5.html :: sectionC5(${projectDataSectionC})}"></div>
 
     <div class="page-break-after"></div>
-
+    <!-- C8 -->
     <div th:insert="~{application-form/section-c/section-c-8.html :: sectionC8(${projectDataSectionC})}"></div>
 
     <div class="page-break-after"></div>

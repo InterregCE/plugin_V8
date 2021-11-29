@@ -1,23 +1,24 @@
 package io.cloudflight.jems.plugin.standard.common.template
 
+import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundTypeData
+import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingByFundOverview
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
-import io.cloudflight.jems.plugin.standard.common.getTranslationFor
-import io.cloudflight.jems.plugin.standard.common.percentageDown
-import io.cloudflight.jems.plugin.standard.common.percentageTo
+import io.cloudflight.jems.plugin.standard.common.*
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.standard.expression.IStandardExpression
 import org.thymeleaf.standard.expression.IStandardExpressionParser
 import org.thymeleaf.standard.expression.StandardExpressions
 import java.math.BigDecimal
+import kotlin.collections.sumOf
 
 const val PROJECT_DATA = "projectData"
 const val CALL_DATA = "callData"
@@ -101,6 +102,18 @@ class TemplateUtils {
     fun getEnglishTranslation(translationData: Set<InputTranslationData>) =
         translationData.getTranslationFor(SystemLanguageData.EN)
 
+    fun isSectionCAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isSectionCVisible(lifecycleData, callData)
+
+    fun isSectionC2Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isProjectRelevanceSectionVisible(lifecycleData, callData)
+
+    fun isProjectResultsSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isProjectResultsSectionVisible(lifecycleData, callData)
+
+    fun isLongTermPlansSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData)=
+        isLongTermPlansSectionVisible(lifecycleData, callData)
+
     private fun transformIdsOfIndicatorsToRowIds(data: List<IndicatorOverviewLine>): List<IndicatorOverviewLine> =
         data.mapIndexed {
                 index, indicatorOverviewLine ->
@@ -156,6 +169,8 @@ class TemplateUtils {
             else ->
                 -1
         }
+
+
 }
 
 fun <T> parseAttributeValue(attributeValue: String, context: ITemplateContext, defaultValue: T): T =

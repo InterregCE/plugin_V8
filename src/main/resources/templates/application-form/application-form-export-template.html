@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectData" type="io.cloudflight.jems.plugin.contract.models.project.ProjectData"*/-->
 <!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="application-form/styles/common.css"
           th:href="@{application-form/styles/common.css}"/>
@@ -14,6 +15,7 @@
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
     <div class="page-break-after"></div>
-    <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC})}"></div>
+    <div th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
+            th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionA.specificObjective})}"></div>
 </body>
 </html>
