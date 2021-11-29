@@ -43,6 +43,14 @@ html, body {
     margin: 4px 0;
 }
 
+.font-bold {
+    font-weight: bold;
+}
+
+.font-normal {
+    font-weight: normal !important;
+}
+
 .sub-heading-1 {
     font-size: 16px;
 }
@@ -118,10 +126,6 @@ html, body {
 
 .keep-together {
     page-break-inside: avoid;
-}
-
-.break-before {
-    page-break-before: always;
 }
 
 tr, td, th, .table-header {
