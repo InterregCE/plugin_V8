@@ -128,10 +128,6 @@ html, body {
     page-break-inside: avoid;
 }
 
-.break-before {
-    page-break-before: always;
-}
-
 tr, td, th, .table-header {
     page-break-inside: avoid;
 }
