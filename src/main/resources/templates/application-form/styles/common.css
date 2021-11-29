@@ -51,6 +51,10 @@ html, body {
     width: 30px;
 }
 
+.m-column {
+    min-width: 150px;
+}
+
 .text-center {
     text-align: center;
     vertical-align: middle !important;
@@ -70,6 +74,26 @@ html, body {
 
 .top-border {
     border-top: 1px solid #d2dade !important;
+}
+
+.mt-1 {
+    margin-top: 10px !important;
+}
+
+.mt-2 {
+    margin-top: 20px !important;
+}
+
+.mt-3 {
+    margin-top: 30px !important;
+}
+
+.mt-5 {
+    margin-top: 50px !important;
+}
+
+.mb-1 {
+    margin-bottom: 10px !important;
 }
 
 .break-long-word {
@@ -92,6 +116,13 @@ html, body {
     page-break-after: always;
 }
 
+.keep-together {
+    page-break-inside: avoid;
+}
+
+.break-before {
+    page-break-before: always;
+}
 
 tr, td, th, .table-header {
     page-break-inside: avoid;
@@ -104,7 +135,6 @@ tr, td, th, .table-header {
     border-collapse: collapse;
     overflow: hidden;
     -fs-table-paginate: paginate;
-
 }
 
 .default-table th, .default-table td, .default-vertical-table th, .default-vertical-table td {
@@ -112,6 +142,7 @@ tr, td, th, .table-header {
     border: 0;
     vertical-align: top;
     overflow: hidden;
+    word-break: break-word;
 }
 
 .default-table .table-body tr:nth-child(odd), .default-vertical-table .table-body tr:nth-child(odd) {
@@ -137,14 +168,15 @@ tr, td, th, .table-header {
     border-top: 1px solid #d2dade;
 }
 
-.mt {
-    margin-top: 50px;
-}
-
 .text-box {
-    width: 100%;
     border: 1px solid #d2dade;
     text-align: left;
+}
+
+.text-box-header {
+    background-color: #f4fafe;
+    color: #8a8a8a;
+    font-weight: bold;
 }
 
 .text-box > * {
@@ -165,3 +197,6 @@ tr, td, th, .table-header {
     display: none;
 }
 
+.page-break-height {
+    -fs-page-break-min-height: 8cm;
+}

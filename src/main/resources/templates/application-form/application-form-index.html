@@ -47,16 +47,23 @@
                     </bookmark>
                 </bookmark>
             </bookmark>
+        </th:block>
+            <bookmark th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
+                    th:name="#{project.application.form.section.part.c}" href="#section-c">
+                <bookmark clf:ifAnyFieldIsVisible="PROJECT_OVERALL_OBJECTIVE"
+                        th:name="#{project.application.form.section.part.c.subsection.one}" href="#section-c-1"></bookmark>
+                <bookmark th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
+                        th:name="#{project.application.form.section.part.c.subsection.two}" href="#section-c-2"></bookmark>
+                <bookmark clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
+                        th:name="#{project.application.form.section.part.c.subsection.three}" href="#section-c-3"></bookmark>
 
-            <bookmark th:name="#{jems.standard.application.form.export.section.c.project.description}" href="#section-c">
                 <bookmark
-                        clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT,PROJECT_RESULTS_TARGET_VALUE,PROJECT_RESULTS_BASELINE,PROJECT_RESULTS_DELIVERY_PERIOD,PROJECT_RESULTS_DESCRIPTION"
+                        th:if="${clfUtils.isProjectResultsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
                         th:name="#{project.application.form.section.part.c.subsection.five}" href="#section-c-5"></bookmark>
                 <bookmark
-                        clf:ifAnyFieldIsVisible="PROJECT_OWNERSHIP,PROJECT_DURABILITY,PROJECT_TRANSFERABILITY"
+                        th:if="${clfUtils.isLongTermPlansSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
                         th:name="#{application.config.project.section.c.8}" href="#section-c-8"></bookmark>
             </bookmark>
-        </th:block>
         </bookmark>
     </bookmarks>
 </th:block>

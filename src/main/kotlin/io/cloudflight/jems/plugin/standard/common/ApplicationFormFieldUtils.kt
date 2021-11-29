@@ -26,6 +26,39 @@ fun isAnyFieldVisible(
     fieldIds.any { isFieldVisible(it, lifecycleData, callData) }
 
 
+fun isSectionCVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+    isFieldVisible(ApplicationFormFieldId.PROJECT_OVERALL_OBJECTIVE, lifecycleData, callData) ||
+            isProjectRelevanceSectionVisible(lifecycleData, callData) ||
+            isFieldVisible(ApplicationFormFieldId.PROJECT_PARTNERSHIP, lifecycleData, callData) ||
+            isWorkPlanObjectiveSectionVisible(lifecycleData, callData) ||
+            isInvestmentSectionVisible(lifecycleData, callData) ||
+            isWorkPlanActivitiesSectionVisible(lifecycleData, callData) ||
+            isWorkPlanOutputsSectionVisible(lifecycleData, callData) ||
+            isProjectResultsSectionVisible(lifecycleData, callData) ||
+            isProjectManagementSectionVisible(lifecycleData, callData) ||
+            isLongTermPlansSectionVisible(lifecycleData, callData)
+
+
+fun isProjectRelevanceSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_TERRITORIAL_CHALLENGES,
+    ApplicationFormFieldId.PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED,
+    ApplicationFormFieldId.PROJECT_WHY_IS_COOPERATION_NEEDED,
+    ApplicationFormFieldId.PROJECT_TARGET_GROUP,
+    ApplicationFormFieldId.PROJECT_STRATEGY_CONTRIBUTION,
+    ApplicationFormFieldId.PROJECT_SYNERGIES,
+    ApplicationFormFieldId.PROJECT_HOW_BUILDS_PROJECT_ON_AVAILABLE_KNOWLEDGE,
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+
+fun isWorkPlanObjectiveSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_WORK_PACKAGE_TITLE,
+    ApplicationFormFieldId.PROJECT_SPECIFIC_OBJECTIVE,
+    ApplicationFormFieldId.PROJECT_COMMUNICATION_OBJECTIVES_AND_TARGET_AUDIENCE
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+
 fun isInvestmentSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
     listOf(
         ApplicationFormFieldId.PROJECT_INVESTMENT_TITLE,
@@ -46,3 +79,55 @@ fun isInvestmentSectionVisible(lifecycleData: ProjectLifecycleData, callData: Ca
     ).any {
         isFieldVisible(it, lifecycleData, callData)
     }
+
+fun isWorkPlanActivitiesSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_ACTIVITIES_TITLE,
+    ApplicationFormFieldId.PROJECT_ACTIVITIES_DESCRIPTION,
+    ApplicationFormFieldId.PROJECT_ACTIVITIES_START_PERIOD,
+    ApplicationFormFieldId.PROJECT_ACTIVITIES_END_PERIOD,
+    ApplicationFormFieldId.PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED,
+    ApplicationFormFieldId.PROJECT_ACTIVITIES_DELIVERABLES
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+
+fun isWorkPlanOutputsSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_OUTPUT_TITLE,
+    ApplicationFormFieldId.PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT,
+    ApplicationFormFieldId.PROJECT_OUTPUT_TARGET_VALUE,
+    ApplicationFormFieldId.PROJECT_OUTPUT_DELIVERY_PERIOD,
+    ApplicationFormFieldId.PROJECT_OUTPUT_DESCRIPTION
+
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+
+fun isProjectResultsSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT,
+    ApplicationFormFieldId.PROJECT_RESULTS_TARGET_VALUE,
+    ApplicationFormFieldId.PROJECT_RESULTS_BASELINE,
+    ApplicationFormFieldId.PROJECT_RESULTS_DELIVERY_PERIOD,
+    ApplicationFormFieldId.PROJECT_RESULTS_DESCRIPTION
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+
+fun isProjectManagementSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_COORDINATION,
+    ApplicationFormFieldId.PROJECT_QUALITY_MEASURES,
+    ApplicationFormFieldId.PROJECT_COMMUNICATION_APPROACH,
+    ApplicationFormFieldId.PROJECT_FINANCIAL_MANAGEMENT_AND_REPORTING,
+    ApplicationFormFieldId.PROJECT_COOPERATION_CRITERIA,
+    ApplicationFormFieldId.PROJECT_HORIZONTAL_PRINCIPLES,
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+
+fun isLongTermPlansSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
+    ApplicationFormFieldId.PROJECT_OWNERSHIP,
+    ApplicationFormFieldId.PROJECT_DURABILITY,
+    ApplicationFormFieldId.PROJECT_TRANSFERABILITY,
+).any {
+    isFieldVisible(it, lifecycleData, callData)
+}
+

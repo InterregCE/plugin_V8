@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionC" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="projectObjective(projectDataSectionC, specificObjective)">
+    <div id="section-c-1" class="title"
+         th:text="#{project.application.form.section.part.c.subsection.one}">
+    </div>
+
+    <div class="text-box text-box-header">
+        <p th:text="#{project.application.form.overall.objective.field.row.one}">
+            Programme priority specific objective your project will contribute to (chosen in section A.1.)
+        </p>
+    </div>
+    <div class="text-box" th:if="${specificObjective?.programmeObjectivePolicy != null}">
+        <p th:text="${#messages.msg('programme.policy.' + specificObjective?.programmeObjectivePolicy)}">
+            Specific objective
+        </p>
+    </div>
+
+    <div class="text-box text-box-header mt-5">
+        <div class="mt-1" th:text="#{application.config.project.overall.objective}">overall objective</div>
+        <div th:text="#{project.application.form.overall.objective.field.row.two}">two</div>
+
+        <div class="mt-2" th:text="#{project.application.form.overall.objective.field.row.three}">Abbreviation</div>
+        <ul>
+            <li>
+                <div class="mt-1" th:text="#{project.application.form.overall.objective.field.row.four}">four</div>
+            </li>
+            <li>
+                <div class="mt-1" th:text="#{project.application.form.overall.objective.field.row.five}">five</div>
+            </li>
+            <li>
+                <div class="mt-1" th:text="#{project.application.form.overall.objective.field.row.six}">six</div>
+            </li>
+        </ul>
+    </div>
+    <div class="text-box">
+        <p clf:textTranslationByDataLanguage="${projectDataSectionC.projectOverallObjective.overallObjective}"></p>
+    </div>
+
+
+</th:block>
+</body>
+</html>
