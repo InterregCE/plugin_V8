@@ -52,8 +52,9 @@
             <th th:text="#{jems.standard.application.form.export.programme.priority.objective}">Programme priority
                 specific objective
             </th>
-            <td >
-                <span th:if="${projectDataSectionA.specificObjective?.programmeObjectivePolicy != null}" th:text="${#messages.msg('programme.policy.' + projectDataSectionA.specificObjective?.programmeObjectivePolicy)}">
+            <td>
+                <span th:if="${projectDataSectionA.specificObjective?.programmeObjectivePolicy != null}"
+                      th:text="${#messages.msg('programme.policy.' + projectDataSectionA.specificObjective?.programmeObjectivePolicy)}">
                 </span>
             </td>
         </tr>
@@ -66,27 +67,25 @@
     </table>
 
     <!--A.2 Project summary-->
-    <th:block clf:ifAnyFieldIsVisible="PROJECT_SUMMARY">
-        <div id="section-a-2" class="title mt-5" th:text="#{jems.standard.application.form.export.section.a.project.summary}">
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_SUMMARY">
+        <div id="section-a-2" class="title"
+             th:text="#{jems.standard.application.form.export.section.a.project.summary}">
             A.2 Project summary
         </div>
-        <div class="text-box text-box-header">
-            <p th:text="#{project.application.form.summary.intro.row.one}"></p>
+        <div>
+            <div th:text="#{project.application.form.summary.intro.row.one}"></div>
             <ul>
-                <li><p th:text="#{project.application.form.summary.intro.row.two}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.three}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.four}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.five}"></p></li>
-                <li><p th:text="#{project.application.form.summary.intro.row.six}"></p></li>
+                <li th:text="#{project.application.form.summary.intro.row.two}"></li>
+                <li th:text="#{project.application.form.summary.intro.row.three}"></li>
+                <li th:text="#{project.application.form.summary.intro.row.four}"></li>
+                <li th:text="#{project.application.form.summary.intro.row.five}"></li>
+                <li th:text="#{project.application.form.summary.intro.row.six}"></li>
             </ul>
         </div>
-        <div class="text-box">
-            <p clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></p>
-        </div>
-        <div class="text-box" th:if="${dataLanguage.name != 'EN'}">
-            <p th:text="${clfUtils.getEnglishTranslation(projectDataSectionA.intro)}"></p>
-        </div>
-    </th:block>
+        <div class="input-data" clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></div>
+        <div class="input-data" th:if="${dataLanguage.name != 'EN'}"
+             th:text="${clfUtils.getEnglishTranslation(projectDataSectionA.intro)}"></div>
+    </div>
 </th:block>
 </body>
 </html>

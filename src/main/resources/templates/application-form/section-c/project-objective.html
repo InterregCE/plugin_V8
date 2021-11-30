@@ -9,43 +9,33 @@
 </head>
 <body>
 <th:block th:fragment="projectObjective(projectDataSectionC, specificObjective)">
-    <div id="section-c-1" class="title"
-         th:text="#{project.application.form.section.part.c.subsection.one}">
-    </div>
+    <div class="keep-together">
+        <div id="section-c-1" class="title"
+             th:text="#{project.application.form.section.part.c.subsection.one}">
+        </div>
 
-    <div class="text-box text-box-header">
-        <p th:text="#{project.application.form.overall.objective.field.row.one}">
+        <div th:text="#{project.application.form.overall.objective.field.row.one}">
             Programme priority specific objective your project will contribute to (chosen in section A.1.)
-        </p>
-    </div>
-    <div class="text-box" th:if="${specificObjective?.programmeObjectivePolicy != null}">
-        <p th:text="${#messages.msg('programme.policy.' + specificObjective?.programmeObjectivePolicy)}">
+        </div>
+
+        <div class="input-data" th:if="${specificObjective?.programmeObjectivePolicy != null}"
+             th:text="${#messages.msg('programme.policy.' + specificObjective?.programmeObjectivePolicy)}">
             Specific objective
-        </p>
+        </div>
     </div>
 
-    <div class="text-box text-box-header mt-5">
-        <div class="mt-1" th:text="#{application.config.project.overall.objective}">overall objective</div>
+    <div class="keep-together">
+        <div class="sub-heading-2" th:text="#{application.config.project.overall.objective}">overall objective</div>
         <div th:text="#{project.application.form.overall.objective.field.row.two}">two</div>
-
-        <div class="mt-2" th:text="#{project.application.form.overall.objective.field.row.three}">Abbreviation</div>
+        <div th:text="#{project.application.form.overall.objective.field.row.three}">Abbreviation</div>
         <ul>
-            <li>
-                <div class="mt-1" th:text="#{project.application.form.overall.objective.field.row.four}">four</div>
-            </li>
-            <li>
-                <div class="mt-1" th:text="#{project.application.form.overall.objective.field.row.five}">five</div>
-            </li>
-            <li>
-                <div class="mt-1" th:text="#{project.application.form.overall.objective.field.row.six}">six</div>
-            </li>
+            <li th:text="#{project.application.form.overall.objective.field.row.four}">four</li>
+            <li th:text="#{project.application.form.overall.objective.field.row.five}">five</li>
+            <li th:text="#{project.application.form.overall.objective.field.row.six}">six</li>
         </ul>
+        <div class="input-data"
+             clf:textTranslationByDataLanguage="${projectDataSectionC.projectOverallObjective.overallObjective}"></div>
     </div>
-    <div class="text-box">
-        <p clf:textTranslationByDataLanguage="${projectDataSectionC.projectOverallObjective.overallObjective}"></p>
-    </div>
-
-
 </th:block>
 </body>
 </html>

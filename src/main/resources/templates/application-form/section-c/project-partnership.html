@@ -4,27 +4,24 @@
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 
 <head>
-  <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
-        th:href="@{../styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="projectPartnership(projectDataSectionC)">
-  <div id="section-c-3" class="title"
-       th:text="#{project.application.form.section.part.c.subsection.three}">
-  </div>
+<div class="keep-together" th:fragment="projectPartnership(projectDataSectionC)">
+    <div id="section-c-3" class="title"
+         th:text="#{project.application.form.section.part.c.subsection.three}">
+    </div>
 
-  <div class="text-box text-box-header">
-    <p th:text="#{project.application.form.project.partnership.field.row}">
-      Describe the structure of your partnership and explain why these partners are needed to implement the project and to achieve project objectives.
-      What is the contribution of each partner to the project?
-    </p>
-  </div>
-  <div class="text-box">
-    <p clf:textTranslationByDataLanguage="${projectDataSectionC.projectPartnership?.partnership}">
-      Project partnership description
-    </p>
-  </div>
+    <div th:text="#{project.application.form.project.partnership.field.row}">
+        Describe the structure of your partnership and explain why these partners are needed to implement the project
+        and to achieve project objectives.
+        What is the contribution of each partner to the project?
+    </div>
+    <div class="input-data" clf:textTranslationByDataLanguage="${projectDataSectionC.projectPartnership?.partnership}">
+        Project partnership description
+    </div>
 
-</th:block>
+</div>
 </body>
 </html>

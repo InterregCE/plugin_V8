@@ -13,143 +13,124 @@
          th:text="#{project.application.form.section.part.c.subsection.two}">
     </div>
     <!-- C 2.1 -->
-    <th:block clf:ifAnyFieldIsVisible="PROJECT_TERRITORIAL_CHALLENGES">
-        <div class="text-box text-box-header page-break-height">
-            <div class="mt-1" th:text="#{project.application.form.relevance.field.1}"></div>
-            <div class="mb-1" th:text="#{project.application.form.relevance.field.1.intro}"></div>
-        </div>
-        <div class="text-box">
-            <p clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.territorialChallenge}"></p>
-        </div>
-    </th:block>
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_TERRITORIAL_CHALLENGES">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.1}"></div>
+        <div th:text="#{project.application.form.relevance.field.1.intro}"></div>
+        <div class="input-data"
+             clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.territorialChallenge}"></div>
+    </div>
 
     <!-- C 2.2 -->
-    <th:block clf:ifAnyFieldIsVisible="PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED">
-        <div class="text-box text-box-header mt-2 page-break-height">
-            <div class="mt-1" th:text="#{project.application.form.relevance.field.2}"></div>
-            <div class="mb-1" th:text="#{project.application.form.relevance.field.2.intro}"></div>
-        </div>
-        <div class="text-box">
-            <p clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.commonChallenge}"></p>
-        </div>
-    </th:block>
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.2}"></div>
+        <div th:text="#{project.application.form.relevance.field.2.intro}"></div>
+        <div class="input-data"
+             clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.commonChallenge}"></div>
+    </div>
 
     <!-- C 2.3 -->
-    <th:block clf:ifAnyFieldIsVisible="PROJECT_WHY_IS_COOPERATION_NEEDED">
-        <div class="text-box text-box-header page-break-height mt-2">
-            <div class="mt-1" th:text="#{project.application.form.relevance.field.3}"></div>
-            <div class="mb-1" th:text="#{project.application.form.relevance.field.3.intro}"></div>
-        </div>
-        <div class="text-box">
-            <p clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.transnationalCooperation}"></p>
-        </div>
-    </th:block>
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_WHY_IS_COOPERATION_NEEDED">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.3}"></div>
+        <div th:text="#{project.application.form.relevance.field.3.intro}"></div>
+        <div class="input-data"
+             clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.transnationalCooperation}"></div>
+    </div>
 
     <!-- C 2.4 -->
-    <table class="default-table page-break-height" clf:ifAnyFieldIsVisible="PROJECT_TARGET_GROUP">
-        <caption>
-            <div class="text-box text-box-header mt-2">
-                <div class="mt-1" th:text="#{project.application.form.relevance.field.4}"></div>
-                <div class="mb-1" th:text="#{project.application.form.relevance.field.4.intro}"></div>
-            </div>
-        </caption>
-        <thead class="table-header">
-        <tr>
-            <th class="bottom-border right-border"
-                th:text="#{project.application.form.relevance.target.group}">
-                Group
-            </th>
-            <th class="bottom-border" th:text="#{project.application.form.relevance.specification}">
-                Specifications
-            </th>
-        </tr>
-        </thead>
-        <tbody class="table-body">
-        <tr th:each="benefitData : ${projectDataSectionC.projectRelevance?.projectBenefits}">
-            <td class="bottom-border right-border m-column"
-                th:text="${#messages.msg('project.application.form.relevance.target.group.' + benefitData.group)}">
-                Group
-            </td>
-            <td class="bottom-border" clf:textTranslationByDataLanguage="${benefitData.specification}">
-                Specification
-            </td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_TARGET_GROUP">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.4}"></div>
+        <div th:text="#{project.application.form.relevance.field.4.intro}"></div>
+        <table class="default-table mt-1">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.relevance.target.group}">
+                    Group
+                </th>
+                <th th:text="#{project.application.form.relevance.specification}">
+                    Specifications
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr th:each="benefitData : ${projectDataSectionC.projectRelevance?.projectBenefits}">
+                <td class="m-column"
+                    th:text="${#messages.msg('project.application.form.relevance.target.group.' + benefitData.group)}">
+                    Group
+                </td>
+                <td clf:textTranslationByDataLanguage="${benefitData.specification}">
+                    Specification
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- C 2.5 -->
-    <table class="default-table page-break-height" clf:ifAnyFieldIsVisible="PROJECT_STRATEGY_CONTRIBUTION">
-        <caption>
-            <div class="text-box mt-2 text-box-header keep-together">
-                <div class="mt-1" th:text="#{project.application.form.relevance.field.5}"></div>
-                <div class="mb-1" th:text="#{project.application.form.relevance.field.5.intro}"></div>
-            </div>
-        </caption>
-        <thead class="table-header">
-        <tr>
-            <th class="bottom-border right-border" th:text="#{project.application.form.relevance.strategy}">
-                Strategy
-            </th>
-            <th class="bottom-border"th:text="#{project.application.form.relevance.contribution}">
-                Contribution
-            </th>
-        </tr>
-        </thead>
-        <tbody class="table-body">
-        <tr th:each="strategyData : ${projectDataSectionC.projectRelevance?.projectStrategies}">
-            <td class="bottom-border right-border m-column" th:text="${#messages.msg('programme.strategy.' + strategyData.strategy)}">
-                Strategy
-            </td>
-            <td class="bottom-border" clf:textTranslationByDataLanguage="${strategyData.specification}">
-                Contribution
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_STRATEGY_CONTRIBUTION">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.5}"></div>
+        <div th:text="#{project.application.form.relevance.field.5.intro}"></div>
+        <table class="default-table mt-1">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.relevance.strategy}">
+                    Strategy
+                </th>
+                <th th:text="#{project.application.form.relevance.contribution}">
+                    Contribution
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr th:each="strategyData : ${projectDataSectionC.projectRelevance?.projectStrategies}">
+                <td class="m-column">
+                <span th:if="${strategyData.strategy != null}"
+                      th:text="${#messages.msg('programme.strategy.' + strategyData.strategy)}"></span>
+                    Strategy
+                </td>
+                <td clf:textTranslationByDataLanguage="${strategyData.specification}">
+                    Contribution
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- C 2.6 -->
-    <table class="default-table page-break-height" clf:ifAnyFieldIsVisible="PROJECT_SYNERGIES">
-        <caption>
-            <div class="text-box text-box-header mt-2 keep-together page-break-height">
-                <div class="mt-1 mb-1" th:text="#{project.application.form.relevance.field.6}">
-                    C.2.6 Which synergies with past or current EU and other projects or initiatives will the project
-                    make use of?
-                </div>
-            </div>
-        </caption>
-        <thead class="table-header">
-        <tr>
-            <th class="bottom-border right-border" th:text="#{project.application.form.relevance.project.or.initiative}">
-                Project initiative
-            </th>
-            <th class="bottom-border" th:text="#{project.application.form.relevance.synergy}">
-                Synergy
-            </th>
-        </tr>
-        </thead>
-        <tbody class="table-body">
-        <tr th:each="synergyData : ${projectDataSectionC.projectRelevance?.projectSynergies}">
-            <td class="bottom-border right-border" clf:textTranslationByDataLanguage="${synergyData.specification}">
-                Specification
-            </td>
-            <td class="bottom-border" clf:textTranslationByDataLanguage="${synergyData.synergy}">Synergy</td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_SYNERGIES">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.6}">
+            C.2.6 Which synergies with past or current EU and other projects or initiatives will the project
+            make use of?
+        </div>
 
+        <table class="default-table mt-1">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.relevance.project.or.initiative}">
+                    Project initiative
+                </th>
+                <th th:text="#{project.application.form.relevance.synergy}">
+                    Synergy
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr th:each="synergyData : ${projectDataSectionC.projectRelevance?.projectSynergies}">
+                <td clf:textTranslationByDataLanguage="${synergyData.specification}">
+                    Specification
+                </td>
+                <td clf:textTranslationByDataLanguage="${synergyData.synergy}">Synergy</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- C 2.7 -->
-    <th:block clf:ifAnyFieldIsVisible="PROJECT_HOW_BUILDS_PROJECT_ON_AVAILABLE_KNOWLEDGE">
-        <div class="text-box text-box-header mt-2 page-break-height keep-together">
-            <div class="mt-1" th:text="#{project.application.form.relevance.field.7}"></div>
-            <div class="mb-1" th:text="#{project.application.form.relevance.field.7.intro}"></div>
-        </div>
-        <div class="text-box keep-together">
-            <p clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.availableKnowledge}"></p>
-        </div>
-    </th:block>
-
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HOW_BUILDS_PROJECT_ON_AVAILABLE_KNOWLEDGE">
+        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.7}"></div>
+        <div th:text="#{project.application.form.relevance.field.7.intro}"></div>
+        <div class="input-data"
+             clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.availableKnowledge}"></div>
+    </div>
 </th:block>
 </body>
 </html>
