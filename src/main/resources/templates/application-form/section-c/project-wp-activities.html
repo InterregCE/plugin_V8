@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="workPackage" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.ProjectWorkPackageData"*/-->
+<!--/*@thymesVar id="activity" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityData"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="sectionC4Activities(workPackage)" th:each="activity, rowStat: ${workPackage.activities}"
+          th:object="${activity}">
+
+    <table class="default-vertical-table" clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE,PROJECT_ACTIVITIES_START_PERIOD,PROJECT_ACTIVITIES_END_PERIOD,PROJECT_ACTIVITIES_DESCRIPTION,PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
+        <thead class="table-header">
+        <tr>
+            <td class="sub-heading-1" colspan="2"
+                th:text="#{project.work.package.tab.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber}">Activity x.x
+            </td>
+        </tr>
+        </thead>
+
+        <tbody class="table-body">
+        <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE">
+            <th th:text="#{jems.standard.application.form.export.common.label.title}">title</th>
+            <td clf:textTranslationByDataLanguage="${activity.title}">value</td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_START_PERIOD">
+            <th th:text="#{jems.standard.application.form.export.common.label.start.period}">period start</th>
+            <td th:text="${activity.startPeriod}">x</td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_END_PERIOD">
+            <th th:text="#{jems.standard.application.form.export.common.label.end.period}">period en</th>
+            <td th:text="${activity.endPeriod}">x</td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_DESCRIPTION">
+            <th th:text="#{jems.standard.application.form.export.common.label.description}">desc</th>
+            <td clf:textTranslationByDataLanguage="${activity.description}">value</td>
+        </tr>
+
+        <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
+            <th th:text="#{project.work.package.tab.activity.partnersInvolved}">prtnrs involved</th>
+            <td>
+                <th:block th:each="partner, rowStat : ${projectDataSectionB.partners}" th:object="${partner}">
+                    <span  th:text="${partner.abbreviation} + (!${rowStat.last} ? ', ' : '') "></span>
+                </th:block>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="default-table" clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_DELIVERABLES">
+        <thead class="table-header">
+        <tr class="sub-heading-1">
+            <td colspan="4"
+                th:text="#{jems.standard.application.form.export.section.c.deliverables.for.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber}">del for activity x
+            </td>
+        </tr>
+        <tr>
+            <th th:text="#{project.work.package.tab.deliverables.number}">Deliverable number</th>
+            <th th:text="#{project.work.package.tab.deliverables.title}">Deliverable title</th>
+            <th th:text="#{project.work.package.tab.deliverables.description}">Description</th>
+            <th th:text="#{project.work.package.tab.deliverables.period}">Delivery period</th>
+        </tr>
+        </thead>
+
+        <tbody class="table-body">
+        <tr th:each="deliverable, rowStat: ${activity.deliverables}"
+            th:object="${deliverable}">
+            <td th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber}">D.x.x</td>
+            <td clf:textTranslationByDataLanguage="${deliverable.title}">value</td>
+            <td clf:textTranslationByDataLanguage="${deliverable.description}">value</td>
+            <td th:text="${deliverable.period}">X</td>
+        </tr>
+        </tbody>
+    </table>
+
+</th:block>
+</body>
+</html>

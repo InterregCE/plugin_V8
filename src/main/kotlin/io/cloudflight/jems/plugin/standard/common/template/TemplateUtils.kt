@@ -23,6 +23,7 @@ import io.cloudflight.jems.plugin.standard.common.isSectionCVisible
 import io.cloudflight.jems.plugin.standard.common.isProjectRelevanceSectionVisible
 import io.cloudflight.jems.plugin.standard.common.isProjectResultsSectionVisible
 import io.cloudflight.jems.plugin.standard.common.isLongTermPlansSectionVisible
+import io.cloudflight.jems.plugin.standard.common.isProjectWorkPackageSectionVisible
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.standard.expression.IStandardExpression
@@ -118,6 +119,9 @@ class TemplateUtils {
 
     fun isSectionC2Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectRelevanceSectionVisible(lifecycleData, callData)
+
+    fun isSectionC4Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isProjectWorkPackageSectionVisible(lifecycleData, callData)
 
     fun isProjectResultsSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectResultsSectionVisible(lifecycleData, callData)

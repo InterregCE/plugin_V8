@@ -10,18 +10,14 @@
 <body>
 <th:block th:fragment="projectWorkPackagesOverview(projectDataSectionC)">
 
-    <div id="section-c-4" class="title"
-         th:text="#{project.application.form.section.part.c.subsection.four}">
-    </div>
-
-    <table class="default-vertical-table" clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE">
-        <thead class="table-header grey-background">
-        <tr class="sub-heading-2">
-            <th class="xs-column text-center" th:text="#{jems.standard.application.form.export.common.label.number}">
+    <table class="default-table">
+        <thead class="table-header">
+        <tr>
+            <th th:text="#{jems.standard.application.form.export.common.label.number}">
                 Number
             </th>
 
-            <th class="text-center" th:text="#{jems.standard.application.form.export.section.c.work.package.name}">
+            <th clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" th:text="#{project.application.form.workpackage.name}">
                 Work package name
             </th>
         </tr>
@@ -29,8 +25,8 @@
         <tbody class="table-body">
         <tr th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
             th:object="${workPackage}">
-            <td class="xs-column" th:text="${workPackage.workPackageNumber}">Number</td>
-            <td clf:textTranslationByDataLanguage="${workPackage.name}" ></td>
+            <td th:text="*{workPackageNumber}">Number</td>
+            <td clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" clf:textTranslationByDataLanguage="*{name}">Name</td>
         </tr>
         </tbody>
     </table>

@@ -49,14 +49,15 @@
             </bookmark>
         </th:block>
             <bookmark th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-                    th:name="#{project.application.form.section.part.c}" href="#section-c">
+                    th:name="#{jems.standard.pre.condition.check.plugin.project.section.c.header}" href="#section-c">
                 <bookmark clf:ifAnyFieldIsVisible="PROJECT_OVERALL_OBJECTIVE"
                         th:name="#{project.application.form.section.part.c.subsection.one}" href="#section-c-1"></bookmark>
                 <bookmark th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
                         th:name="#{project.application.form.section.part.c.subsection.two}" href="#section-c-2"></bookmark>
                 <bookmark clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
                         th:name="#{project.application.form.section.part.c.subsection.three}" href="#section-c-3"></bookmark>
-
+                <bookmark th:if="${clfUtils.isSectionC4Available(#vars.projectData.lifecycleData, #vars.callData)}"
+                        th:name="#{project.application.form.section.part.c.subsection.four}" href="#section-c-4"></bookmark>
                 <bookmark
                         th:if="${clfUtils.isProjectResultsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
                         th:name="#{project.application.form.section.part.c.subsection.five}" href="#section-c-5"></bookmark>
