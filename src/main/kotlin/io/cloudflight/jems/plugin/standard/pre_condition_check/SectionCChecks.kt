@@ -647,6 +647,15 @@ private fun checkIfInvestmentsAreValid(workPackageNumber: Int, investments: List
                 )
             )
         }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_EXPECTED_DELIVERY_PERIOD) &&
+            investment.expectedDeliveryPeriod ?: 0 <= 0) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.package.investments.expected.delivery.period.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
+                )
+            )
+        }
         if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED) &&
             investment.justificationExplanation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
             errorInvestmentsMessages.add(
@@ -715,6 +724,15 @@ private fun checkIfInvestmentsAreValid(workPackageNumber: Int, investments: List
             errorInvestmentsMessages.add(
                 buildErrorPreConditionCheckMessage(
                     "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.documentation.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
+                )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_DOCUMENTATION_EXPECTED_IMPACTS) &&
+            investment.documentationExpectedImpacts.isNotFullyTranslated(CallDataContainer.get().inputLanguages)) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.documentation.expected.impacts.is.not.provided",
                     mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
             )
@@ -788,6 +806,7 @@ private fun isInvestmentsContentMissing(investments: List<WorkPackageInvestmentD
             investments.any
             {
                 investment -> investment.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                investment.expectedDeliveryPeriod ?: 0 <= 0 ||
                 investment.justificationExplanation.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
                 investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
                 investment.justificationTransactionalRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
@@ -796,6 +815,7 @@ private fun isInvestmentsContentMissing(investments: List<WorkPackageInvestmentD
                 investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
                 investment.risk.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
                 investment.documentation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+                investment.documentationExpectedImpacts.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
             }
         )
 
