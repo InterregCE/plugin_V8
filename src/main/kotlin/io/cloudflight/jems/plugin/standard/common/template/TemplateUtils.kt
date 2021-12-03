@@ -16,14 +16,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.Proj
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectContactTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
-import io.cloudflight.jems.plugin.standard.common.getTranslationFor
-import io.cloudflight.jems.plugin.standard.common.percentageTo
-import io.cloudflight.jems.plugin.standard.common.percentageDown
-import io.cloudflight.jems.plugin.standard.common.isSectionCVisible
-import io.cloudflight.jems.plugin.standard.common.isProjectRelevanceSectionVisible
-import io.cloudflight.jems.plugin.standard.common.isProjectResultsSectionVisible
-import io.cloudflight.jems.plugin.standard.common.isLongTermPlansSectionVisible
-import io.cloudflight.jems.plugin.standard.common.isProjectWorkPackageSectionVisible
+import io.cloudflight.jems.plugin.standard.common.*
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.standard.expression.IStandardExpression
@@ -133,6 +126,9 @@ class TemplateUtils {
         data.mapIndexed {
                 index, indicatorOverviewLine ->
             generateIdsForNotExistingIds(indicatorOverviewLine, index) }
+
+    fun isInvestmentSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isInvestmentSectionVisible(lifecycleData, callData)
 
     private fun generateIdsForNotExistingIds(
         indicatorOverviewLine: IndicatorOverviewLine,
