@@ -2,13 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionC" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC"*/-->
 <!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
+<!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="sectionC(projectDataSectionC, projectDataSectionB, specificObjective)">
+<th:block th:fragment="sectionC(projectDataSectionC, projectDataSectionB, projectDataSectionA, specificObjective)">
     <div id="section-c" class="headline" th:text="#{project.application.form.section.part.c}">
         SECTION C - Project description
     </div>
@@ -22,12 +23,12 @@
     <div class="page-break-after"></div>
     <!-- C3 -->
     <div  clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
-          th:insert="~{application-form/section-c/project-partnership.html :: projectPartnership(${projectDataSectionC})}"></div>
+          th:insert="~{application-form/section-c/section-c-3.html :: projectPartnership(${projectDataSectionC})}"></div>
     <div class="page-break-after"></div>
 
     <!-- C4 -->
     <th:block th:if="${clfUtils.isSectionC4Available(#vars.projectData.lifecycleData, #vars.callData)}">
-        <div th:insert="~{application-form/section-c/section-c-4.html :: sectionC4(${projectDataSectionC})}"></div>
+        <div th:insert="~{application-form/section-c/section-c-4.html :: sectionC4(${projectDataSectionC}, ${projectDataSectionB}, ${projectDataSectionA.periods})}"></div>
         <div class="page-break-after"></div>
     </th:block>
 
