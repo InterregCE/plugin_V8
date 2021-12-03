@@ -51,6 +51,12 @@ fun isProjectRelevanceSectionVisible(lifecycleData: ProjectLifecycleData, callDa
     isFieldVisible(it, lifecycleData, callData)
 }
 
+fun isProjectWorkPackageSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+    isWorkPlanObjectiveSectionVisible(lifecycleData, callData) ||
+            isInvestmentSectionVisible(lifecycleData, callData) ||
+            isWorkPlanActivitiesSectionVisible(lifecycleData, callData) ||
+            isWorkPlanOutputsSectionVisible(lifecycleData, callData)
+
 fun isWorkPlanObjectiveSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
     ApplicationFormFieldId.PROJECT_WORK_PACKAGE_TITLE,
     ApplicationFormFieldId.PROJECT_SPECIFIC_OBJECTIVE,

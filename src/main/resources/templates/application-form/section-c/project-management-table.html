@@ -160,6 +160,7 @@
                         th:text="#{project.application.form.management.principles.table.contribution.type.negative}">
                         negative effects
                     </td>
+                    <td th:if="${projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == null}"></td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.sustainableDevelopmentDescription}"></td>
                 </tr>
                 <tr>
@@ -178,6 +179,7 @@
                         th:text="#{project.application.form.management.principles.table.contribution.type.negative}">
                         negative effects
                     </td>
+                    <td th:if="${projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect == null}"></td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.equalOpportunitiesDescription}"></td>
                 </tr>
                 <tr>
@@ -196,6 +198,7 @@
                         th:text="#{project.application.form.management.principles.table.contribution.type.negative}">
                         negative effects
                     </td>
+                    <td th:if="${projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect == null}"></td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.sexualEqualityDescription}"></td>
                 </tr>
                 </tbody>
