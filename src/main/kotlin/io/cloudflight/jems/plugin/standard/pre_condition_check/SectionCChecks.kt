@@ -651,7 +651,7 @@ private fun checkIfInvestmentsAreValid(workPackageNumber: Int, investments: List
             investment.expectedDeliveryPeriod ?: 0 <= 0) {
             errorInvestmentsMessages.add(
                 buildErrorPreConditionCheckMessage(
-                    "$SECTION_C_ERROR_MESSAGES_PREFIX.package.investments.expected.delivery.period.is.not.provided",
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.expected.delivery.period.is.not.provided",
                     mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
             )
