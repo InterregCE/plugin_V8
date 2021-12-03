@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionC" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC"*/-->
+<!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
 <!--/*@thymesVar id="workPackage" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.ProjectWorkPackageData"*/-->
+<!--/*@thymesVar id="periods" type="kotlin.collections.List<io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData>"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="sectionC4(projectDataSectionC)">
+<th:block th:fragment="sectionC4(projectDataSectionC, projectDataSectionB, periods)">
 
     <div class="title" id="section-c-4" th:text="#{project.application.form.section.part.c.subsection.four}">
         work plan
@@ -46,8 +48,7 @@
             <div class="input-data" clf:textTranslationByDataLanguage="*{objectiveAndAudience}">answer 2</div>
         </div>
 
-
-        <div th:insert="~{application-form/section-c/project-wp-activities.html :: sectionC4Activities(${workPackage})}"></div>
+        <div th:insert="~{application-form/section-c/project-wp-activities.html :: sectionC4Activities(${workPackage}, ${periods}, ${projectDataSectionB})}"></div>
         <div th:insert="~{application-form/section-c/project-wp-output.html :: sectionC4Output(${workPackage})}"></div>
         <div th:insert="~{application-form/section-c/project-wp-investment.html :: sectionC4Investment(${workPackage})}"></div>
 
