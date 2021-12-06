@@ -14,13 +14,6 @@
 <th:block th:fragment="sectionC4Activities(workPackage, periods, projectDataSectionB)" th:each="activity, rowStat: ${workPackage.activities}"
           th:object="${activity}">
 
-    <th:block th:each="period, rowStat: ${periods}"
-              th:object="${period}">
-        <div th:text="*{number}"></div>
-        <div th:text="*{start}"></div>
-        <div th:text="*{end}"></div>
-    </th:block>
-
     <table class="default-vertical-table" clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE,PROJECT_ACTIVITIES_START_PERIOD,PROJECT_ACTIVITIES_END_PERIOD,PROJECT_ACTIVITIES_DESCRIPTION,PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
         <thead class="table-header">
         <tr>
@@ -32,12 +25,12 @@
 
         <tbody class="table-body">
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE">
-            <th th:text="#{jems.standard.application.form.export.common.label.title}">title</th>
+            <th th:text="#{project.work.package.tab.activity.title}">title</th>
             <td clf:textTranslationByDataLanguage="${activity.title}">value</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_START_PERIOD">
-            <th th:text="#{jems.standard.application.form.export.common.label.start.period}">period start</th>
+            <th th:text="#{project.work.package.tab.activity.start.period}">period start</th>
             <td>
                 <th:block th:each="period, rowStat: ${periods}" th:object="${period}">
                     <span th:if="${period.number == activity.startPeriod}">
@@ -52,7 +45,7 @@
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_END_PERIOD">
-            <th th:text="#{jems.standard.application.form.export.common.label.end.period}">period en</th>
+            <th th:text="#{project.work.package.tab.activity.end.period}">period en</th>
             <td>
                 <th:block th:each="period, rowStat: ${periods}" th:object="${period}">
                     <span th:if="${period.number == activity.endPeriod}">
@@ -67,7 +60,7 @@
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_DESCRIPTION">
-            <th th:text="#{jems.standard.application.form.export.common.label.description}">desc</th>
+            <th th:text="#{project.work.package.tab.activity.description}">desc</th>
             <td clf:textTranslationByDataLanguage="${activity.description}">value</td>
         </tr>
 

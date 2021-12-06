@@ -10,7 +10,7 @@
                 th:name="#{jems.standard.application.form.export.application.form.title(${projectData.sectionA?.customIdentifier},${projectData.sectionA?.acronym})}"
                 href="#first-page"
         >
-        <bookmark th:name="#{jems.standard.application.form.export.section.a.project.overview}" href="#section-a">
+        <bookmark th:name="#{project.application.form.section.part.a}" href="#section-a">
             <bookmark th:name="#{jems.standard.application.form.export.section.a.project.identification}" href="#section-a-1"></bookmark>
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_SUMMARY"
@@ -24,7 +24,7 @@
         </bookmark>
 
         <th:block th:object="${projectData}">
-            <bookmark th:name="#{jems.standard.application.form.export.section.b.partners}" href="#section-b">
+            <bookmark th:name="#{project.application.form.section.part.b}" href="#section-b">
                 <bookmark th:name="#{jems.standard.application.form.export.partner.overview}"
                           href="#partners-overview">
                     <bookmark
@@ -49,7 +49,7 @@
             </bookmark>
         </th:block>
             <bookmark th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-                    th:name="#{jems.standard.pre.condition.check.plugin.project.section.c.header}" href="#section-c">
+                    th:name="#{project.application.form.section.part.c}" href="#section-c">
                 <bookmark clf:ifAnyFieldIsVisible="PROJECT_OVERALL_OBJECTIVE"
                         th:name="#{project.application.form.section.part.c.subsection.one}" href="#section-c-1"></bookmark>
                 <bookmark th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
@@ -57,7 +57,14 @@
                 <bookmark clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
                         th:name="#{project.application.form.section.part.c.subsection.three}" href="#section-c-3"></bookmark>
                 <bookmark th:if="${clfUtils.isSectionC4Available(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{project.application.form.section.part.c.subsection.four}" href="#section-c-4"></bookmark>
+                        th:name="#{project.application.form.section.part.c.subsection.four}" href="#section-c-4">
+                    <bookmark
+                            th:each="wp, rowStat: ${projectData.sectionC?.projectWorkPackages}"
+                            th:object="${wp}"
+                            th:name="#{jems.standard.application.form.export.section.c.wp}+*{workPackageNumber}"
+                            th:href="'#wp-'+*{workPackageNumber}">
+                    </bookmark>
+                </bookmark>
                 <bookmark
                         th:if="${clfUtils.isProjectResultsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
                         th:name="#{project.application.form.section.part.c.subsection.five}" href="#section-c-5"></bookmark>

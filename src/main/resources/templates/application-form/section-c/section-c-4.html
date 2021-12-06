@@ -22,7 +22,9 @@
     <th:block th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
               th:object="${workPackage}">
 
-        <div class="sub-heading-2" th:text="#{project.application.form.workpackage.form.header} + ' ' + ${workPackage.workPackageNumber}">
+        <div class="sub-heading-2"
+             th:text="#{project.application.form.workpackage.form.header} + ' ' + ${workPackage.workPackageNumber}"
+             th:id="'wp-'+*{workPackageNumber}">
             wrk pckg x
         </div>
 
