@@ -71,22 +71,27 @@
         <tbody class="table-body">
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.country}">country</th>
+            <th th:text="#{project.partner.main-address.country}">country</th>
             <td th:text="${investment?.address?.country}">SK</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.region}">region</th>
+            <th th:text="#{project.partner.main-address.region2}">region</th>
             <td th:text="${investment?.address?.nutsRegion2}">x</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.subregion}">subregion</th>
+            <th th:text="#{project.partner.main-address.region3}">subregion</th>
             <td th:text="${investment?.address?.nutsRegion3}"></td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.address}">addr</th>
+            <th>
+                <span th:text="#{project.partner.main-address.street}"></span>
+                <span th:text="#{project.partner.main-address.housenumber}"></span><span>,</span>
+                <span th:text="#{project.partner.main-address.postalcode}"></span><span>,</span>
+                <span th:text="#{project.partner.main-address.city}"></span>
+            </th>
             <td>
                 <span th:text="${investment?.address?.street}">str</span>
                 <span th:text="${investment?.address?.houseNumber}">x</span><span>,</span>
