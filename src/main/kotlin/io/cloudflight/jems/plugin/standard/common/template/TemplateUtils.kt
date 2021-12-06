@@ -5,6 +5,7 @@ import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundTypeData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingByFundOverview
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
@@ -106,6 +107,9 @@ class TemplateUtils {
 
     fun getEnglishTranslation(translationData: Set<InputTranslationData>) =
         translationData.getTranslationFor(SystemLanguageData.EN)
+
+    fun getPeriod(periodNumber: Number, periods: List<ProjectPeriodData>): ProjectPeriodData? =
+        periods.filter { it.number == periodNumber }.firstOrNull()
 
     fun isSectionCAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isSectionCVisible(lifecycleData, callData)

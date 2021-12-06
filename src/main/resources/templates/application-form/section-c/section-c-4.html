@@ -52,7 +52,7 @@
 
         <div th:insert="~{application-form/section-c/project-wp-activities.html :: sectionC4Activities(${workPackage}, ${periods}, ${projectDataSectionB})}"></div>
         <div th:insert="~{application-form/section-c/project-wp-output.html :: sectionC4Output(${workPackage})}"></div>
-        <div th:insert="~{application-form/section-c/project-wp-investment.html :: sectionC4Investment(${workPackage})}"></div>
+        <div th:insert="~{application-form/section-c/project-wp-investment.html :: sectionC4Investment(${workPackage}, ${periods})}"></div>
 
         <div class="page-break-after"></div>
     </th:block>

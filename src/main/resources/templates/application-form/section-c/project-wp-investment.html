@@ -8,7 +8,7 @@
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="sectionC4Investment(workPackage)" th:each="investment, rowStat: ${workPackage.investments}"
+<th:block th:fragment="sectionC4Investment(workPackage, periods)" th:each="investment, rowStat: ${workPackage.investments}"
           th:object="${investment}">
 
     <div class="sub-heading-2" th:text="#{project.application.form.workpackage.investment.form.title} + ' ' + ${workPackage.workPackageNumber} + '.' + ${investment?.investmentNumber}">
@@ -18,6 +18,19 @@
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COMMUNICATION_OBJECTIVES_AND_TARGET_AUDIENCE">
         <div class="sub-heading-1" th:text="#{jems.standard.application.form.export.common.label.title}">title</div>
         <div class="input-data" clf:textTranslationByDataLanguage="*{title}">title value</div>
+    </div>
+
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_PERIOD" th:if="${investment?.expectedDeliveryPeriod} != null">
+        <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.expected.delivery.period}">period</div>
+        <th:block th:with="period = ${clfUtils.getPeriod(investment?.expectedDeliveryPeriod, periods)}">
+            <span th:unless="${period == null}">
+                            <span th:text="#{project.partner.budget.table.period}">Per</span>
+                            <span th:text="${period.number}">x</span><span>, </span>
+                            <span th:text="${period.start}">x</span>
+                            <span> - </span>
+                            <span th:text="${period.end}">x</span>
+            </span>
+        </th:block>
     </div>
 
     <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.justification}">
@@ -58,22 +71,27 @@
         <tbody class="table-body">
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.country}">country</th>
+            <th th:text="#{project.partner.main-address.country}">country</th>
             <td th:text="${investment?.address?.country}">SK</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.region}">region</th>
+            <th th:text="#{project.partner.main-address.region2}">region</th>
             <td th:text="${investment?.address?.nutsRegion2}">x</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.subregion}">subregion</th>
+            <th th:text="#{project.partner.main-address.region3}">subregion</th>
             <td th:text="${investment?.address?.nutsRegion3}"></td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY">
-            <th th:text="#{jems.standard.application.form.export.section.c.investment.physical.address}">addr</th>
+            <th>
+                <span th:text="#{project.partner.main-address.street}"></span>
+                <span th:text="#{project.partner.main-address.housenumber}"></span><span>,</span>
+                <span th:text="#{project.partner.main-address.postalcode}"></span><span>,</span>
+                <span th:text="#{project.partner.main-address.city}"></span>
+            </th>
             <td>
                 <span th:text="${investment?.address?.street}">str</span>
                 <span th:text="${investment?.address?.houseNumber}">x</span><span>,</span>
@@ -101,6 +119,11 @@
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION">
         <div th:text="#{project.application.form.workpackage.investment.documentation.description.line.1}">descr</div>
         <div class="input-data" clf:textTranslationByDataLanguage="${investment?.documentation}">value</div>
+    </div>
+
+    <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION_EXPECTED_IMPACTS">
+        <div th:text="#{project.application.form.workpackage.investment.documentation.description.line.2}">descr</div>
+        <div class="input-data" clf:textTranslationByDataLanguage="${investment?.documentationExpectedImpacts}">value</div>
     </div>
 
     <div class="sub-heading-1" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE,PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT,PROJECT_INVESTMENT_MAINTENANCE" th:text="#{project.application.form.workpackage.investment.ownership}">
