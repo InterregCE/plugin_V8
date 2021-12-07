@@ -95,6 +95,18 @@ html, body {
     margin-top: 8px !important;
 }
 
+.mt-1rem{
+    margin-top: 1rem !important;
+}
+
+.mt-2rem {
+    margin-top: 2rem !important;
+}
+
+.mt-3rem {
+    margin-top: 3rem !important;
+}
+
 .default-table .row-bordered td, .default-table .row-bordered th, .default-vertical-table .table-body .row-bordered td, .default-vertical-table .table-body .row-bordered th {
     border-top: 1px solid #d2dade;
     border-bottom: 1px solid #d2dade;
@@ -106,6 +118,10 @@ html, body {
 
 tr, td, th, .table-header {
     page-break-inside: avoid;
+}
+
+.long-text {
+    word-wrap: break-word;
 }
 
 .default-table, .default-vertical-table {

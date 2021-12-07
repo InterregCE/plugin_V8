@@ -78,9 +78,9 @@
                     <td th:text="#{project.application.form.management.cooperation.table.row.1}">Joint development</td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointDevelopment == true}"
-                          th:text="#{jems.standard.application.form.export.common.label.yes}">Yes</span>
+                          th:text="#{common.yes}">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointDevelopment == false}"
-                              th:text="#{jems.standard.application.form.export.common.label.no}">No</span>
+                              th:text="#{common.no}">No</span>
                     </td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointDevelopmentDescription}"></td>
                 </tr>
@@ -89,9 +89,9 @@
                     </td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointImplementation == true}"
-                          th:text="#{jems.standard.application.form.export.common.label.yes}">Yes</span>
+                          th:text="#{common.yes}">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointImplementation == false}"
-                              th:text="#{jems.standard.application.form.export.common.label.no}">No</span>
+                              th:text="#{common.no}">No</span>
                     </td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointImplementationDescription}"></td>
                 </tr>
@@ -99,9 +99,9 @@
                     <td th:text="#{project.application.form.management.cooperation.table.row.3}">Joint staffing</td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointStaffing == true}"
-                          th:text="#{jems.standard.application.form.export.common.label.yes}">Yes</span>
+                          th:text="#{common.yes}">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointStaffing == false}"
-                              th:text="#{jems.standard.application.form.export.common.label.no}">No</span>
+                              th:text="#{common.no}">No</span>
                     </td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointStaffingDescription}"></td>
                 </tr>
@@ -109,9 +109,9 @@
                     <td th:text="#{project.application.form.management.cooperation.table.row.4}">Joint financing</td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointFinancing == true}"
-                          th:text="#{jems.standard.application.form.export.common.label.yes}">Yes</span>
+                          th:text="#{common.yes}">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointFinancing == false}"
-                              th:text="#{jems.standard.application.form.export.common.label.no}">No
+                              th:text="#{common.no}">No
                 </span>
                     </td>
                     <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointFinancingDescription}"></td>

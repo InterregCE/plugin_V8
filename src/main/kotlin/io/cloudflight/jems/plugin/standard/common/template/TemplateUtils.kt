@@ -154,6 +154,12 @@ class TemplateUtils {
     fun getPartnerListForActivity(activityPartnerIds:Set<Long>, partners:Set<ProjectPartnerData>): Set<ProjectPartnerData> =
         partners.filter { activityPartnerIds.contains(it.id) }.toSet()
 
+    fun isOutputsSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isWorkPlanOutputsSectionVisible(lifecycleData, callData)
+
+    fun isActivitiesSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isWorkPlanActivitiesSectionVisible(lifecycleData, callData)
+
     private fun generateIdsForNotExistingIds(
         indicatorOverviewLine: IndicatorOverviewLine,
         index: Int

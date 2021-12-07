@@ -10,51 +10,51 @@
 <body>
 <th:block th:fragment="projectCofinancingOverviewTable(projectCoFinancingOverview)">
     <div id="section-a-3" class="landscape" clf:ifAnyFieldIsVisible="PROJECT_A3">
-        <div class="title" th:text="#{jems.standard.application.form.export.project.budget.overview.title}"></div>
+        <div class="title" th:text="#{application.config.project.section.a.3}"></div>
         <table class="default-table">
             <thead class="table-header">
             <tr>
                 <th class="text-center right-border" colspan="3"
-                    th:text="#{jems.standard.application.form.export.project.budget.overview.funding.programme.funding}">
+                    th:text="#{project.application.form.overview.budget.table.programme.funding}">
                     Programme funding
                 </th>
 
                 <th class="text-center right-border" colspan="5"
-                    th:text="#{jems.standard.application.form.export.project.budget.overview.funding.contribution}">
+                    th:text="#{project.application.form.overview.budget.table.contribution}">
                     Contribution
                 </th>
 
                 <th class="text-center right-border" rowspan="2"
-                    th:text="#{jems.standard.application.form.export.common.label.total}">
+                    th:text="#{project.application.form.overview.budget.table.total}">
                     Total
                 </th>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.project.budget.overview.funding.source}">Funding
+                <th th:text="#{project.application.form.overview.budget.table.funding.source}">Funding
                     source
                 </th>
-                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.funding.amount}">Funding
+                <th class="text-right" th:text="#{project.application.form.overview.budget.table.funding.amount}">Funding
                     amount
                 </th>
                 <th class="right-border text-right"
-                    th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.rate}">
+                    th:text="#{project.application.form.overview.budget.table.cofinancing.rate}">
                     Co-financing rate (%)
                 </th>
 
-                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.automatic.public.contribution}">
+                <th class="text-right" th:text="#{project.application.form.overview.budget.table.auto.public}">
                     Automatic public contribution
                 </th>
-                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.other.public.contribution}">
+                <th class="text-right" th:text="#{project.application.form.overview.budget.table.other.public}">
                     Other public contribution
                 </th>
-                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.public.contribution}">
+                <th class="text-right" th:text="#{project.application.form.overview.budget.table.total.public}">
                     Total public contribution
                 </th>
-                <th class="text-right" th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.private.contribution}">
+                <th class="text-right" th:text="#{project.application.form.overview.budget.table.private}">
                     Private contribution
                 </th>
                 <th class="right-border text-right"
-                    th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.contribution}">
+                    th:text="#{project.application.form.overview.budget.table.total.contribution}">
                     Total contribution
                 </th>
             </tr>
@@ -81,7 +81,7 @@
                 </tr>
             </th:block>
             <tr class="row-bordered">
-                <td th:text="#{jems.standard.application.form.export.project.budget.overview.co.financing.total.eu.funds}"></td>
+                <td th:text="#{project.application.form.overview.budget.table.total.eu}"></td>
                 <td clf:number="${projectCoFinancingOverview.totalEuFundingAmount}"></td>
                 <td class="right-border" clf:percentage="${projectCoFinancingOverview.averageEuFinancingRate}"></td>
 
@@ -115,7 +115,7 @@
                 </tr>
             </th:block>
             <tr class="row-bordered">
-                <td th:text="#{jems.standard.application.form.export.common.label.total}"></td>
+                <td th:text="#{project.application.form.overview.budget.table.total}"></td>
                 <td clf:number="${projectCoFinancingOverview.totalFundingAmount}"></td>
                 <td class="right-border" clf:percentage="${projectCoFinancingOverview.averageCoFinancingRate}"></td>
 

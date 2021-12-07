@@ -11,45 +11,43 @@
 <th:block th:fragment="projectOverview(projectDataSectionA, projectPartners)">
     <!--A.1 Project identification-->
     <div id="section-a-1" class="title"
-         th:text="#{jems.standard.application.form.export.section.a.project.identification}">
+         th:text="#{project.application.form.section.part.a.subsection.one}">
         A.1 Project identification
     </div>
     <table class="default-vertical-table">
         <tbody class="table-body">
         <tr>
-            <th th:text="#{jems.standard.application.form.export.project.identification.index.number}">Project index
-                number
-            </th>
+            <th th:text="#{project.application.form.field.project.id}">ID (automatically created)</th>
             <td th:text="${projectDataSectionA.customIdentifier}"></td>
         </tr>
         <th:block th:with="leadPartner=${clfUtils.getLeadPartner(projectPartners)}">
             <tr clf:ifAnyFieldIsVisible="PARTNER_ORIGINAL_NAME_OF_ORGANISATION">
-                <th th:text="#{jems.standard.application.form.export.partner.detail.role.lead.organization.name.original}">
+                <th th:text="#{project.application.form.field.project.nameOfTheLeadPartner}">
                     Name of the lead partner organisation /original language
                 </th>
                 <td th:text="${leadPartner?.nameInOriginalLanguage}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION">
-                <th th:text="#{jems.standard.application.form.export.partner.detail.role.lead.organization.name.english}">
+                <th th:text="#{project.application.form.field.project.nameOfTheLeadPartnerInEnglish}">
                     Name of the lead partner organisation/English
                 </th>
                 <td th:text="${leadPartner?.nameInEnglish}"></td>
             </tr>
         </th:block>
         <tr clf:ifAnyFieldIsVisible="PROJECT_TITLE">
-            <th th:text="#{jems.standard.application.form.export.project.title}">Project title</th>
+            <th th:text="#{project.application.form.field.project.title}">Project title</th>
             <td clf:textTranslationByDataLanguage="${projectDataSectionA.title}"></td>
         </tr>
         <tr>
-            <th th:text="#{jems.standard.application.form.export.project.acronym}">Project acronym</th>
+            <th th:text="#{project.application.form.field.project.acronym}">Project acronym</th>
             <td th:text="${projectDataSectionA?.acronym}"></td>
         </tr>
         <tr>
-            <th th:text="#{jems.standard.application.form.export.programme.priority}">Programme priority</th>
+            <th th:text="#{application.config.project.priority}">Programme priority</th>
             <td clf:textTranslationByDataLanguage="${projectDataSectionA.programmePriority?.title}"></td>
         </tr>
         <tr>
-            <th th:text="#{jems.standard.application.form.export.programme.priority.objective}">Programme priority
+            <th th:text="#{project.application.project.priority.title}">Programme priority
                 specific objective
             </th>
             <td>
@@ -59,7 +57,7 @@
             </td>
         </tr>
         <tr>
-            <th th:text="#{jems.standard.application.form.export.project.duration}">Project duration (nr. of months)
+            <th th:text="#{project.application.form.field.project.duration}">Project duration (nr. of months)
             </th>
             <td th:text="${projectDataSectionA?.duration}"></td>
         </tr>
@@ -69,7 +67,7 @@
     <!--A.2 Project summary-->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_SUMMARY">
         <div id="section-a-2" class="title"
-             th:text="#{jems.standard.application.form.export.section.a.project.summary}">
+             th:text="#{project.application.form.section.part.a.subsection.two}">
             A.2 Project summary
         </div>
         <div>
