@@ -69,6 +69,7 @@ fun isInvestmentSectionVisible(lifecycleData: ProjectLifecycleData, callData: Ca
     listOf(
         ApplicationFormFieldId.PROJECT_INVESTMENT_TITLE,
         ApplicationFormFieldId.PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_PERIOD,
         ApplicationFormFieldId.PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT,
         ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_IS_BENEFITING,
         ApplicationFormFieldId.PROJECT_INVESTMENT_PILOT_CLARIFICATION,

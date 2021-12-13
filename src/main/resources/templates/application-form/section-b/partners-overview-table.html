@@ -9,69 +9,78 @@
 </head>
 <body>
 <th:block th:fragment="partnersOverviewTable(projectDataSectionB)">
-    <div class="title" id="partners-overview" th:text="#{jems.standard.application.form.export.partner.overview}">
-        Partners overview
+    <div class="landscape">
+        <div class="title" id="partners-overview" th:text="#{jems.standard.application.form.export.partner.overview}">
+            Partners overview
+        </div>
+        <table class="default-table">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
+
+                <th clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
+                    th:text="#{project.organization.english.name.label}">
+                    Partner name in English
+                </th>
+
+                <th clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS"
+                    th:text="#{project.partner.main-address.country}">
+                    Country
+                </th>
+
+                <th clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME"
+                    th:text="#{project.application.form.partner.table.name}">Abbreviation
+                </th>
+
+                <th clf:ifAnyFieldIsVisible="PARTNER_ROLE"
+                    th:text="#{project.partner.role.label}">Role
+                </th>
+
+                <th clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS"
+                    th:text="#{project.application.form.section.part.b.associatedOrganizations}">
+                    Associated organizations
+                </th>
+
+                <th
+                    th:text="#{project.partner.coFinancing.total}">
+                    Total eligible budget
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr th:if="${projectDataSectionB.partners.size() == 0}">
+                <td colspan="6"></td>
+            </tr>
+            <tr th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
+                th:object="${partner}">
+                <td th:text="*{sortNumber}"></td>
+                <td clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
+                    th:text="*{nameInEnglish}">
+                </td>
+                <td clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS"
+                    th:with="mainAddress=${clfUtils.getMainAddress(partner.addresses)}"
+                    th:text="${mainAddress?.country}">
+                </td>
+                <td clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME"
+                    th:text="*{abbreviation}"></td>
+                <td clf:ifAnyFieldIsVisible="PARTNER_ROLE"
+                    th:text="*{role?.isLead()}?
+             #{jems.standard.application.form.export.partner.lead.partner}:#{jems.standard.application.form.export.partner.project.partner}">
+                </td>
+                <td clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+                    <th:block th:each="associatedOrganization, rowStat: ${projectDataSectionB.associatedOrganisations}">
+                        <div th:if="${associatedOrganization.partner.id} == ${partner.id}"
+                             th:text="${associatedOrganization.nameInOriginalLanguage}">
+                            associated organization
+                        </div>
+                    </th:block>
+                </td>
+                <td th:text="*{budget.projectPartnerBudgetTotalCost}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <table class="default-table">
-        <thead class="table-header">
-        <tr>
-            <th th:text="#{jems.standard.application.form.export.partner.number}">Number</th>
-
-            <th clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
-                th:text="#{jems.standard.application.form.export.partner.name.in.english}">
-                Partner name in English
-            </th>
-
-            <th clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS"
-                th:text="#{jems.standard.application.form.export.partner.country}">
-                Country
-            </th>
-
-            <th clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME"
-                th:text="#{jems.standard.application.form.export.partner.abbreviation}">Abbreviation
-            </th>
-
-            <th clf:ifAnyFieldIsVisible="PARTNER_ROLE"
-                th:text="#{jems.standard.application.form.export.partner.role}">Role
-            </th>
-
-            <th clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS"
-                th:text="#{jems.standard.application.form.export.partner.associated.organizations}">
-                Associated organizations
-            </th>
-        </tr>
-        </thead>
-        <tbody class="table-body">
-        <tr th:if="${projectDataSectionB.partners.size() == 0}">
-            <td colspan="6"></td>
-        </tr>
-        <tr th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
-            th:object="${partner}">
-            <td th:text="*{sortNumber}"></td>
-            <td clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
-                th:text="*{nameInEnglish}">
-            </td>
-            <td clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS"
-                th:with="mainAddress=${clfUtils.getMainAddress(partner.addresses)}"
-                th:text="${mainAddress?.country}">
-            </td>
-            <td clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME"
-                th:text="*{abbreviation}"></td>
-            <td clf:ifAnyFieldIsVisible="PARTNER_ROLE"
-                th:text="*{role?.isLead()}?
-         #{jems.standard.application.form.export.partner.lead.partner}:#{jems.standard.application.form.export.partner.project.partner}">
-            </td>
-            <td clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
-                <th:block th:each="associatedOrganization, rowStat: ${projectDataSectionB.associatedOrganisations}">
-                    <div th:if="${associatedOrganization.partner.id} == ${partner.id}"
-                         th:text="#{jems.standard.application.form.export.associated.organization(${associatedOrganization.nameInOriginalLanguage}, ${associatedOrganization.sortNumber})}">
-                        associated organization #1
-                    </div>
-                </th:block>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 </th:block>
 </body>
 </html>

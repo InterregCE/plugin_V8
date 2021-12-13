@@ -11,16 +11,16 @@
                 href="#first-page"
         >
         <bookmark th:name="#{project.application.form.section.part.a}" href="#section-a">
-            <bookmark th:name="#{jems.standard.application.form.export.section.a.project.identification}" href="#section-a-1"></bookmark>
+            <bookmark th:name="#{project.application.form.section.part.a.subsection.one}" href="#section-a-1"></bookmark>
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_SUMMARY"
-                    th:name="#{jems.standard.application.form.export.section.a.project.summary}" href="#section-a-2"></bookmark>
+                    th:name="#{project.application.form.section.part.a.subsection.two}" href="#section-a-2"></bookmark>
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_A3"
                     th:if="${callData.isAdditionalFundAllowed == false}"
-                    th:name="#{jems.standard.application.form.export.project.budget.overview.title}" href="#section-a-3"></bookmark>
+                    th:name="#{application.config.project.section.a.3}" href="#section-a-3"></bookmark>
             <bookmark clf:ifAnyFieldIsVisible="PROJECT_A4"
-                      th:name="#{jems.standard.application.form.export.project.output.and.results.overview}" href="#section-a-4"></bookmark>
+                      th:name="#{application.config.project.section.a.4}" href="#section-a-4"></bookmark>
         </bookmark>
 
         <th:block th:object="${projectData}">
@@ -37,11 +37,11 @@
                 </bookmark>
                 <bookmark clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS"
                           href="#associated-organizations"
-                          th:name="#{jems.standard.application.form.export.partner.associated.organizations}">
+                          th:name="#{project.application.form.section.part.b.associatedOrganizations}">
                     <bookmark
                             th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(projectData.sectionB.associatedOrganisations)}"
                             th:object="${associatedOrganization}"
-                            th:with="associatedOrganizationTitle = #{jems.standard.application.form.export.associated.organization(${associatedOrganization.nameInOriginalLanguage}, ${associatedOrganization.sortNumber})}"
+                            th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage}"
                             th:name="${associatedOrganizationTitle}"
                             th:href="'#'+${associatedOrganizationTitle}">
                     </bookmark>

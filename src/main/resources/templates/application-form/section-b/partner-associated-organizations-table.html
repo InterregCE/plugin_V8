@@ -11,16 +11,49 @@
 <th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)"
           clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
     <div class="title" id="associated-organizations"
-         th:text="#{jems.standard.application.form.export.associated.organizations}">Associated
+         th:text="#{project.application.form.section.part.b.associatedOrganizations}">Associated
         organizations
     </div>
+
+    <table class="default-table" clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+        <thead class="table-header">
+        <tr>
+            <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
+
+            <th th:text="#{project.organization.original.name.label}">
+                Partner name in Original language
+            </th>
+
+            <th th:text="#{project.application.form.associatedOrganization.table.partner}">
+                Name of the responsible project partner
+            </th>
+
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr th:if="${projectDataSectionB.associatedOrganisations.size() == 0}">
+            <td colspan="3"></td>
+        </tr>
+        <tr th:each="organization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(projectDataSectionB.associatedOrganisations)}"
+            th:object="${organization}">
+            <td th:text="*{sortNumber}"></td>
+            <td
+                    th:text="*{nameInOriginalLanguage}">
+            </td>
+            <td th:text="${organization.partner.abbreviation}">
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
     <th:block th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(associatedOrganizations)}"
               th:object="${associatedOrganization}">
-        <table class="default-vertical-table">
+        <table class="default-vertical-table mt-2rem">
             <thead class="table-header">
             <tr class="sub-heading-2">
                 <td colspan="2"
-                    th:with="associatedOrganizationTitle = #{jems.standard.application.form.export.associated.organization(${associatedOrganization.nameInOriginalLanguage}, ${associatedOrganization.sortNumber})}"
+                    th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage} + ' ' + *{'AO'+partner.sortNumber}"
                     th:text="${associatedOrganizationTitle}"
                     th:id="${associatedOrganizationTitle}"
                 >
@@ -30,35 +63,35 @@
             </thead>
             <tbody class="table-body">
             <tr>
-                <th th:text="#{jems.standard.application.form.export.partner.detail.number}">Number</th>
-                <td th:text="*{'AO'+partner.sortNumber}"></td>
+                <th th:text="#{project.application.form.partner.table.number}">Number</th>
+                <td th:text="(*{partner.role?.isLead()}? 'LP' : 'PP') + *{partner.sortNumber}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.common.label.name.of.organization.in.original.language}">
+                <th th:text="#{project.organization.original.name.label}">
                     Name in original language
                 </th>
                 <td th:text="*{nameInOriginalLanguage}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.common.label.name.of.organization.in.english}">
+                <th th:text="#{project.organization.english.name.label}">
                     Name in english
                 </th>
                 <td th:text="*{nameInEnglish}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.common.label.country}">Country</th>
+                <th th:text="#{project.partner.main-address.country}">Country</th>
                 <td th:text="*{address?.country}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.common.label.region}">Region</th>
+                <th th:text="#{project.partner.main-address.region2}">Region</th>
                 <td th:text="*{address?.nutsRegion2}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.common.label.sub.region}">Sub region</th>
+                <th th:text="#{project.partner.secondary-address.region3}">Sub region</th>
                 <td th:text="*{address?.nutsRegion3}"></td>
             </tr>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.common.label.address.detail}">Address details
+                <th th:text="#{project.partner.main-address.street} + ', ' + #{project.partner.main-address.housenumber} + ', ' + #{project.partner.main-address.postalcode} + ', ' + #{project.partner.main-address.city}">Address details
                 </th>
                 <td>
                     <div>
@@ -74,7 +107,7 @@
             <th:block
                     th:with="legalRepresentative=${clfUtils.getLegalRepresentative(associatedOrganization?.contacts)}">
                 <tr>
-                    <th th:text="#{jems.standard.application.form.export.common.label.legal.representative}">Legal
+                    <th th:text="#{project.partner.representative.header.detail}">Legal
                         representative
                     </th>
                     <td>
@@ -85,7 +118,7 @@
             </th:block>
             <th:block th:with="contactPerson=${clfUtils.getContactPerson(associatedOrganization.contacts)}">
                 <tr>
-                    <th th:text="#{jems.standard.application.form.export.common.label.contact.person}">Contact person
+                    <th th:text="#{project.partner.contact.header.detail}">Contact person
                     </th>
                     <td>
                         <span th:text="${contactPerson?.firstName} "></span>
@@ -93,18 +126,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <th th:text="#{jems.standard.application.form.export.common.label.email}">Email</th>
+                    <th th:text="#{authentication.email.label}">Email</th>
                     <td th:text="${contactPerson?.email}"></td>
                 </tr>
                 <tr>
-                    <th th:text="#{jems.standard.application.form.export.common.label.phone}">Phone</th>
+                    <th th:text="#{project.partner.contact.telephone}">Phone</th>
                     <td th:text="${contactPerson?.telephone}"></td>
                 </tr>
             </th:block>
             <tr>
-                <th th:text="#{jems.standard.application.form.export.associated.organization.role.description}">Role
+                <th th:text="#{application.config.project.partner.role}">Role
                     description
                 </th>
+            </tr>
+            <tr>
                 <td clf:textTranslationByDataLanguage="*{roleDescription}"></td>
             </tr>
             </tbody>
