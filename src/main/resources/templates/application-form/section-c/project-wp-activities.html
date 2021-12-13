@@ -89,7 +89,7 @@
         </tr>
         </thead>
 
-        <tbody class="table-body">
+        <tbody class="table-body long-text">
         <tr th:each="deliverable, rowStat: ${activity.deliverables}"
             th:object="${deliverable}">
             <td th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber}">D.x.x</td>
