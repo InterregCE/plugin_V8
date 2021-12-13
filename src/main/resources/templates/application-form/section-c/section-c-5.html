@@ -28,8 +28,8 @@
                 </tr>
                 </thead>
                 <tbody class="table-body">
-                <tr>
-                    <th th:text="#{project.results.result.indicator}">Indicatr</th>
+                <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">
+                    <th th:text="#{project.results.result.indicator}">Indicator</th>
                     <td clf:textTranslationByExportLanguage="*{programmeResultName}">indic name</td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">

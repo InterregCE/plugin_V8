@@ -11,7 +11,7 @@
 <th:block th:fragment="sectionC4Output(workPackage)" th:each="output, rowStat: ${workPackage.outputs}"
       th:object="${output}">
 
-    <table class="default-vertical-table">
+    <table class="default-vertical-table" clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_TITLE,PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT,PROJECT_OUTPUT_DELIVERY_PERIOD,PROJECT_OUTPUT_TARGET_VALUE,PROJECT_OUTPUT_DESCRIPTION">
         <thead class="table-header">
         <tr class="sub-heading-1">
             <td colspan="2"
@@ -22,27 +22,27 @@
         </thead>
 
         <tbody class="table-body">
-            <tr>
+            <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_TITLE">
                 <th th:text="#{project.application.form.work.package.output.title}">title</th>
                 <td clf:textTranslationByDataLanguage="${output.title}">value</td>
             </tr>
 
-            <tr>
+            <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT">
                 <th th:text="#{project.application.form.work.package.output.programme.output.indicator}">indicator name</th>
                 <td clf:textTranslationByExportLanguage="*{programmeOutputIndicatorName}"></td>
             </tr>
 
-            <tr>
+            <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT">
                 <th th:text="#{project.application.form.work.package.output.measurement.unit}">indicator measure unit</th>
                 <td  clf:textTranslationByExportLanguage="*{programmeOutputIndicatorMeasurementUnit}"></td>
             </tr>
 
-            <tr>
+            <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_TARGET_VALUE">
                 <th th:text="#{project.application.form.work.package.output.target.value}"></th>
                 <td clf:number="*{targetValue}"></td>
             </tr>
 
-            <tr>
+            <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_DELIVERY_PERIOD">
                 <th th:text="#{project.work.package.tab.deliverables.period}"></th>
                 <td>
                     <span th:unless="*{periodNumber == null}">
@@ -55,7 +55,7 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_DESCRIPTION">
                 <th th:text="#{project.application.form.work.package.output.description}"></th>
                 <td clf:textTranslationByDataLanguage="${output.description}"></td>
             </tr>

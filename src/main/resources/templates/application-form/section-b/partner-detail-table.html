@@ -160,11 +160,19 @@
             <tbody class="table-body">
             <tr clf:ifAnyFieldIsVisible="PARTNER_TYPE">
                 <th th:text="#{jems.standard.application.form.export.partner.detail.type}">Partner type</th>
-                <td th:text="*{partnerType}"></td>
+                <td>
+                    <span th:if="${partner.partnerType != null}"
+                          th:text="#{${clfUtils.getPartnerTypeTranslationString(partner.partnerType)}}">
+                    </span>
+                </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_SUB_TYPE">
                 <th th:text="#{jems.standard.application.form.export.partner.detail.sub.type}">Partner sub type</th>
-                <td th:text="*{partnerSubType}"></td>
+                <td>
+                    <span th:if="${partner.partnerSubType != null}"
+                          th:text="#{${clfUtils.getPartnerSubTypeTranslationString(partner.partnerSubType)}}">
+                    </span>
+                </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_STATUS">
                 <th th:text="#{jems.standard.application.form.export.partner.detail.legal.status}">Legal status</th>
@@ -172,7 +180,11 @@
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_NACE_GROUP_LEVEL">
                 <th th:text="#{jems.standard.application.form.export.partner.detail.nace}">NACE</th>
-                <td th:text="*{nace}"></td>
+                <td>
+                    <span th:if="${partner.nace != null}"
+                          th:text="${clfUtils.getPartnerNaceTranslationString(partner.nace)}">
+                    </span>
+                </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_IDENTIFIER">
                 <th th:text="#{jems.standard.application.form.export.partner.detail.vat}">Vat number</th>
@@ -206,7 +218,7 @@
             </tbody>
         </table>
         <table class="default-vertical-table"
-               clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME,PARTNER_CONTACT_PERSON_EMAIL,PARTNER_CONTACT_PERSON_TELEPHONE">
+               clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_TITLE,PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME,PARTNER_CONTACT_PERSON_TITLE,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME,PARTNER_CONTACT_PERSON_EMAIL,PARTNER_CONTACT_PERSON_TELEPHONE">
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2"
