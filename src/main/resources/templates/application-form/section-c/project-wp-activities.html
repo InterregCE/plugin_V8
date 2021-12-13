@@ -65,9 +65,9 @@
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
-            <th th:text="#{project.work.package.tab.activity.partnersInvolved}">prtnrs involved</th>
+            <th th:text="#{project.work.package.tab.activity.partnersInvolved}">partners involved</th>
             <td>
-                <th:block th:each="partner, rowStat : ${projectDataSectionB.partners}" th:object="${partner}">
+                <th:block th:each="partner, rowStat : ${clfUtils.getPartnerListForActivity(activity.partnerIds, projectDataSectionB.partners)}" th:object="${partner}">
                     <span  th:text="${partner.abbreviation} + (!${rowStat.last} ? ', ' : '') "></span>
                 </th:block>
             </td>

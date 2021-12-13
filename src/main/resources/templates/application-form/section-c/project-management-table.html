@@ -8,7 +8,8 @@
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="projectManagement(projectDataSectionC)">
+<th:block clf:ifAnyFieldIsVisible="PROJECT_COORDINATION,PROJECT_QUALITY_MEASURES,PROJECT_COMMUNICATION_APPROACH,PROJECT_FINANCIAL_MANAGEMENT_AND_REPORTING,PROJECT_COOPERATION_CRITERIA,PROJECT_HORIZONTAL_PRINCIPLES"
+          th:fragment="projectManagement(projectDataSectionC)">
     <div id="section-c-7" class="title"
          th:text="#{project.application.form.section.part.c.subsection.seven}">
         C.7 Project management

@@ -9,14 +9,10 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriod
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingByFundOverview
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerStateAidData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerContactData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressTypeData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectContactTypeData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
+import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectTargetGroupData
 import io.cloudflight.jems.plugin.standard.common.*
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
@@ -131,8 +127,32 @@ class TemplateUtils {
                 index, indicatorOverviewLine ->
             generateIdsForNotExistingIds(indicatorOverviewLine, index) }
 
-    fun isInvestmentSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
-        isInvestmentSectionVisible(lifecycleData, callData)
+    fun isInvestmentLocationAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isInvestmentLocationVisible(lifecycleData, callData)
+
+    fun getPartnerTypeTranslationString(partnerType: ProjectTargetGroupData?): String {
+        if (partnerType != null) {
+            return "project.application.form.relevance.target.group.$partnerType"
+        }
+        return ""
+    }
+
+    fun getPartnerSubTypeTranslationString(partnerSubType: PartnerSubTypeData?): String {
+        if (partnerSubType != null) {
+            return "project.application.form.relevance.target.group.$partnerSubType"
+        }
+        return ""
+    }
+
+    fun getPartnerNaceTranslationString(nace: NaceGroupLevelData?): String {
+        if (nace != null) {
+            return nace.toString().replace('_', '.')
+        }
+        return ""
+    }
+
+    fun getPartnerListForActivity(activityPartnerIds:Set<Long>, partners:Set<ProjectPartnerData>): Set<ProjectPartnerData> =
+        partners.filter { activityPartnerIds.contains(it.id) }.toSet()
 
     private fun generateIdsForNotExistingIds(
         indicatorOverviewLine: IndicatorOverviewLine,

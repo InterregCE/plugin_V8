@@ -86,6 +86,17 @@ fun isInvestmentSectionVisible(lifecycleData: ProjectLifecycleData, callData: Ca
         isFieldVisible(it, lifecycleData, callData)
     }
 
+fun isInvestmentLocationVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+    listOf(
+        ApplicationFormFieldId.PROJECT_INVESTMENT_COUNTRY,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_STREET,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_HOUSE_NUMBER,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_POSTAL_CODE,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_CITY,
+    ).any {
+        isFieldVisible(it, lifecycleData, callData)
+    }
+
 fun isWorkPlanActivitiesSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
     ApplicationFormFieldId.PROJECT_ACTIVITIES_TITLE,
     ApplicationFormFieldId.PROJECT_ACTIVITIES_DESCRIPTION,

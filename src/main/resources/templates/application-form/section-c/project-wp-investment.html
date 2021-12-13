@@ -33,11 +33,10 @@
         </th:block>
     </div>
 
-    <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.justification}">
-        justification
-    </div>
-
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED">
+        <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.justification}">
+            justification
+        </div>
         <div th:text="#{project.application.form.workpackage.investment.justification.explanation}">explanation</div>
         <div class="input-data" clf:textTranslationByDataLanguage="${investment?.justificationExplanation}">value</div>
     </div>
@@ -58,7 +57,7 @@
     </div>
 
     <table class="default-vertical-table"
-        th:if="${clfUtils.isInvestmentSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}">
+        th:if="${clfUtils.isInvestmentLocationAvailable(#vars.projectData.lifecycleData, #vars.callData)}">
         <thead class="table-header">
         <tr class="sub-heading-1">
             <td colspan="2"
@@ -112,11 +111,10 @@
         <div class="input-data" clf:textTranslationByDataLanguage="${investment?.risk}">value</div>
     </div>
 
-    <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.documentation}" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION">
-        investment
-    </div>
-
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION">
+        <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.documentation}">
+            investment
+        </div>
         <div th:text="#{project.application.form.workpackage.investment.documentation.description.line.1}">descr</div>
         <div class="input-data" clf:textTranslationByDataLanguage="${investment?.documentation}">value</div>
     </div>
