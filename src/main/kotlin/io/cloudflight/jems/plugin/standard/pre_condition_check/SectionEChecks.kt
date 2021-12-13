@@ -15,7 +15,7 @@ private const val SECTION_E_INFO_MESSAGES_PREFIX = "$SECTION_E_MESSAGES_PREFIX.i
 
 fun checkSectionE(sectionEData: ProjectDataSectionE): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
-        messageKey = "$SECTION_E_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
+        messageKey = "project.application.form.section.part.e.subsection.one", messageArgs = emptyMap(),
 
         checkIfPartnersShareSumUpToTotalLumpSum(sectionEData.projectLumpSums),
 
