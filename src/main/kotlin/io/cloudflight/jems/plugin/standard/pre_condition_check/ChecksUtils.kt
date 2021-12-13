@@ -12,15 +12,13 @@ import io.cloudflight.jems.plugin.contract.pre_condition_check.models.PreConditi
 fun buildPreConditionCheckMessage(
     messageKey: String, messageArgs: Map<String, String> = emptyMap(), vararg checkResults: PreConditionCheckMessage?
 ): PreConditionCheckMessage =
-    mutableListOf<PreConditionCheckMessage>().plus(
-        checkResults.filterNotNull()
-    ).let { subSectionMessages ->
-        PreConditionCheckMessage(
-            I18nMessageData(messageKey, messageArgs),
-            subSectionMessages.firstOrNull { it.messageType == MessageType.ERROR }?.messageType ?: MessageType.INFO,
-            subSectionMessages
-        )
-    }
+    checkResults.filterNotNull().let { subSectionMessages ->
+    PreConditionCheckMessage(
+        I18nMessageData(messageKey, messageArgs),
+        subSectionMessages.firstOrNull { it.messageType == MessageType.ERROR }?.messageType ?: MessageType.INFO,
+        subSectionMessages
+    )
+}
 
 fun buildPreConditionCheckMessage(
     messageKey: String, messageArgs: Map<String, String> = emptyMap(), messageType: MessageType,

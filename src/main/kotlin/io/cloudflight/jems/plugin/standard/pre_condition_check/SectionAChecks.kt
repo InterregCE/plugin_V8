@@ -16,7 +16,7 @@ private const val SECTION_A_INFO_MESSAGES_PREFIX = "$SECTION_A_MESSAGES_PREFIX.i
 
 fun checkSectionA(sectionAData: ProjectDataSectionA?): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
-        messageKey = "$SECTION_A_MESSAGES_PREFIX.header", messageArgs = emptyMap(),
+        messageKey = "project.application.form.section.part.a", messageArgs = emptyMap(),
 
         checkIfTitleIsProvided(sectionAData?.title),
 
@@ -69,7 +69,8 @@ private fun checkIfIntroIsProvidedInEnglish(intro: Set<InputTranslationData>?) =
 
 private fun checkIfIntroIsProvided(intro: Set<InputTranslationData>?) =
     when {
-        intro.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        intro.isNotFullyTranslated(CallDataContainer.get().inputLanguages) &&
+                CallDataContainer.get().inputLanguages.any { it != SystemLanguageData.EN }
         -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.intro.is.not.provided")
         else -> null
     }
