@@ -26,7 +26,10 @@ import java.time.ZonedDateTime
 internal class ChecksSectionA {
 
     companion object {
-        val mandatoryLanguages = setOf(SystemLanguageData.EN, SystemLanguageData.DE)
+        val mandatoryLanguages = setOf(
+            SystemLanguageData.EN,
+            SystemLanguageData.DE,
+            SystemLanguageData.RO)
         val onceStepCallData = CallDetailData(
             id = 0,
             name = "UT Call",
@@ -161,7 +164,7 @@ internal class ChecksSectionA {
     }
 
     @Test
-    fun `Project Intro Is not fully Provided`() {
+    fun `Project Intro in English Is not Provided`() {
         val sectionAData = ProjectDataSectionA(
             customIdentifier = "BP4500492",
             title = emptySet(),
@@ -180,18 +183,66 @@ internal class ChecksSectionA {
         val verification = checkSectionA(sectionAData)
         assertThat(verification.subSectionMessages.any
         {message ->
+            message.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.a.error.intro.in.en.is.not.provided" }
+        ).isTrue
+    }
+
+    @Test
+    fun `Project Intro in English Is empty`() {
+        val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
+            title = emptySet(),
+            intro  = setOf(
+                InputTranslationData(SystemLanguageData.EN, ""),
+            ),
+            acronym = null,
+            duration = null,
+            specificObjective = null,
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
+        CallDataContainer.set(onceStepCallData)
+        LifecycleDataContainer.set(projectLifecycleData)
+        val verification = checkSectionA(sectionAData)
+        assertThat(verification.subSectionMessages.any
+        {message ->
+            message.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.a.error.intro.in.en.is.not.provided" }
+        ).isTrue
+    }
+
+    @Test
+    fun `Project Intro in other language than English Is not fully Provided`() {
+        val sectionAData = ProjectDataSectionA(
+            customIdentifier = "BP4500492",
+            title = emptySet(),
+            intro  = setOf(
+                InputTranslationData(SystemLanguageData.DE, "Test data"),
+            ),
+            acronym = null,
+            duration = null,
+            specificObjective = null,
+            programmePriority = null,
+            coFinancingOverview = coFinancingOverview,
+            resultIndicatorOverview = resultIndicatorOverview
+        )
+        CallDataContainer.set(onceStepCallData)
+        LifecycleDataContainer.set(projectLifecycleData)
+        val verification = checkSectionA(sectionAData)
+        assertThat(verification.subSectionMessages.any
+        {message ->
             message.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.a.error.intro.is.not.provided" }
         ).isTrue
     }
 
     @Test
-    fun `Project Intro Is not fully Provided due to empty text`() {
+    fun `Project Intro in other language than English Is not fully Provided due to empty text`() {
         val sectionAData = ProjectDataSectionA(
             customIdentifier = "BP4500492",
             title = emptySet(),
             intro  = setOf(
-                InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
-                InputTranslationData(SystemLanguageData.EN, ""),
+                InputTranslationData(SystemLanguageData.DE, ""),
+                InputTranslationData(SystemLanguageData.RO, "test data")
             ),
             acronym = null,
             duration = null,
@@ -288,6 +339,7 @@ internal class ChecksSectionA {
             intro  = setOf(
                 InputTranslationData(SystemLanguageData.EN, "TEST DATA"),
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
+                InputTranslationData(SystemLanguageData.RO, "TEST DATA")
             ),
             acronym = null,
             duration = null,
@@ -312,6 +364,7 @@ internal class ChecksSectionA {
             title = setOf(
                 InputTranslationData(SystemLanguageData.EN, "TEST DATA"),
                 InputTranslationData(SystemLanguageData.DE, "TEST DATA"),
+                InputTranslationData(SystemLanguageData.RO, "TEST DATA")
             ),
             intro = emptySet(),
             acronym = null,

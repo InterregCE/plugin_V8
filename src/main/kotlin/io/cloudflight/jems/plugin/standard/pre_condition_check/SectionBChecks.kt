@@ -76,9 +76,8 @@ private fun checkIfExactlyOneLeadPartnerIsAdded(partners: Set<ProjectPartnerData
 
 private fun checkIfTotalCoFinancingIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
     when {
-        partners.isNullOrEmpty() -> null
-        partners.sumOf { partner -> partner.budget.projectPartnerCoFinancing.finances
-            .firstOrNull { it.fundType == ProjectPartnerCoFinancingFundTypeData.MainFund }?.percentage } <= BigDecimal.ZERO
+        partners.all { partner ->
+            partner.budget.projectPartnerCoFinancing.partnerContributions.all { it.amount == null || it.amount!! <= BigDecimal.ZERO }}
         -> buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.co.financing.should.be.greater.than.zero")
         else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.co.financing.is.greater.than.zero")
     }
