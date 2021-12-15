@@ -127,6 +127,9 @@ class TemplateUtils {
                 index, indicatorOverviewLine ->
             generateIdsForNotExistingIds(indicatorOverviewLine, index) }
 
+    fun isInvestmentSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isInvestmentSectionVisible(lifecycleData, callData) || isInvestmentLocationAvailable(lifecycleData, callData)
+
     fun isInvestmentLocationAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isInvestmentLocationVisible(lifecycleData, callData)
 
