@@ -75,6 +75,8 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
 
             checkIfObjectivesOfWorkPackagesAreProvided(sectionCData?.projectWorkPackages),
 
+            checkIfProjectHasAtLeastOneWorkPackageOutput(sectionCData?.projectWorkPackages),
+
             checkIfWorkPackageContentIsProvided(sectionCData?.projectWorkPackages)
         ),
 
@@ -637,12 +639,6 @@ private fun checkIfOutputsAreValid(
                 )
             }
         }
-    } else {
-        errorOutputsMessages.add(
-            buildErrorPreConditionCheckMessage(
-                "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.output.should.be.added"
-            )
-        )
     }
     return errorOutputsMessages
 }
@@ -856,3 +852,13 @@ private fun isFieldVisible(fieldId: ApplicationFormFieldId): Boolean {
     return isFieldVisible(fieldId, LifecycleDataContainer.get()!!, CallDataContainer.get())
 }
 
+private fun checkIfProjectHasAtLeastOneWorkPackageOutput(workPackages: List<ProjectWorkPackageData>?):  PreConditionCheckMessage? =
+    when {
+        workPackages.isNullOrEmpty() -> buildErrorPreConditionCheckMessage(
+            "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.output.should.be.added"
+        )
+        workPackages.all { workPackage -> workPackage.outputs.isNullOrEmpty() } -> buildErrorPreConditionCheckMessage(
+            "$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.output.should.be.added"
+        )
+        else -> null
+    }

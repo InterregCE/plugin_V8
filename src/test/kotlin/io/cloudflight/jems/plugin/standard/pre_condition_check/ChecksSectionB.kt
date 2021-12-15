@@ -179,9 +179,15 @@ internal class ChecksSectionB {
             fund = programmeFund,
             percentage = BigDecimal(100)
         )
+        val partnerContributionData = ProjectPartnerContributionData(
+            123,
+            "contribution",
+            ProjectPartnerContributionStatusData.Private, BigDecimal(93700),
+            true
+        )
         val coFinancingData = ProjectPartnerCoFinancingAndContributionData(
             finances = listOf(projectPartnerFinancingData),
-            partnerContributions = emptyList(),
+            partnerContributions = listOf(partnerContributionData),
             partnerAbbreviation = ""
         )
         val budget = PartnerBudgetData(

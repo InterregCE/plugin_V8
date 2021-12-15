@@ -69,8 +69,7 @@ private fun checkIfIntroIsProvidedInEnglish(intro: Set<InputTranslationData>?) =
 
 private fun checkIfIntroIsProvided(intro: Set<InputTranslationData>?) =
     when {
-        intro.isNotFullyTranslated(CallDataContainer.get().inputLanguages) &&
-                CallDataContainer.get().inputLanguages.any { it != SystemLanguageData.EN }
+        intro.isNotFullyTranslated(CallDataContainer.get().inputLanguages.minus(SystemLanguageData.EN))
         -> buildErrorPreConditionCheckMessage("$SECTION_A_ERROR_MESSAGES_PREFIX.intro.is.not.provided")
         else -> null
     }
