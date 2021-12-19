@@ -50,17 +50,17 @@
             <div class="input-data" clf:textTranslationByDataLanguage="*{objectiveAndAudience}">answer 2</div>
         </div>
 
-        <div class="title" id="activities" th:if="${clfUtils.isActivitiesSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.activities.size() > 0}"
+        <div class="sub-heading-1" id="activities" th:if="${clfUtils.isActivitiesSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.activities.size() > 0}"
              th:text="#{workpackage.tab.activities}">Activities
         </div>
         <div th:insert="~{application-form/section-c/project-wp-activities.html :: sectionC4Activities(${workPackage}, ${periods}, ${projectDataSectionB})}"></div>
 
-        <div class="title" id="outputs" th:if="${clfUtils.isOutputsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.outputs.size() > 0}"
+        <div class="sub-heading-1" id="outputs" th:if="${clfUtils.isOutputsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.outputs.size() > 0}"
              th:text="#{workpackage.tab.outputs}">Outputs
         </div>
         <div th:insert="~{application-form/section-c/project-wp-output.html :: sectionC4Output(${workPackage})}"></div>
 
-        <div class="title" id="investments" th:if="${clfUtils.isInvestmentSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
+        <div class="sub-heading-1" id="investments" th:if="${clfUtils.isInvestmentSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
              th:text="#{workpackage.tab.investments}">Investments
         </div>
         <div th:insert="~{application-form/section-c/project-wp-investment.html :: sectionC4Investment(${workPackage}, ${periods})}"></div>

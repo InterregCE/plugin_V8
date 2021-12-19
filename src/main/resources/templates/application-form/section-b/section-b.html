@@ -9,10 +9,6 @@
 </head>
 <body>
 <th:block th:fragment="sectionB(projectDataSectionB)">
-    <div class="headline" id="section-b" th:text="#{project.application.form.section.part.b}">
-        Section B - partners
-    </div>
-
     <div th:insert="~{application-form/section-b/partners-overview-table.html :: partnersOverviewTable(${projectDataSectionB})}"></div>
 
     <div class="page-break-after"></div>

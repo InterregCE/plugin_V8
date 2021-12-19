@@ -133,6 +133,9 @@ class TemplateUtils {
     fun isInvestmentLocationAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isInvestmentLocationVisible(lifecycleData, callData)
 
+    fun isInvestmentJustificationAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isInvestmentJustificationVisible(lifecycleData, callData)
+
     fun getPartnerTypeTranslationString(partnerType: ProjectTargetGroupData?): String {
         if (partnerType != null) {
             return "project.application.form.relevance.target.group.$partnerType"
