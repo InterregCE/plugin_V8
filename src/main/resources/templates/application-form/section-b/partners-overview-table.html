@@ -10,6 +10,10 @@
 <body>
 <th:block th:fragment="partnersOverviewTable(projectDataSectionB)">
     <div class="landscape">
+        <div class="headline" id="section-b" th:text="#{project.application.form.section.part.b}">
+            Section B - partners
+        </div>
+
         <div class="title" id="partners-overview" th:text="#{jems.standard.application.form.export.partner.overview}">
             Partners overview
         </div>
@@ -75,7 +79,7 @@
                         </div>
                     </th:block>
                 </td>
-                <td th:text="*{budget.projectPartnerBudgetTotalCost}">
+                <td class="text-right" th:text="*{budget.projectPartnerBudgetTotalCost}">
                 </td>
             </tr>
             </tbody>

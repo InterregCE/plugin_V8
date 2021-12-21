@@ -111,6 +111,7 @@
                         representative
                     </th>
                     <td>
+                        <span th:text="${legalRepresentative?.title} "></span>
                         <span th:text="${legalRepresentative?.firstName} "></span>
                         <span th:text="${legalRepresentative?.lastName}"></span>
                     </td>
@@ -121,6 +122,7 @@
                     <th th:text="#{project.partner.contact.header.detail}">Contact person
                     </th>
                     <td>
+                        <span th:text="${contactPerson?.title} "></span>
                         <span th:text="${contactPerson?.firstName} "></span>
                         <span th:text="${contactPerson?.lastName}"></span>
                     </td>
@@ -135,7 +137,7 @@
                 </tr>
             </th:block>
             <tr>
-                <th th:text="#{application.config.project.partner.role}">Role
+                <th th:text="#{project.application.form.partner.table.role}">Role
                     description
                 </th>
             </tr>

@@ -93,6 +93,17 @@ fun isInvestmentLocationVisible(lifecycleData: ProjectLifecycleData, callData: C
         isFieldVisible(it, lifecycleData, callData)
     }
 
+fun isInvestmentJustificationVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+    listOf(
+        ApplicationFormFieldId.PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_IS_BENEFITING,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_PILOT_CLARIFICATION,
+    ).any {
+        isFieldVisible(it, lifecycleData, callData)
+    }
+
+
 fun isWorkPlanActivitiesSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
     ApplicationFormFieldId.PROJECT_ACTIVITIES_TITLE,
     ApplicationFormFieldId.PROJECT_ACTIVITIES_DESCRIPTION,

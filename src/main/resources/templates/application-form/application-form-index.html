@@ -18,9 +18,9 @@
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_A3"
                     th:if="${callData.isAdditionalFundAllowed == false}"
-                    th:name="#{application.config.project.section.a.3}" href="#section-a-3"></bookmark>
+                    th:name="#{project.application.form.section.part.a.subsection.three}" href="#section-a-3"></bookmark>
             <bookmark clf:ifAnyFieldIsVisible="PROJECT_A4"
-                      th:name="#{application.config.project.section.a.4}" href="#section-a-4"></bookmark>
+                      th:name="#{project.application.form.section.part.a.subsection.four}" href="#section-a-4"></bookmark>
         </bookmark>
 
         <th:block th:object="${projectData}">
@@ -71,7 +71,7 @@
                 <bookmark th:name="#{project.application.form.section.part.c.subsection.seven}" href="#section-c-7"></bookmark>
                 <bookmark
                         th:if="${clfUtils.isLongTermPlansSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{application.config.project.section.c.8}" href="#section-c-8"></bookmark>
+                        th:name="#{project.application.form.section.part.c.subsection.eight}" href="#section-c-8"></bookmark>
             </bookmark>
         </bookmark>
     </bookmarks>

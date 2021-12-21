@@ -15,6 +15,12 @@
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="3"
+                th:text="#{partner.tab.state.aid}">
+                State aid
+            </td>
+            </tr>
+            <tr class="sub-heading-1">
+                <td colspan="3"
                     th:text="#{project.partner.state.aid.title}">
                     State aid criteria check
                 </td>
@@ -85,14 +91,6 @@
     </th:block>
     <table class="default-vertical-table"
            clf:ifAnyFieldIsVisible="PARTNER_STATE_AID_CRITERIA_SELF_CHECK,PARTNER_STATE_AID_RELEVANT_ACTIVITIES,PARTNER_STATE_AID_SCHEME">
-        <thead class="table-header">
-            <tr class="sub-heading-1">
-                <td colspan="3"
-                    th:text="#{partner.tab.state.aid}">
-                    State aid
-                </td>
-            </tr>
-        </thead>
         <tbody class="table-body">
         <tr clf:ifAnyFieldIsVisible="PARTNER_STATE_AID_CRITERIA_SELF_CHECK">
             <th th:text="#{project.partner.state.aid.check.result}">

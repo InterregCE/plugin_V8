@@ -212,7 +212,7 @@
                 </tr>
             </th:block>
             <tr clf:ifAnyFieldIsVisible="PARTNER_PIC">
-                <th th:text="#{application.config.project.partner.pic}">PIC</th>
+                <th th:text="#{project.partner.pic}">PIC</th>
                 <td th:text="*{pic}"></td>
             </tr>
             </tbody>
@@ -273,8 +273,8 @@
                clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_COMPETENCES,PARTNER_MOTIVATION_ROLE,PARTNER_ROLE_EXPERIENCE">
             <thead>
                 <tr>
-                    <td th:text="#{application.config.project.section.b.1.6}">
-                        Partner motivation and contribution
+                    <td class="sub-heading-1" th:text="#{partner.tab.motivation}">
+                        Motivation
                     </td>
                 </tr>
             </thead>
