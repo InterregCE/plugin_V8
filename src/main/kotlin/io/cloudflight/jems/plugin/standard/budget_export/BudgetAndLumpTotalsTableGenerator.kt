@@ -5,6 +5,7 @@ import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.ProjectData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.*
+import io.cloudflight.jems.plugin.contract.models.project.sectionD.PartnerBudgetPerFundData
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetAndLumpSumTotalsRow
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetTotalCostInfo
 import io.cloudflight.jems.plugin.standard.budget_export.models.FundInfo
@@ -12,13 +13,10 @@ import io.cloudflight.jems.plugin.standard.budget_export.models.GeneralBudgetTot
 import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getMessagesWithoutArgs
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
-import io.cloudflight.jems.plugin.standard.common.percentageTo
 import io.cloudflight.jems.plugin.standard.common.toLocale
-import io.cloudflight.jems.plugin.standard.common.percentageDown
 import io.cloudflight.jems.plugin.standard.common.isFieldVisible
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
-import java.math.RoundingMode
 import kotlin.collections.sumOf
 
 open class BudgetAndLumpTotalsTableGenerator(
@@ -57,6 +55,10 @@ open class BudgetAndLumpTotalsTableGenerator(
                     fundAbbreviation,
                     getMessage(
                         "jems.standard.budget.export.budget.totals.fund.rate.percentage",
+                        exportLocale, messageSource, arrayOf(fundAbbreviation)
+                    ),
+                    getMessage(
+                        "jems.standard.budget.export.budget.totals.fund.percentage.of.total",
                         exportLocale, messageSource, arrayOf(fundAbbreviation)
                     ),
                 )
@@ -173,20 +175,17 @@ open class BudgetAndLumpTotalsTableGenerator(
 
         }
 
-    private fun generateBudgetAndLumpSumTotalsTableData(): List<BudgetAndLumpSumTotalsRow> {
-        val partnersTotalEligibleBudget = projectData.sectionB.partners.sumOf { it.budget.projectBudgetCostsCalculationResult.totalCosts }
-        return projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
+    private fun generateBudgetAndLumpSumTotalsTableData(): List<BudgetAndLumpSumTotalsRow> =
+       projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
+            val projectPartnerBudgetPerFundData = projectData.sectionD.projectPartnerBudgetPerFundData.first { it.partner?.id == partner.id }
             BudgetAndLumpSumTotalsRow(
                 partnerInfo = getPartnerInfo(partner),
-                fundInfoList = getFoundInfoList(partner.budget),
-                publicContribution = partner.budget.projectPartnerCoFinancing.partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Public }
-                    .sumOf { it.amount ?: BigDecimal.ZERO },
-                automaticPublicContribution = partner.budget.projectPartnerCoFinancing.partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.AutomaticPublic }
-                    .sumOf { it.amount ?: BigDecimal.ZERO },
-                privateContribution = partner.budget.projectPartnerCoFinancing.partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Private }
-                    .sumOf { it.amount ?: BigDecimal.ZERO },
-                totalEligibleBudget = partner.budget.projectBudgetCostsCalculationResult.totalCosts,
-                totalEligibleBudgetPercentage = partner.budget.projectBudgetCostsCalculationResult.totalCosts.percentageTo(partnersTotalEligibleBudget, RoundingMode.HALF_UP),
+                fundInfoList = getFoundInfoList(projectPartnerBudgetPerFundData.budgetPerFund),
+                publicContribution = projectPartnerBudgetPerFundData.publicContribution ?: BigDecimal.ZERO,
+                automaticPublicContribution = projectPartnerBudgetPerFundData.autoPublicContribution ?: BigDecimal.ZERO ,
+                privateContribution = projectPartnerBudgetPerFundData.privateContribution ?: BigDecimal.ZERO ,
+                totalEligibleBudget = projectPartnerBudgetPerFundData.totalEligibleBudget ?: BigDecimal.ZERO,
+                totalEligibleBudgetPercentage = projectPartnerBudgetPerFundData.percentageOfTotalEligibleBudget ?: BigDecimal.ZERO,
                 staffCostTotals = getStaffCostTotals(
                     partner.budget.projectPartnerBudgetCosts.staffCosts,
                     partner.budget.projectBudgetCostsCalculationResult.staffCosts,
@@ -208,7 +207,6 @@ open class BudgetAndLumpTotalsTableGenerator(
                 lumpSumsCoveringMultipleCostCategories = projectData.sectionE.projectLumpSums.flatMap { it.lumpSumContributions }
                     .filter { it.partnerId == partner.id }.sumOf { it.amount }
             )
-        }
         }
 
     private fun getGeneralBudgetCostTotalsFor(budgetCosts: List<BudgetGeneralCostEntryData>): GeneralBudgetTotalCostInfo =
@@ -243,15 +241,15 @@ open class BudgetAndLumpTotalsTableGenerator(
                 .flatMap { it.budgetPeriods }.sumOf { it.amount } else BigDecimal.ZERO
         )
 
-    private fun getFoundInfoList(budget: PartnerBudgetData) =
+    private fun getFoundInfoList(partnerBudgetPerFundData: Set<PartnerBudgetPerFundData>) =
         callSelectedFunds.map { fund ->
-            val percentage =
-                budget.projectPartnerCoFinancing.finances.firstOrNull { fund.type == it.fund?.type }?.percentage
-            FundInfo(
-                fundAmount = if (percentage == null) BigDecimal.ZERO
-                else budget.projectBudgetCostsCalculationResult.totalCosts.percentageDown(percentage),
-                fundPercentage = percentage ?: BigDecimal.ZERO
-            )
+            partnerBudgetPerFundData.first { it.fund == fund }.let{
+                FundInfo(
+                    fundAmount = it.value,
+                    fundPercentage = it.percentage,
+                    percentageOfTotal = it.percentageOfTotal
+                )
+            }
         }
 
     private fun shouldBeVisible(fieldId: ApplicationFormFieldId) =
