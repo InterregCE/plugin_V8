@@ -22,6 +22,8 @@
             <tr>
                 <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
 
+                <th th:text="#{project.application.form.associatedOrganization.table.status}">Status</th>
+
                 <th clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
                     th:text="#{project.organization.english.name.label}">
                     Partner name in English
@@ -58,6 +60,7 @@
             <tr th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
                 th:object="${partner}">
                 <td th:text="*{sortNumber}"></td>
+                <td th:text="${partner.active}  ? #{project.application.form.partner.table.status.active} : #{project.application.form.partner.table.status.inactive}"></td>
                 <td clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
                     th:text="*{nameInEnglish}">
                 </td>

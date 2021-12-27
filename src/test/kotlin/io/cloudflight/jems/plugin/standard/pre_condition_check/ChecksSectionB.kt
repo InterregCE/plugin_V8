@@ -112,6 +112,7 @@ internal class ChecksSectionB {
         )
         val partner = ProjectPartnerData(
             id = 123L,
+            active = true,
             abbreviation = "",
             role = ProjectPartnerRoleData.LEAD_PARTNER,
             sortNumber = 1,
@@ -199,6 +200,7 @@ internal class ChecksSectionB {
         )
         val partner = ProjectPartnerData(
             id = 123L,
+            active = true,
             abbreviation = "",
             role = ProjectPartnerRoleData.LEAD_PARTNER,
             sortNumber = 1,
@@ -243,6 +245,7 @@ internal class ChecksSectionB {
         )
         val partner = ProjectPartnerData(
             id = 123L,
+            active = true,
             abbreviation = "abbr",
             role = ProjectPartnerRoleData.LEAD_PARTNER,
             sortNumber = 1,
@@ -285,6 +288,7 @@ internal class ChecksSectionB {
         LifecycleDataContainer.set(projectLifecycleData)
         val partner = ProjectPartnerData(
             id = 123L,
+            active = true,
             abbreviation = "abbr",
             role = ProjectPartnerRoleData.LEAD_PARTNER,
             sortNumber = 1,
