@@ -107,9 +107,6 @@ class TemplateUtils {
     fun getPeriod(periodNumber: Number, periods: List<ProjectPeriodData>): ProjectPeriodData? =
         periods.filter { it.number == periodNumber }.firstOrNull()
 
-    fun isSectionCAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
-        isSectionCVisible(lifecycleData, callData)
-
     fun isSectionC2Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectRelevanceSectionVisible(lifecycleData, callData)
 

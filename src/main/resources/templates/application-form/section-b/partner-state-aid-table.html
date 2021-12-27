@@ -9,16 +9,19 @@
 </head>
 <body>
 <th:block th:fragment="partnerStateAidTable(partnerStateAidData)">
-
+    <table class="default-vertical-table">
+        <thead>
+            <tr class="sub-heading-1" clf:ifAnyFieldIsVisible="PARTNER_STATE_AID_CRITERIA_SELF_CHECK,PARTNER_STATE_AID_CRITERIA_SELF_CHECK,PARTNER_STATE_AID_RELEVANT_ACTIVITIES,PARTNER_STATE_AID_SCHEME">
+                <td colspan="3"
+                    th:text="#{partner.tab.state.aid}">
+                    State aid
+                </td>
+            </tr>
+        </thead>
+    </table>
     <th:block clf:ifAnyFieldIsVisible="PARTNER_STATE_AID_CRITERIA_SELF_CHECK">
         <table class="default-vertical-table">
             <thead class="table-header">
-            <tr class="sub-heading-1">
-                <td colspan="3"
-                th:text="#{partner.tab.state.aid}">
-                State aid
-            </td>
-            </tr>
             <tr class="sub-heading-1">
                 <td colspan="3"
                     th:text="#{project.partner.state.aid.title}">

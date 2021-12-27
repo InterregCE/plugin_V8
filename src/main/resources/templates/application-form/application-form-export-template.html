@@ -15,7 +15,6 @@
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
     <div class="page-break-after"></div>
-    <div th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-            th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionB}, ${projectData.sectionA}, ${projectData.sectionA.specificObjective})}"></div>
+    <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionB}, ${projectData.sectionA}, ${projectData.sectionA.specificObjective})}"></div>
 </body>
 </html>

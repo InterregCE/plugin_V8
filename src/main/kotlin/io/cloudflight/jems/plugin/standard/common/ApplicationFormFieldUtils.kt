@@ -25,20 +25,6 @@ fun isAnyFieldVisible(
 ): Boolean =
     fieldIds.any { isFieldVisible(it, lifecycleData, callData) }
 
-
-fun isSectionCVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
-    isFieldVisible(ApplicationFormFieldId.PROJECT_OVERALL_OBJECTIVE, lifecycleData, callData) ||
-            isProjectRelevanceSectionVisible(lifecycleData, callData) ||
-            isFieldVisible(ApplicationFormFieldId.PROJECT_PARTNERSHIP, lifecycleData, callData) ||
-            isWorkPlanObjectiveSectionVisible(lifecycleData, callData) ||
-            isInvestmentSectionVisible(lifecycleData, callData) ||
-            isWorkPlanActivitiesSectionVisible(lifecycleData, callData) ||
-            isWorkPlanOutputsSectionVisible(lifecycleData, callData) ||
-            isProjectResultsSectionVisible(lifecycleData, callData) ||
-            isProjectManagementSectionVisible(lifecycleData, callData) ||
-            isLongTermPlansSectionVisible(lifecycleData, callData)
-
-
 fun isProjectRelevanceSectionVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) = listOf(
     ApplicationFormFieldId.PROJECT_TERRITORIAL_CHALLENGES,
     ApplicationFormFieldId.PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED,
