@@ -141,7 +141,7 @@ open class BudgetAndLumpTotalsTableGenerator(
             it.addAll((1..(6 - numberOfHiddenColumns)).map { "" })
             it.addAll(
                 listOf(
-                    *(1..callSelectedFunds.size).flatMap { listOf("", "") }.toTypedArray(),
+                    *(1..callSelectedFunds.size).flatMap { listOf("", "", "") }.toTypedArray(),
                     rows.sumOf { it.publicContribution },
                     rows.sumOf { it.automaticPublicContribution },
                     rows.sumOf { it.privateContribution },
