@@ -31,10 +31,10 @@ open class BudgetExportDefaultImpl(
             val exportationTime = ZonedDateTime.now()
 
             addRow(getTitle(projectData, version, exportationTime))
-            addRow(getMessage("jems.standard.budget.export.budget.totals.header", exportLocale, messageSource))
+            addRow(getMessage("project.application.form.section.part.d", exportLocale, messageSource))
             addRows(BudgetAndLumpTotalsTableGenerator(projectData, callData, exportLanguage, messageSource).getData())
             addEmptyRow()
-            addRow(getMessage("jems.standard.budget.export.budget.details.header", exportLocale, messageSource))
+            addRow(getMessage("project.partner.budget.overview.header", exportLocale, messageSource))
             addRows(
                 BudgetDetailsTableGenerator(
                     projectData, callData, exportLanguage, dataLanguage, messageSource

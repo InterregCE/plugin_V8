@@ -10,6 +10,7 @@ open class BudgetDetailsRow(
     val unitType: String = "",
     val numberOfUnits: BigDecimal? = null,
     val pricePerUnit: BigDecimal? = null,
+    val lumpSumName : String = "",
     val description: String = "",
     val comments: String = "",
     val awardProcedure: String = "",

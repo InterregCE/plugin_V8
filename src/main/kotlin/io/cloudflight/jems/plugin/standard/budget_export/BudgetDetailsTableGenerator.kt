@@ -30,6 +30,7 @@ open class BudgetDetailsTableGenerator(
     private val messageSource: MessageSource
 ) {
 
+    private val numberOfColumnsBeforePeriods = 18
     private val isUnitTypeAndNumberOfUnitColumnsVisible =
         isUnitTypeAndNumberOfUnitColumnsVisible(projectData.lifecycleData, callData)
     private val isPricePerUnitColumnVisible = isPricePerUnitColumnVisible(projectData.lifecycleData, callData)
@@ -72,47 +73,54 @@ open class BudgetDetailsTableGenerator(
                     messageSource, exportLocale
                 )
             )
+            it.add(getMessage("export.cost.category", exportLocale, messageSource))
+
+            if (isDescriptionColumnVisible)
+                it.add(getMessage("project.partner.budget.table.description", exportLocale, messageSource))
+            if (isCommentColumnVisible)
+                it.add(getMessage("project.partner.budget.table.comments", exportLocale, messageSource))
+            if (isAwardProcedureColumnVisible)
+                it.add(getMessage("project.partner.budget.table.award.procedures", exportLocale, messageSource))
+            if (isInvestmentColumnVisible)
+                it.add(getMessage("project.partner.budget.table.investment", exportLocale, messageSource))
+
+            it.add(getMessage("project.application.form.section.part.e.lump.sums.column.title", exportLocale, messageSource))
+
+
             it.addAll(
                 getMessagesWithoutArgs(
                     messageSource,
                     exportLocale,
-                    "jems.standard.budget.export.cost.category", "jems.standard.budget.export.flat.rate",
-                    "jems.standard.budget.export.unit.cost"
+                    "export.flat.rate",
+                    "project.partner.budget.unitCosts"
                 )
             )
             if (isUnitTypeAndNumberOfUnitColumnsVisible)
                 it.addAll(
                     getMessagesWithoutArgs(
                         messageSource, exportLocale,
-                        "jems.standard.budget.export.unit.type", "jems.standard.budget.export.number.of.units",
+                        "project.partner.budget.table.unit.type", "project.partner.budget.table.number.of.units",
                     )
                 )
             if (isPricePerUnitColumnVisible)
-                it.add(getMessage("jems.standard.budget.export.price.per.unit", exportLocale, messageSource))
-            if (isDescriptionColumnVisible)
-                it.add(getMessage("jems.standard.budget.export.description", exportLocale, messageSource))
-            if (isCommentColumnVisible)
-                it.add(getMessage("jems.standard.budget.export.comment", exportLocale, messageSource))
-            if (isAwardProcedureColumnVisible)
-                it.add(getMessage("jems.standard.budget.export.award.procedure", exportLocale, messageSource))
-            if (isInvestmentColumnVisible)
-                it.add(getMessage("jems.standard.budget.export.investement", exportLocale, messageSource))
+                it.add(getMessage("project.partner.budget.table.price.per.unit", exportLocale, messageSource))
+
             if (arePeriodColumnsVisible) {
                 it.add(
-                    getMessage("jems.standard.budget.export.period.preparation", exportLocale, messageSource),
+                    getMessage("project.application.form.section.part.e.period.preparation", exportLocale, messageSource),
                 )
                 it.addAll(
                     periodsNumber.filter { it != PREPARATION_PERIOD && it != CLOSURE_PERIOD }.map {
                         getMessage(
-                            "jems.standard.budget.export.period.number", exportLocale, messageSource, arrayOf(it)
-                        )
+                            "project.application.form.section.part.e.period.label", exportLocale, messageSource
+                        ).plus(" ").plus(it)
                     }
                 )
-                it.add(getMessage("jems.standard.budget.export.period.closure", exportLocale, messageSource))
+                it.add(getMessage("project.application.form.section.part.e.period.closure", exportLocale, messageSource))
             }
 
             it.add(
-                getMessage("jems.standard.budget.export.total", exportLocale, messageSource),
+                getMessage("project.partner.budget.table.total", exportLocale, messageSource),
             )
         }
 
@@ -125,15 +133,17 @@ open class BudgetDetailsTableGenerator(
                     )
                 )
                 it.add(row.costCategory)
+                if (isDescriptionColumnVisible) it.add((row.description))
+                if (isCommentColumnVisible) it.add((row.comments))
+                if (isAwardProcedureColumnVisible) it.add((row.awardProcedure))
+                if (isInvestmentColumnVisible) it.add((row.investmentNumber))
+                it.add(row.lumpSumName)
                 it.add((row.flatRate ?: "").toString())
                 it.add(row.unitCost)
                 if (isUnitTypeAndNumberOfUnitColumnsVisible)
                     it.addAll(listOf(row.unitType, (row.numberOfUnits ?: "").toString()))
                 if (isPricePerUnitColumnVisible) it.add((row.pricePerUnit ?: "").toString())
-                if (isDescriptionColumnVisible) it.add((row.description))
-                if (isCommentColumnVisible) it.add((row.comments))
-                if (isAwardProcedureColumnVisible) it.add((row.awardProcedure))
-                if (isInvestmentColumnVisible) it.add((row.investmentNumber))
+
                 if (arePeriodColumnsVisible) it.addAll(row.periodAmounts.map { it.toStringList() })
                 it.add(row.total.toString())
             }
@@ -141,7 +151,7 @@ open class BudgetDetailsTableGenerator(
 
     private fun getTotalRow(rows: List<BudgetDetailsRow>): List<String> =
         mutableListOf<String>().also {
-            it.add(getMessage("jems.standard.budget.export.total", exportLanguage.toLocale(), messageSource))
+            it.add(getMessage("project.partner.budget.table.total", exportLanguage.toLocale(), messageSource))
 
             val numberOfHiddenColumns = listOf(
                 isNameInOriginalLanguageVisible, isNameInEnglishVisible,
@@ -151,11 +161,11 @@ open class BudgetDetailsTableGenerator(
                 isAwardProcedureColumnVisible, isInvestmentColumnVisible
             ).filter { visible -> !visible }.size
 
-            it.addAll((1..(16 - numberOfHiddenColumns)).map { "" })
+            it.addAll((2..(numberOfColumnsBeforePeriods - numberOfHiddenColumns)).map { "" })
             if (arePeriodColumnsVisible) {
                 it.addAll(
                     rows.flatMap { it.periodAmounts }.groupBy({ it.periodNumber }, { it.periodAmount })
-                        .mapValues { it.value.sumOf { it } }.values.map { it.toString() })
+                        .mapValues { it.value.sumOf { it ?: BigDecimal.ZERO } }.values.map { it.toString() })
             }
             it.add(rows.sumOf { it.total }.toString())
         }
@@ -176,7 +186,7 @@ open class BudgetDetailsTableGenerator(
                     partner.budget.projectBudgetCostsCalculationResult.travelCosts
                 ),
                 *getGeneralCostData(
-                    "jems.standard.budget.export.cost.category.external.costs", partnerInfo, workPackages,
+                    "project.partner.budget.external", partnerInfo, workPackages,
                     partner.budget.projectPartnerBudgetCosts.externalCosts,
                     shouldBeVisible(PARTNER_BUDGET_EXTERNAL_EXPERTISE_UNIT_TYPE_AND_NUMBER_OF_UNITS),
                     shouldBeVisible(PARTNER_BUDGET_EXTERNAL_EXPERTISE_PRICE_PER_UNIT),
@@ -185,7 +195,7 @@ open class BudgetDetailsTableGenerator(
                     shouldBeVisible(PARTNER_BUDGET_EXTERNAL_EXPERTISE_INVESTMENT),
                 ),
                 *getGeneralCostData(
-                    "jems.standard.budget.export.cost.category.equipment.costs", partnerInfo, workPackages,
+                    "project.partner.budget.equipment", partnerInfo, workPackages,
                     partner.budget.projectPartnerBudgetCosts.equipmentCosts,
                     shouldBeVisible(PARTNER_BUDGET_EQUIPMENT_UNIT_TYPE_AND_NUMBER_OF_UNITS),
                     shouldBeVisible(PARTNER_BUDGET_EQUIPMENT_PRICE_PER_UNIT),
@@ -194,7 +204,7 @@ open class BudgetDetailsTableGenerator(
                     shouldBeVisible(PARTNER_BUDGET_EQUIPMENT_INVESTMENT),
                 ),
                 *getGeneralCostData(
-                    "jems.standard.budget.export.cost.category.infrastructure.costs", partnerInfo, workPackages,
+                    "project.partner.budget.infrastructure", partnerInfo, workPackages,
                     partner.budget.projectPartnerBudgetCosts.infrastructureCosts,
                     shouldBeVisible(PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_UNIT_TYPE_AND_NUMBER_OF_UNITS),
                     shouldBeVisible(PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_PRICE_PER_UNIT),
@@ -207,7 +217,7 @@ open class BudgetDetailsTableGenerator(
                     partner.budget.projectPartnerOptions?.officeAndAdministrationOnDirectCostsFlatRate
                         ?: partner.budget.projectPartnerOptions?.officeAndAdministrationOnStaffCostsFlatRate
                 ),
-                getPartnerLumpSumData(partner.id, partnerInfo),
+                *getPartnerLumpSumData(partner.id, partnerInfo),
                 *getMultiCategoryUnitCostData(partnerInfo, partner.budget.projectPartnerBudgetCosts.unitCosts),
                 *getOtherCostData(
                     partnerInfo, partner.budget.projectBudgetCostsCalculationResult.otherCosts,
@@ -228,7 +238,7 @@ open class BudgetDetailsTableGenerator(
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
-                    "jems.standard.budget.export.cost.category.staff.costs",
+                    "project.partner.budget.staff",
                     exportLocale, messageSource
                 ),
                 unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(
@@ -261,12 +271,12 @@ open class BudgetDetailsTableGenerator(
                     BudgetDetailsRow(
                         partnerInfo = partnerInfo,
                         costCategory = getMessage(
-                            "jems.standard.budget.export.cost.category.staff.costs.flat.rate",
+                            "project.partner.budget.staff.costs.flat.rate.header",
                             exportLocale, messageSource
                         ),
                         flatRate = flatRate,
                         periodAmounts = if (arePeriodColumnsVisible)
-                            periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) } else emptyList(),
+                            periodNumbers.map { PeriodInfo(it, null) } else emptyList(),
                         total = staffCostTotal
                     )
                 )
@@ -282,7 +292,7 @@ open class BudgetDetailsTableGenerator(
         BudgetDetailsRow(
             partnerInfo = partnerInfo,
             costCategory = getMessage(
-                "jems.standard.budget.export.cost.category.travel.costs",
+                "project.partner.budget.travel",
                 exportLocale, messageSource
             ),
             unitCost = if (budget.unitCostId == null) "N/A" else unitCost?.name?.getTranslationFor(
@@ -313,12 +323,12 @@ open class BudgetDetailsTableGenerator(
                 BudgetDetailsRow(
                     partnerInfo = partnerInfo,
                     costCategory = getMessage(
-                        "jems.standard.budget.export.cost.category.travel.costs.flat.rate",
+                        "project.partner.budget.travel.and.accommodation.flat.rate.header",
                         exportLocale, messageSource
                     ),
                     flatRate = flatRate,
                     periodAmounts = if (arePeriodColumnsVisible)
-                        periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) } else emptyList(),
+                        periodNumbers.map { PeriodInfo(it, null) } else emptyList(),
                     total = travelCostTotal
                 )
             )
@@ -371,37 +381,37 @@ open class BudgetDetailsTableGenerator(
             arrayOf(BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
-                    "jems.standard.budget.export.cost.category.office.costs", exportLocale, messageSource
+                    "export.cost.category.office.costs", exportLocale, messageSource
                 ),
                 flatRate = flatRate,
-                periodAmounts = if (arePeriodColumnsVisible) periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) }
+                periodAmounts = if (arePeriodColumnsVisible) periodNumbers.map { PeriodInfo(it, null) }
                 else emptyList(),
                 total = total ?: BigDecimal.ZERO
             ))
         } else emptyArray()
 
-    private fun getPartnerLumpSumData(partnerId: Long?, partnerInfo: PartnerInfo): BudgetDetailsRow =
-        BudgetDetailsRow(
-            partnerInfo = partnerInfo,
-            costCategory = getMessage(
-                "jems.standard.budget.export.cost.category.lump.sum.costs",
-                exportLocale,
-                messageSource
-            ),
-            periodAmounts = if (arePeriodColumnsVisible)
-                periodNumbers.map { periodNumber ->
-                    PeriodInfo(
-                        periodNumber,
-                        projectData.sectionE.projectLumpSums.filter { it.period == periodNumber }
-                            .flatMap { it.lumpSumContributions }
-                            .filter { it.partnerId == partnerId }
-                            .sumOf { it.amount }
-                    )
-                } else emptyList(),
-            total = projectData.sectionE.projectLumpSums.flatMap { it.lumpSumContributions }
-                .filter { it.partnerId == partnerId }
-                .sumOf { it.amount }
-        )
+    private fun getPartnerLumpSumData(partnerId: Long?, partnerInfo: PartnerInfo) =
+        projectData.sectionE.projectLumpSums.filter { it.lumpSumContributions.any { it.partnerId == partnerId && it.amount > BigDecimal.ZERO }}.map { lumpSum ->
+            val lumpSumAmount = lumpSum.lumpSumContributions.first { it.partnerId == partnerId }.amount
+            BudgetDetailsRow(
+                partnerInfo = partnerInfo,
+                costCategory = getMessage(
+                    "project.partner.budget.lumpSum",
+                    exportLocale,
+                    messageSource
+                ),
+                lumpSumName = lumpSum.programmeLumpSum?.name?.getTranslationFor(dataLanguage) ?: "",
+                description = if(shouldBeVisible(PROJECT_LUMP_SUMS_DESCRIPTION)) lumpSum.programmeLumpSum?.description?.getTranslationFor(dataLanguage) ?: "" else "",
+                periodAmounts = if (arePeriodColumnsVisible)
+                    periodNumbers.map { periodNumber ->
+                        PeriodInfo(
+                            periodNumber,
+                            if(lumpSum.period == periodNumber) lumpSumAmount  else BigDecimal.ZERO
+                        )
+                    } else emptyList(),
+                total = lumpSumAmount
+            )
+        }.toTypedArray()
 
     private fun getMultiCategoryUnitCostData(partnerInfo: PartnerInfo, unitCostsData: List<BudgetUnitCostEntryData>) =
         unitCostsData.map { budget ->
@@ -409,7 +419,7 @@ open class BudgetDetailsTableGenerator(
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
-                    "jems.standard.budget.export.cost.category.unit.costs",
+                    "project.partner.budget.unitcosts",
                     exportLocale, messageSource
                 ),
                 unitCost = callUnitCost?.name?.getTranslationFor(dataLanguage) ?: "",
@@ -434,11 +444,11 @@ open class BudgetDetailsTableGenerator(
             arrayOf(BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
-                    "jems.standard.budget.export.cost.category.other.costs.flat.rate",
+                    "project.partner.budget.other.costs.flat.rate.header",
                     exportLocale, messageSource
                 ),
                 flatRate = flatRate,
-                periodAmounts = if (arePeriodColumnsVisible) periodNumbers.map { PeriodInfo(it, BigDecimal.ZERO) }
+                periodAmounts = if (arePeriodColumnsVisible) periodNumbers.map { PeriodInfo(it, null) }
                 else emptyList(),
                 total = otherCosts
             )) else arrayOf()
@@ -484,7 +494,7 @@ open class BudgetDetailsTableGenerator(
         listOf(
             PARTNER_BUDGET_STAFF_COST_STAFF_FUNCTION, PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION,
             PARTNER_BUDGET_EQUIPMENT_DESCRIPTION, PARTNER_BUDGET_EXTERNAL_EXPERTISE_DESCRIPTION,
-            PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_DESCRIPTION,
+            PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_DESCRIPTION,PROJECT_LUMP_SUMS_DESCRIPTION
         ).any { isFieldVisible(it, lifecycleData, callData) }
 
     private fun isAwardProcedureColumnVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =

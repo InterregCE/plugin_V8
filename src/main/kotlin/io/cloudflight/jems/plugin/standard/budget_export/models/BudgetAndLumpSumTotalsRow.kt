@@ -1,5 +1,6 @@
 package io.cloudflight.jems.plugin.standard.budget_export.models
 
+import io.cloudflight.jems.plugin.contract.models.project.sectionD.ProjectPeriodBudgetData
 import java.math.BigDecimal
 
 
@@ -20,8 +21,9 @@ open class BudgetAndLumpSumTotalsRow(
     val infrastructureCostTotals: GeneralBudgetTotalCostInfo,
     val otherCosts: BigDecimal,
     val unitCostsCoveringMultipleCostCategories: BigDecimal,
-    val lumpSumsCoveringMultipleCostCategories: BigDecimal
-) {
+    val lumpSumsCoveringMultipleCostCategories: BigDecimal,
+    val partnerBudgetPerPeriod: List<ProjectPeriodBudgetData>
+    ) {
     fun getTotalPartnerContribution() =
         publicContribution.plus(automaticPublicContribution).plus(privateContribution)
 }

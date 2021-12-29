@@ -36,33 +36,25 @@ fun getPartnerHeaders(
     mutableListOf<String>().also {
         it.addAll(
             getMessagesWithoutArgs(
-                messageSource, exportLocale, "jems.standard.budget.export.partner.number",
-                "jems.standard.budget.export.partner.abbreviation"
+                messageSource, exportLocale, "project.application.form.partner.table.number",
+                "project.application.form.partner.table.name"
             )
         )
         if (isNameInOriginalLanguageVisible)
             it.add(
-                getMessage(
-                    "jems.standard.budget.export.partner.original.language",
-                    exportLocale,
-                    messageSource
-                )
+                getMessage("project.organization.original.name.label", exportLocale, messageSource)
             )
         if (isNameInEnglishVisible)
             it.add(
-                getMessage(
-                    "jems.standard.budget.export.partner.name.in.english",
-                    exportLocale,
-                    messageSource
-                )
+                getMessage("project.organization.english.name.label", exportLocale, messageSource)
             )
         if (isCountryAndNutsVisible)
             it.addAll(
                 getMessagesWithoutArgs(
                     messageSource, exportLocale,
-                    "jems.standard.budget.export.partner.country",
-                    "jems.standard.budget.export.partner.nuts.3",
-                    "jems.standard.budget.export.partner.nuts.2",
+                    "project.partner.main-address.country",
+                    "project.partner.main-address.region3",
+                    "project.partner.main-address.region2",
                 )
             )
     }

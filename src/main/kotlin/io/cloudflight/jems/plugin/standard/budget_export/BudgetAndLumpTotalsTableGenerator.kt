@@ -4,7 +4,9 @@ import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.ProjectData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.*
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetGeneralCostEntryData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetStaffCostEntryData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetTravelAndAccommodationCostEntryData
 import io.cloudflight.jems.plugin.contract.models.project.sectionD.PartnerBudgetPerFundData
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetAndLumpSumTotalsRow
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetTotalCostInfo
@@ -13,8 +15,8 @@ import io.cloudflight.jems.plugin.standard.budget_export.models.GeneralBudgetTot
 import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getMessagesWithoutArgs
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
-import io.cloudflight.jems.plugin.standard.common.toLocale
 import io.cloudflight.jems.plugin.standard.common.isFieldVisible
+import io.cloudflight.jems.plugin.standard.common.toLocale
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
 import kotlin.collections.sumOf
@@ -32,6 +34,7 @@ open class BudgetAndLumpTotalsTableGenerator(
         shouldBeVisible(ApplicationFormFieldId.PARTNER_ORIGINAL_NAME_OF_ORGANISATION)
     private val isNameInEnglishVisible = shouldBeVisible(ApplicationFormFieldId.PARTNER_ENGLISH_NAME_OF_ORGANISATION)
     private val isCountryAndNutsVisible = shouldBeVisible(ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS)
+    private val arePeriodsVisible = shouldBeVisible(ApplicationFormFieldId.PARTNER_BUDGET_PERIODS)
 
     fun getData() =
         mutableListOf<List<String?>>().also {
@@ -53,50 +56,68 @@ open class BudgetAndLumpTotalsTableGenerator(
                 val fundAbbreviation = it.abbreviation.getTranslationFor(exportLanguage)
                 listOf(
                     fundAbbreviation,
-                    getMessage(
-                        "jems.standard.budget.export.budget.totals.fund.rate.percentage",
+                    fundAbbreviation.plus(" ").plus(getMessage(
+                        "project.partner.percentage",
                         exportLocale, messageSource, arrayOf(fundAbbreviation)
-                    ),
+                    )),
                     getMessage(
-                        "jems.standard.budget.export.budget.totals.fund.percentage.of.total",
-                        exportLocale, messageSource, arrayOf(fundAbbreviation)
-                    ),
+                        "export.budget.totals.fund.percentage.of.total",
+                        exportLocale, messageSource
+                    ).plus(" ").plus(fundAbbreviation),
                 )
             })
             it.addAll(
                 getMessagesWithoutArgs(
                     messageSource, exportLocale,
-                    "jems.standard.budget.export.budget.totals.public.contribution",
-                    "jems.standard.budget.export.budget.totals.automatic.public.contribution",
-                    "jems.standard.budget.export.budget.totals.private.contribution",
-                    "jems.standard.budget.export.budget.totals.total.partner.contribution",
-                    "jems.standard.budget.export.budget.totals.total.eligible.budget",
-                    "jems.standard.budget.export.budget.totals.percent.of.total.eligible.budget",
-                    "jems.standard.budget.export.budget.totals.staff.costs.total",
-                    "jems.standard.budget.export.budget.totals.staff.costs.flat.rate",
-                    "jems.standard.budget.export.budget.totals.staff.costs.real.cost",
-                    "jems.standard.budget.export.budget.totals.staff.costs.unit.cost",
-                    "jems.standard.budget.export.budget.totals.office.and.administration.total",
-                    "jems.standard.budget.export.budget.totals.office.and.administration.flat.rate",
-                    "jems.standard.budget.export.budget.totals.travel.total",
-                    "jems.standard.budget.export.budget.totals.travel.flat.rate",
-                    "jems.standard.budget.export.budget.totals.travel.real.cost",
-                    "jems.standard.budget.export.budget.totals.travel.unit.cost",
-                    "jems.standard.budget.export.budget.totals.external.total",
-                    "jems.standard.budget.export.budget.totals.external.real.cost",
-                    "jems.standard.budget.export.budget.totals.external.unit.cost",
-                    "jems.standard.budget.export.budget.totals.equipment.total",
-                    "jems.standard.budget.export.budget.totals.equipment.real.cost",
-                    "jems.standard.budget.export.budget.totals.equipment.unit.cost",
-                    "jems.standard.budget.export.budget.totals.infrastructure.total",
-                    "jems.standard.budget.export.budget.totals.infrastructure.real.cost",
-                    "jems.standard.budget.export.budget.totals.infrastructure.unit.cost",
-                    "jems.standard.budget.export.budget.totals.other.costs",
-                    "jems.standard.budget.export.budget.totals.unit.costs.covering.several.cost.categories",
-                    "jems.standard.budget.export.budget.totals.lump.sums.covering.several.cost.categories",
+                    "project.partner.public.contribution",
+                    "project.partner.auto.public.contribution",
+                    "project.partner.private.contribution",
+                    "project.partner.total.contribution",
+                    "project.partner.total.eligible.budget",
+                    "project.partner.percent.total.budget",
+                    "export.budget.totals.staff.costs.total",
+                    "project.partner.budget.staff.costs.flat.rate.header",
+                    "export.budget.totals.staff.costs.real.cost",
+                    "export.budget.totals.staff.costs.unit.cost",
+                    "export.budget.totals.office.and.administration.total",
+                    "export.budget.totals.office.and.administration.flat.rate",
+                    "export.budget.totals.travel.total",
+                    "project.partner.budget.travel.and.accommodation.flat.rate.header",
+                    "export.budget.totals.travel.real.cost",
+                    "export.budget.totals.travel.unit.cost",
+                    "export.budget.totals.external.total",
+                    "export.budget.totals.external.real.cost",
+                    "export.budget.totals.external.unit.cost",
+                    "export.budget.totals.equipment.total",
+                    "export.budget.totals.equipment.real.cost",
+                    "export.budget.totals.equipment.unit.cost",
+                    "export.budget.totals.infrastructure.total",
+                    "export.budget.totals.infrastructure.real.cost",
+                    "export.budget.totals.infrastructure.unit.cost",
+                    "project.partner.budget.other",
+                    "project.partner.budget.unitcosts",
+                    "project.application.form.section.part.e.lump.sums.label",
                 )
             )
-
+            if (arePeriodsVisible) {
+                it.add(
+                    getMessage(
+                        "project.application.form.section.part.e.period.preparation", exportLocale, messageSource
+                    )
+                )
+                it.addAll(
+                    projectData.sectionA?.periods?.map {
+                        getMessage(
+                            "project.partner.budget.table.period",
+                            exportLocale,
+                            messageSource
+                        ).plus(" ").plus(it.number)
+                    } ?: emptyList()
+                )
+                it.add(
+                    getMessage("project.application.form.section.part.e.period.closure", exportLocale, messageSource)
+                )
+            }
         }
 
     private fun getRows(data: List<BudgetAndLumpSumTotalsRow>): List<List<String?>> =
@@ -128,19 +149,21 @@ open class BudgetAndLumpTotalsTableGenerator(
                 it.add(row.otherCosts.toString())
                 it.add(row.unitCostsCoveringMultipleCostCategories.toString())
                 it.add(row.lumpSumsCoveringMultipleCostCategories.toString())
+                if (arePeriodsVisible)
+                    it.addAll(row.partnerBudgetPerPeriod.map { budgetPerPeriod -> budgetPerPeriod.totalBudgetPerPeriod.toString() })
             }
         }
 
     private fun getTotalRow(rows: List<BudgetAndLumpSumTotalsRow>): List<String> =
         mutableListOf<String>().also {
-            it.add(getMessage("jems.standard.budget.export.total", exportLocale, messageSource))
+            it.add(getMessage("project.partner.budget.table.total", exportLocale, messageSource))
             val numberOfHiddenColumns = listOf(
                 isNameInOriginalLanguageVisible, isNameInEnglishVisible,
                 isCountryAndNutsVisible, isCountryAndNutsVisible, isCountryAndNutsVisible
             ).filter { visible -> !visible }.size
             it.addAll((1..(6 - numberOfHiddenColumns)).map { "" })
             it.addAll(
-                listOf(
+                mutableListOf(
                     *(1..callSelectedFunds.size).flatMap { listOf("", "", "") }.toTypedArray(),
                     rows.sumOf { it.publicContribution },
                     rows.sumOf { it.automaticPublicContribution },
@@ -172,20 +195,24 @@ open class BudgetAndLumpTotalsTableGenerator(
                     rows.sumOf { it.lumpSumsCoveringMultipleCostCategories },
                 ).map { it.toString() }
             )
-
+            if (arePeriodsVisible)
+                it.addAll(projectData.sectionD.projectPartnerBudgetPerPeriodData.totals.dropLast(1).map { it.toString() })
         }
 
     private fun generateBudgetAndLumpSumTotalsTableData(): List<BudgetAndLumpSumTotalsRow> =
-       projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
-            val projectPartnerBudgetPerFundData = projectData.sectionD.projectPartnerBudgetPerFundData.first { it.partner?.id == partner.id }
+        projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
+            val projectPartnerBudgetPerFundData =
+                projectData.sectionD.projectPartnerBudgetPerFundData.first { it.partner?.id == partner.id }
+            val projectPartnerBudgetPerPeriodData = projectData.sectionD.projectPartnerBudgetPerPeriodData
             BudgetAndLumpSumTotalsRow(
                 partnerInfo = getPartnerInfo(partner),
                 fundInfoList = getFoundInfoList(projectPartnerBudgetPerFundData.budgetPerFund),
                 publicContribution = projectPartnerBudgetPerFundData.publicContribution ?: BigDecimal.ZERO,
-                automaticPublicContribution = projectPartnerBudgetPerFundData.autoPublicContribution ?: BigDecimal.ZERO ,
-                privateContribution = projectPartnerBudgetPerFundData.privateContribution ?: BigDecimal.ZERO ,
+                automaticPublicContribution = projectPartnerBudgetPerFundData.autoPublicContribution ?: BigDecimal.ZERO,
+                privateContribution = projectPartnerBudgetPerFundData.privateContribution ?: BigDecimal.ZERO,
                 totalEligibleBudget = projectPartnerBudgetPerFundData.totalEligibleBudget ?: BigDecimal.ZERO,
-                totalEligibleBudgetPercentage = projectPartnerBudgetPerFundData.percentageOfTotalEligibleBudget ?: BigDecimal.ZERO,
+                totalEligibleBudgetPercentage = projectPartnerBudgetPerFundData.percentageOfTotalEligibleBudget
+                    ?: BigDecimal.ZERO,
                 staffCostTotals = getStaffCostTotals(
                     partner.budget.projectPartnerBudgetCosts.staffCosts,
                     partner.budget.projectBudgetCostsCalculationResult.staffCosts,
@@ -205,7 +232,8 @@ open class BudgetAndLumpTotalsTableGenerator(
                 unitCostsCoveringMultipleCostCategories = partner.budget.projectPartnerBudgetCosts.unitCosts.flatMap { it.budgetPeriods }
                     .sumOf { it.amount },
                 lumpSumsCoveringMultipleCostCategories = projectData.sectionE.projectLumpSums.flatMap { it.lumpSumContributions }
-                    .filter { it.partnerId == partner.id }.sumOf { it.amount }
+                    .filter { it.partnerId == partner.id }.sumOf { it.amount },
+                partnerBudgetPerPeriod = projectPartnerBudgetPerPeriodData.partnersBudgetPerPeriod.firstOrNull { it.partner.id == partner.id }?.periodBudgets ?: emptyList()
             )
         }
 
@@ -243,7 +271,7 @@ open class BudgetAndLumpTotalsTableGenerator(
 
     private fun getFoundInfoList(partnerBudgetPerFundData: Set<PartnerBudgetPerFundData>) =
         callSelectedFunds.map { fund ->
-            partnerBudgetPerFundData.first { it.fund == fund }.let{
+            partnerBudgetPerFundData.first { it.fund == fund }.let {
                 FundInfo(
                     fundAmount = it.value,
                     fundPercentage = it.percentage,
