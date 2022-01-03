@@ -61,6 +61,7 @@ fun isInvestmentSectionVisible(lifecycleData: ProjectLifecycleData, callData: Ca
         ApplicationFormFieldId.PROJECT_INVESTMENT_PILOT_CLARIFICATION,
         ApplicationFormFieldId.PROJECT_INVESTMENT_RISK,
         ApplicationFormFieldId.PROJECT_INVESTMENT_DOCUMENTATION,
+        ApplicationFormFieldId.PROJECT_INVESTMENT_DOCUMENTATION_EXPECTED_IMPACTS,
         ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE,
         ApplicationFormFieldId.PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT,
         ApplicationFormFieldId.PROJECT_INVESTMENT_MAINTENANCE,
