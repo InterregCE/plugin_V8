@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" media="all" href="application-form/styles/common.css"
           th:href="@{application-form/styles/common.css}"/>
     <th:block
-            th:insert="~{application-form/application-form-index.html :: applicationFormIndex(${projectData}, ${callData})}"></th:block>
+            th:insert="~{application-form/application-form-index.html :: applicationFormIndex(${projectData}, ${callData}, ${timeplanData})}"></th:block>
 </head>
 
 <body id="first-page">
@@ -15,6 +15,6 @@
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
     <div class="page-break-after"></div>
-    <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionB}, ${projectData.sectionA}, ${projectData.sectionA.specificObjective})}"></div>
+    <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionB}, ${projectData.sectionA}, ${projectData.sectionA.specificObjective}, ${timeplanData})}"></div>
 </body>
 </html>

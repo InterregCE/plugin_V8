@@ -4,7 +4,7 @@
 <!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <body>
-<th:block th:fragment="applicationFormIndex(projectData, callData)">
+<th:block th:fragment="applicationFormIndex(projectData, callData, timeplanData)">
     <bookmarks>
         <bookmark
                 th:name="#{jems.standard.application.form.export.application.form.title(${projectData.sectionA?.customIdentifier},${projectData.sectionA?.acronym})}"
@@ -66,6 +66,8 @@
                 <bookmark
                         th:if="${clfUtils.isProjectResultsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
                         th:name="#{project.application.form.section.part.c.subsection.five}" href="#section-c-5"></bookmark>
+                <bookmark th:if="${timeplanData != null}"
+                          th:name="#{project.application.form.section.part.c.subsection.six}" href="#section-c-6"></bookmark>
                 <bookmark th:name="#{project.application.form.section.part.c.subsection.seven}" href="#section-c-7"></bookmark>
                 <bookmark
                         th:if="${clfUtils.isLongTermPlansSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"

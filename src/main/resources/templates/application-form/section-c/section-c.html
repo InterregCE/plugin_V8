@@ -9,7 +9,7 @@
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="sectionC(projectDataSectionC, projectDataSectionB, projectDataSectionA, specificObjective)">
+<th:block th:fragment="sectionC(projectDataSectionC, projectDataSectionB, projectDataSectionA, specificObjective, timeplanData)">
     <div id="section-c" class="headline" th:text="#{project.application.form.section.part.c}">
         SECTION C - Project description
     </div>
@@ -34,8 +34,14 @@
 
     <!-- C5 -->
     <div th:insert="~{application-form/section-c/section-c-5.html :: sectionC5(${projectDataSectionC})}"></div>
-
     <div class="page-break-after"></div>
+
+    <!-- C6 -->
+    <th:block th:if="${timeplanData != null}">
+        <div th:insert="~{application-form/section-c/section-c-6.html :: sectionC6(${timeplanData})}"></div>
+        <div class="page-break-after"></div>
+    </th:block>
+
     <!-- C7 -->
     <div th:insert="~{application-form/section-c/project-management-table.html :: projectManagement(${projectDataSectionC})}"></div>
     <div class="page-break-after"></div>

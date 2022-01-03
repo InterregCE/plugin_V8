@@ -6,6 +6,7 @@ import io.cloudflight.jems.plugin.contract.export.ExportResult
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
+import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.getTimeplanData
 import io.cloudflight.jems.plugin.standard.common.pdf.PdfService
 import io.cloudflight.jems.plugin.standard.common.template.*
 import io.cloudflight.jems.plugin.standard.common.toLocale
@@ -47,6 +48,12 @@ open class ApplicationFormExportDefaultImpl(
                         it.setVariable(DATA_LANGUAGE, dataLanguage)
                         it.setVariable(EXPORT_LANGUAGE, exportLanguage)
                         it.setVariable(CLF_UTILS, TemplateUtils())
+                        it.setVariable("timeplanData", getTimeplanData(
+                            periods = projectData.sectionA?.periods ?: emptyList(),
+                            workPackages = projectData.sectionC.projectWorkPackages,
+                            results = projectData.sectionC.projectResults,
+                            language = dataLanguage,
+                        ))
                     }
                 )
             )
@@ -58,7 +65,7 @@ open class ApplicationFormExportDefaultImpl(
         exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
     ): String =
         "${projectCustomIdentifier}_${projectAcronym}_${exportLanguage.name.toLowerCase()}_${dataLanguage.name.toLowerCase()}_" +
-                "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyMd_Hmss"))}.pdf"
+                "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.pdf"
 
     override fun getDescription(): String =
         "Standard implementation for application form exportation"
@@ -70,5 +77,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.4"
+        "1.0.5"
 }

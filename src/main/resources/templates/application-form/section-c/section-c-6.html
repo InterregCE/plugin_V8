@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="timeplanData" type="io.cloudflight.jems.plugin.standard.application_form_export.timeplan.TimeplanData"*/-->
+<!--/*@thymesVar id="data" type="io.cloudflight.jems.plugin.standard.application_form_export.timeplan.Rectangle"*/-->
+<!--/*@thymesVar id="title" type="io.cloudflight.jems.plugin.standard.application_form_export.timeplan.TranslatedText"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="sectionC6(timeplanData)">
+    <div class="landscape">
+
+        <div class="title" id="section-c-6" th:text="#{project.application.form.section.part.c.subsection.six}">
+            timeplan
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" th:width="${timeplanData.width}" th:height="${timeplanData.height}" th:viewBox="${timeplanData.viewBox}">
+            <!-- headers -->
+            <rect x="0" y="0" th:width="${timeplanData.width}" th:height="${timeplanData.rowHeight}" fill="#EEEEEE"/>
+
+            <th:block th:each="period, rowStat: ${timeplanData.periodColumns}"
+                      th:object="${period}">
+                <text th:if="${timeplanData.periodColumns.size <= 16}"
+                      th:text="#{project.application.form.section.part.e.period.column.title} + ' ' + ${period.number}"
+                      th:x="${period.xTextMiddle}" y="15" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
+                <text th:if="${timeplanData.periodColumns.size > 16}"
+                      th:text="${period.number}"
+                      th:x="${period.xTextMiddle}" y="15" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
+            </th:block>
+
+            <!-- column lines -->
+            <th:block th:each="verticalLine, rowStat: ${timeplanData.columnDividers}"
+                      th:object="${verticalLine}">
+                <path th:d="${verticalLine}" stroke="#DDDDDD" stroke-width="1" />
+            </th:block>
+
+            <!-- row lines -->
+            <th:block th:each="rowLine, rowStat: ${timeplanData.rowDividers}"
+                      th:object="${rowLine}">
+                <path th:d="${rowLine}" stroke="#999999" stroke-width="1" />
+            </th:block>
+
+            <!-- border around -->
+            <th:block th:each="borderAround, rowStat: ${timeplanData.borderAround}"
+                      th:object="${borderAround}">
+                <path th:d="${borderAround}" stroke="#555555" stroke-width="1" />
+            </th:block>
+
+            <!-- data -->
+            <th:block th:each="data, rowStat: ${timeplanData.data}"
+                      th:object="${data}">
+                <rect th:x="${data.x}" th:y="${data.y}" th:width="${data.width}" th:height="${data.height}"
+                      th:rx="${data.rx}" th:fill="${data.fill}" th:stroke-width="${data.strokeWidth}" th:stroke="${data.stroke}"/>
+
+                <text th:if="${data.text != null}" th:text="${data.text.value}"
+                      th:x="${data.text.x}" th:y="${data.text.y}" font-size="9" fill="#000000" th:dominant-baseline="${data.text.dominantBaseline}" text-anchor="middle">D1.1.1</text>
+            </th:block>
+
+            <!-- packages names -->
+            <th:block th:each="title, rowStat: ${timeplanData.texts}"
+                      th:object="${title}">
+                <text th:text="${title.value}"
+                      th:x="${title.x}" th:y="${title.y}" font-size="9" th:fill="${title.fill}" th:dominant-baseline="${title.dominantBaseline}" text-anchor="start" th:font-weight="${title.fontWeight}" th:font-style="${title.fontStyle}">title</text>
+            </th:block>
+
+            <!-- result title -->
+            <text th:if="${timeplanData.resultTitleYCoordinate != null}" th:text="#{result.indicator.title}"
+                  th:x="5" th:y="${timeplanData.resultTitleYCoordinate}" font-size="9" fill="#000000" dominant-baseline="middle" text-anchor="start" font-weight="700">results</text>
+
+        </svg>
+
+    </div>
+</th:block>
+</body>
+</html>
