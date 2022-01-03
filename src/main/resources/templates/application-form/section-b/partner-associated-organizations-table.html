@@ -53,7 +53,7 @@
             <thead class="table-header">
             <tr class="sub-heading-2">
                 <td colspan="2"
-                    th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage} + ' ' + *{'AO'+partner.sortNumber}"
+                    th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage} + ' ' + ${'AO'+associatedOrganization.sortNumber}"
                     th:text="${associatedOrganizationTitle}"
                     th:id="${associatedOrganizationTitle}"
                 >

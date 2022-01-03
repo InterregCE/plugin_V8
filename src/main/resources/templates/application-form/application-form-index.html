@@ -41,7 +41,7 @@
                     <bookmark
                             th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(projectData.sectionB.associatedOrganisations)}"
                             th:object="${associatedOrganization}"
-                            th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage}"
+                            th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage} + ' ' + ${'AO'+associatedOrganization.sortNumber}"
                             th:name="${associatedOrganizationTitle}"
                             th:href="'#'+${associatedOrganizationTitle}">
                     </bookmark>
