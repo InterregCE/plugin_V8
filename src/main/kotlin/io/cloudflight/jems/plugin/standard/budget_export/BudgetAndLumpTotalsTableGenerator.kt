@@ -229,8 +229,8 @@ open class BudgetAndLumpTotalsTableGenerator(
                 equipmentCostTotals = getGeneralBudgetCostTotalsFor(partner.budget.projectPartnerBudgetCosts.equipmentCosts),
                 infrastructureCostTotals = getGeneralBudgetCostTotalsFor(partner.budget.projectPartnerBudgetCosts.infrastructureCosts),
                 otherCosts = partner.budget.projectBudgetCostsCalculationResult.otherCosts,
-                unitCostsCoveringMultipleCostCategories = partner.budget.projectPartnerBudgetCosts.unitCosts.flatMap { it.budgetPeriods }
-                    .sumOf { it.amount },
+                unitCostsCoveringMultipleCostCategories = partner.budget.projectPartnerBudgetCosts.unitCosts
+                    .sumOf { it.rowSum ?: BigDecimal.ZERO },
                 lumpSumsCoveringMultipleCostCategories = projectData.sectionE.projectLumpSums.flatMap { it.lumpSumContributions }
                     .filter { it.partnerId == partner.id }.sumOf { it.amount },
                 partnerBudgetPerPeriod = projectPartnerBudgetPerPeriodData.partnersBudgetPerPeriod.firstOrNull { it.partner.id == partner.id }?.periodBudgets ?: emptyList()
@@ -239,10 +239,10 @@ open class BudgetAndLumpTotalsTableGenerator(
 
     private fun getGeneralBudgetCostTotalsFor(budgetCosts: List<BudgetGeneralCostEntryData>): GeneralBudgetTotalCostInfo =
         GeneralBudgetTotalCostInfo(
-            realCostTotal = budgetCosts.filter { it.unitCostId == null }.flatMap { it.budgetPeriods }
-                .sumOf { it.amount },
-            unitCostTotal = budgetCosts.filter { it.unitCostId != null }.flatMap { it.budgetPeriods }
-                .sumOf { it.amount }
+            realCostTotal = budgetCosts.filter { it.unitCostId == null }
+                .sumOf { it.rowSum ?: BigDecimal.ZERO },
+            unitCostTotal = budgetCosts.filter { it.unitCostId != null }
+                .sumOf { it.rowSum ?: BigDecimal.ZERO }
         )
 
     private fun getStaffCostTotals(
@@ -252,9 +252,9 @@ open class BudgetAndLumpTotalsTableGenerator(
             total = staffCostTotal,
             flatRateTotal = if (flatRate == null) BigDecimal.ZERO else staffCostTotal,
             realCostTotal = if (flatRate == null) staffCosts.filter { it.unitCostId == null }
-                .flatMap { it.budgetPeriods }.sumOf { it.amount } else BigDecimal.ZERO,
+                .sumOf { it.rowSum ?: BigDecimal.ZERO } else BigDecimal.ZERO,
             unitCostTotal = if (flatRate == null) staffCosts.filter { it.unitCostId != null }
-                .flatMap { it.budgetPeriods }.sumOf { it.amount } else BigDecimal.ZERO
+                .sumOf { it.rowSum ?: BigDecimal.ZERO } else BigDecimal.ZERO
         )
 
     private fun getTravelCostTotals(
@@ -264,9 +264,9 @@ open class BudgetAndLumpTotalsTableGenerator(
             total = travelCostTotal,
             flatRateTotal = if (flatRate == null) BigDecimal.ZERO else travelCostTotal,
             realCostTotal = if (flatRate == null) travelCosts.filter { it.unitCostId == null }
-                .flatMap { it.budgetPeriods }.sumOf { it.amount } else BigDecimal.ZERO,
+                .sumOf { it.rowSum ?: BigDecimal.ZERO } else BigDecimal.ZERO,
             unitCostTotal = if (flatRate == null) travelCosts.filter { it.unitCostId != null }
-                .flatMap { it.budgetPeriods }.sumOf { it.amount } else BigDecimal.ZERO
+                .sumOf { it.rowSum ?: BigDecimal.ZERO } else BigDecimal.ZERO
         )
 
     private fun getFoundInfoList(partnerBudgetPerFundData: Set<PartnerBudgetPerFundData>) =
