@@ -51,8 +51,6 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
 
         checkIfPeriodsAmountSumUpToBudgetEntrySum(sectionBData.partners),
 
-        checkIfTotalCoFinancingIsGreaterThanZero(sectionBData.partners),
-
         checkIfCoFinancingContentIsProvided(sectionBData.partners),
 
         checkIfPartnerContributionEqualsToBudget(sectionBData.partners),
@@ -72,14 +70,6 @@ private fun checkIfExactlyOneLeadPartnerIsAdded(partners: Set<ProjectPartnerData
         partners.isNullOrEmpty() || partners.filter { it.role == ProjectPartnerRoleData.LEAD_PARTNER }.size != 1 ->
             buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.exactly.one.lead.partner.should.be.added")
         else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.exactly.one.lead.partner.is.added")
-    }
-
-private fun checkIfTotalCoFinancingIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
-    when {
-        partners.all { partner ->
-            partner.budget.projectPartnerCoFinancing.partnerContributions.all { it.amount == null || it.amount!! <= BigDecimal.ZERO }}
-        -> buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.co.financing.should.be.greater.than.zero")
-        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.co.financing.is.greater.than.zero")
     }
 
 private fun checkIfTotalBudgetIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
