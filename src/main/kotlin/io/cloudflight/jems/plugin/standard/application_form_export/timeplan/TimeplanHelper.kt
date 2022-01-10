@@ -4,6 +4,7 @@ import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.results.ProjectResultData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.ProjectWorkPackageData
+import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityData
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
 import kotlin.text.Typography.nbsp
 
@@ -39,11 +40,14 @@ fun getTimeplanData(
     rowLines.addLineAt(currentTableHeight = 0, lineHeight = LINE_HEIGHT)
 
     workPackages.forEachIndexed { wpIndex, wp ->
+        val allUsedPeriods = wp.activities.map { it.getAllUsedPeriods() }.flatten().toSet()
+            .plus(wp.outputs.mapNotNull { it.periodNumber })
+
         // generate first work package line itself (wrapper for all activities)
         rowLines.addLineAt(currentTableHeight = currentTableHeight, lineHeight = LINE_HEIGHT)
         rectanglesBig.addWorkPackageOverallRectangleIfNeeded(
-            startPeriod = wp.activities.mapNotNull { it.startPeriod }.minOrNull(),
-            endPeriod = wp.activities.mapNotNull { it.endPeriod }.maxOrNull(),
+            startPeriod = allUsedPeriods.minOrNull(),
+            endPeriod = allUsedPeriods.maxOrNull(),
             columnWidth, currentTableHeight, colorIndex = wpIndex,
         )
         titles.addMajorTitle(y = currentTableHeight, title = "WP${wp.workPackageNumber} ${wp.name.getTranslationFor(language, false)}")
@@ -51,9 +55,6 @@ fun getTimeplanData(
 
         // activities
         wp.activities.forEach { activity ->
-            if (activity.startPeriod == null || activity.endPeriod == null)
-                return@forEach
-
             val deliverables = activity.deliverables.groupBy { it.period }.filter { it.key != null }
             val maxAmountOfDeliverablesInPeriod = deliverables.values.maxOfOrNull { it.size } ?: 0
             val activityLineHeight = maxOf(LINE_HEIGHT, maxAmountOfDeliverablesInPeriod * LINE_HEIGHT)
@@ -62,16 +63,19 @@ fun getTimeplanData(
             rowLines.addLineAt(currentTableHeight = currentTableHeight, lineHeight = activityLineHeight)
 
             // add activity
-            rectanglesBig.add(
-                getRectangle(
-                    startPeriod = activity.startPeriod!!,
-                    spanPeriods = activity.endPeriod!! - activity.startPeriod!! + 1,
-                    spanRows = maxOf(1, maxAmountOfDeliverablesInPeriod),
-                    columnWidth = columnWidth,
-                    currentTableHeight = currentTableHeight,
-                    colorIndex = wpIndex,
+            if (activity.startPeriod != null && activity.endPeriod != null) {
+                rectanglesBig.add(
+                    getRectangle(
+                        startPeriod = activity.startPeriod!!,
+                        spanPeriods = activity.endPeriod!! - activity.startPeriod!! + 1,
+                        spanRows = maxOf(1, maxAmountOfDeliverablesInPeriod),
+                        columnWidth = columnWidth,
+                        currentTableHeight = currentTableHeight,
+                        colorIndex = wpIndex,
+                    )
                 )
-            )
+            }
+
             titles.addMinorTitle(y = currentTableHeight, title = "A${wp.workPackageNumber}.${activity.activityNumber} ${activity.title.getTranslationFor(language, false)}")
 
             // add deliverables for this particular activity
@@ -309,3 +313,12 @@ private fun String.truncateLong() =
         "${substring(0, LEFT_TEXT_MAX_LENGTH - 1)}…"
     else
         this
+
+private fun WorkPackageActivityData.getAllUsedPeriods(): Set<Int> {
+    val allPeriods = this.deliverables.mapNotNull { it.period }.toMutableSet()
+    if (this.startPeriod != null)
+        allPeriods.add(this.startPeriod!!)
+    if (this.endPeriod != null)
+        allPeriods.add(this.endPeriod!!)
+    return allPeriods.toSet()
+}
