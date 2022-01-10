@@ -481,13 +481,14 @@ open class BudgetDetailsTableGenerator(
             PARTNER_BUDGET_EQUIPMENT_UNIT_TYPE_AND_NUMBER_OF_UNITS,
             PARTNER_BUDGET_EXTERNAL_EXPERTISE_UNIT_TYPE_AND_NUMBER_OF_UNITS,
             PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_UNIT_TYPE_AND_NUMBER_OF_UNITS,
+            PARTNER_BUDGET_UNIT_COSTS_UNIT_TYPE_AND_NUMBER_OF_UNITS
         ).any { isFieldVisible(it, lifecycleData, callData) }
 
     private fun isPricePerUnitColumnVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         listOf(
             PARTNER_BUDGET_STAFF_COST_PRICE_PER_UNIT, PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_PRICE_PER_UNIT,
             PARTNER_BUDGET_EQUIPMENT_PRICE_PER_UNIT, PARTNER_BUDGET_EXTERNAL_EXPERTISE_PRICE_PER_UNIT,
-            PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_PRICE_PER_UNIT,
+            PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_PRICE_PER_UNIT
         ).any { isFieldVisible(it, lifecycleData, callData) }
 
     private fun isDescriptionColumnVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
