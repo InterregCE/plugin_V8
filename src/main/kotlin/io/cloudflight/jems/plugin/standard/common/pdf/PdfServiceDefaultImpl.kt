@@ -4,6 +4,7 @@ import com.openhtmltopdf.bidi.support.ICUBidiReorderer
 import com.openhtmltopdf.bidi.support.ICUBidiSplitter
 import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import io.cloudflight.jems.plugin.config.ClassPathStreamFactory
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
@@ -22,6 +23,7 @@ open class PdfServiceDefaultImpl() : PdfService {
                     builder.defaultTextDirection(BaseRendererBuilder.TextDirection.LTR)
                     builder.useProtocolsStreamImplementation(ClassPathStreamFactory(), "classpath")
                     builder.withHtmlContent(html, "classpath:/templates/")
+                    builder.useSVGDrawer(BatikSVGDrawer())
                     builder.toStream(this)
                     builder.buildPdfRenderer().use {
                         it.layout()

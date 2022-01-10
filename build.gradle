@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.0.41'
+version '1.0.42'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -43,6 +43,7 @@ if (isKotlinProject(project)) {
             implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10")
             implementation("com.openhtmltopdf:openhtmltopdf-java2d:1.0.10")
             implementation("com.openhtmltopdf:openhtmltopdf-rtl-support:1.0.10")
+            implementation("com.openhtmltopdf:openhtmltopdf-svg-support:1.0.10")
         }
     }
 }
@@ -57,6 +58,7 @@ dependencies {
     implementation('com.openhtmltopdf:openhtmltopdf-java2d')
     implementation('com.openhtmltopdf:openhtmltopdf-pdfbox')
     implementation('com.openhtmltopdf:openhtmltopdf-rtl-support')
+    implementation('com.openhtmltopdf:openhtmltopdf-svg-support')
     implementation('com.opencsv:opencsv')
 }
 
