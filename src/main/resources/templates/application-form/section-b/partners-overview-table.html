@@ -14,7 +14,7 @@
             Section B - partners
         </div>
 
-        <div class="title" id="partners-overview" th:text="#{jems.standard.application.form.export.partner.overview}">
+        <div class="title" id="partners-overview" th:text="#{project.application.form.section.part.b.partners}">
             Partners overview
         </div>
         <table class="default-table">
@@ -72,7 +72,7 @@
                     th:text="*{abbreviation}"></td>
                 <td clf:ifAnyFieldIsVisible="PARTNER_ROLE"
                     th:text="*{role?.isLead()}?
-             #{jems.standard.application.form.export.partner.lead.partner}:#{jems.standard.application.form.export.partner.project.partner}">
+             #{export.partner.lead.partner}:#{export.partner.project.partner}">
                 </td>
                 <td clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
                     <th:block th:each="associatedOrganization, rowStat: ${projectDataSectionB.associatedOrganisations}">

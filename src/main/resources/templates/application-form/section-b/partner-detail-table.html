@@ -15,7 +15,7 @@
             <thead class="table-header">
             <tr class="sub-heading-2">
                 <td colspan="2"
-                    th:with="partnerTitle=*{role?.isLead()} ? #{jems.standard.application.form.export.partner.detail.lead.partner.title}            : #{jems.standard.application.form.export.partner.detail.project.partner.title(*{sortNumber})}"
+                    th:with="partnerTitle=*{role?.isLead()} ? #{export.partner.detail.lead.partner.title} : #{export.partner.detail.project.partner.title(*{sortNumber})}"
                     th:text="${partnerTitle}"
                     th:id="${partnerTitle}"
                 >
@@ -187,7 +187,7 @@
                 </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_IDENTIFIER">
-                <th th:text="#{jems.standard.application.form.export.partner.detail.vat}">Vat number</th>
+                <th th:text="#{export.partner.detail.vat}">Vat number</th>
                 <td th:text="*{vat}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_RECOVERY">
