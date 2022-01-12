@@ -11,12 +11,16 @@ import kotlin.text.Typography.nbsp
 private const val TABLE_WIDTH = 1000
 private const val LEFT_BAR_WIDTH = 200
 private const val DATA_SPACE_WIDTH = TABLE_WIDTH - LEFT_BAR_WIDTH
-private const val LINE_HEIGHT = 25
 private const val LEFT_TEXT_MARGIN = 5
 private const val LEFT_TEXT_MAX_LENGTH = 45
 private const val RECT_BIG_MARGIN = 3
 private const val RECT_SMALL_MARGIN = 4
 private const val TEXT_HEIGHT_COMPENSATOR = 16
+
+// in case of page layout changes, adjust those so the table is correctly split on pages
+private const val FIRST_PAGE_HEIGHT_COMPENSATOR = 18f
+private const val PAGE_HEIGHT = 642.5f
+private const val LINE_HEIGHT = PAGE_HEIGHT / 26
 
 fun getTimeplanData(
     periods: List<ProjectPeriodData>,
@@ -29,7 +33,7 @@ fun getTimeplanData(
 
     val columnWidth = DATA_SPACE_WIDTH / periods.size.toFloat()
 
-    var currentTableHeight = LINE_HEIGHT
+    var currentTableHeight = LINE_HEIGHT + FIRST_PAGE_HEIGHT_COMPENSATOR
     val rowLines = mutableListOf<String>()
     val titles = mutableListOf<TranslatedText>()
     // bigger rectangles needs to be generated first to not hide wrapped smaller ones
@@ -37,7 +41,7 @@ fun getTimeplanData(
     val rectanglesSmall = mutableListOf<Rectangle>()
 
     // initialize table with header
-    rowLines.addLineAt(currentTableHeight = 0, lineHeight = LINE_HEIGHT)
+    rowLines.addLineAt(currentTableHeight = 0f, lineHeight = LINE_HEIGHT + FIRST_PAGE_HEIGHT_COMPENSATOR)
 
     workPackages.forEachIndexed { wpIndex, wp ->
         val allUsedPeriods = wp.activities.map { it.getAllUsedPeriods() }.flatten().toSet()
@@ -101,7 +105,7 @@ fun getTimeplanData(
         outputsByIndicator.forEach { (indicatorTitle, outputs) ->
             val outputsByPeriod = outputs.groupBy { it.periodNumber }.filter { it.key != null }
             val outputsHeight = (outputsByPeriod.values.maxOfOrNull { it.size } ?: 0) * LINE_HEIGHT
-            if (outputsHeight == 0)
+            if (outputsHeight == 0f)
                 return@forEach
 
             // add line for output indicator
@@ -127,7 +131,7 @@ fun getTimeplanData(
         }
     }
 
-    var resultTitleYCoordinate: Int? = null
+    var resultTitleYCoordinate: Float? = null
 
     val resultsByIndicator = results.filter { it.periodNumber != null }
         .groupBy { it.programmeResultIndicatorIdentifier }
@@ -141,7 +145,7 @@ fun getTimeplanData(
             val resultsByPeriod = resultsPerLine.groupBy { it.periodNumber!! }
             val resultsHeight = (resultsByPeriod.values.maxOfOrNull { it.size } ?: 0) * LINE_HEIGHT
 
-            if (resultsHeight == 0)
+            if (resultsHeight == 0f)
                 return@forEach
 
             // add line for result indicator
@@ -175,9 +179,9 @@ fun getTimeplanData(
         rowDividers = rowLines,
         width = TABLE_WIDTH,
         height = currentTableHeight,
-        rowHeight = LINE_HEIGHT,
+        firstRowHeight = LINE_HEIGHT + FIRST_PAGE_HEIGHT_COMPENSATOR,
         borderAround = generateBordersAroundAndSidenavDivider(currentTableHeight),
-        viewBox = "0 -1 $TABLE_WIDTH ${currentTableHeight + 2}",
+        viewBox = "0 -1 $TABLE_WIDTH ${(currentTableHeight + 2).toInt()}",
         data = rectanglesBig.plus(rectanglesSmall),
         texts = titles,
         resultTitleYCoordinate = resultTitleYCoordinate,
@@ -221,7 +225,7 @@ private fun getRectangle(
     spanRows: Int = 1,
     columnWidth: Float,
     isSmall: Boolean = false,
-    currentTableHeight: Int,
+    currentTableHeight: Float,
     index: Int = 0,
     colorIndex: Int,
     text: String = "",
@@ -244,7 +248,7 @@ private fun getRectangle(
 
 private fun getMargin(isSmall: Boolean) = if (isSmall) RECT_SMALL_MARGIN else RECT_BIG_MARGIN
 
-private fun MutableList<String>.addLineAt(currentTableHeight: Int, lineHeight: Int) = this.add(
+private fun MutableList<String>.addLineAt(currentTableHeight: Float, lineHeight: Float) = this.add(
     "M0 ${currentTableHeight + lineHeight} L${TABLE_WIDTH} ${currentTableHeight + lineHeight}"
 )
 
@@ -252,7 +256,7 @@ private fun MutableList<Rectangle>.addWorkPackageOverallRectangleIfNeeded(
     startPeriod: Int?,
     endPeriod: Int?,
     columnWidth: Float,
-    tableHeight: Int,
+    tableHeight: Float,
     colorIndex: Int,
 ) {
     if (startPeriod != null && endPeriod != null)
@@ -267,11 +271,11 @@ private fun MutableList<Rectangle>.addWorkPackageOverallRectangleIfNeeded(
         )
 }
 
-private fun List<ProjectPeriodData>.toColumnDividers(columnWidth: Float, tableHeight: Int) =
+private fun List<ProjectPeriodData>.toColumnDividers(columnWidth: Float, tableHeight: Float) =
     mapIndexed { index, _ -> 200 + ((index + 1) * columnWidth) }
         .map { "M$it 0 L$it $tableHeight" }
 
-private fun generateBordersAroundAndSidenavDivider(tableHeight: Int) = listOf(
+private fun generateBordersAroundAndSidenavDivider(tableHeight: Float) = listOf(
     "M0 0 L$TABLE_WIDTH 0",
     "M0 0 L0 $tableHeight",
     "M$TABLE_WIDTH 0 L$TABLE_WIDTH $tableHeight",
@@ -285,7 +289,7 @@ private fun List<ProjectPeriodData>.toCoordinates(columnWidth: Float) = mapIndex
     xTextMiddle = LEFT_BAR_WIDTH + ((index + 0.5f) * columnWidth),
 ) }
 
-private fun MutableList<TranslatedText>.addMajorTitle(y: Int, title: String) = this.add(
+private fun MutableList<TranslatedText>.addMajorTitle(y: Float, title: String) = this.add(
     TranslatedText(
         x = LEFT_TEXT_MARGIN.toFloat(),
         y = y + TEXT_HEIGHT_COMPENSATOR,
@@ -294,7 +298,7 @@ private fun MutableList<TranslatedText>.addMajorTitle(y: Int, title: String) = t
     )
 )
 
-private fun MutableList<TranslatedText>.addMinorTitle(y: Int, title: String?) =
+private fun MutableList<TranslatedText>.addMinorTitle(y: Float, title: String?) =
     if (title.isNullOrEmpty())
         false
     else

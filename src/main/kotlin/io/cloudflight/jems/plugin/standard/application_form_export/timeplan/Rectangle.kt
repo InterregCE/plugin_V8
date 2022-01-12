@@ -2,9 +2,9 @@ package io.cloudflight.jems.plugin.standard.application_form_export.timeplan
 
 data class Rectangle(
     val x: Float,
-    val y: Int,
+    val y: Float,
     val width: Float,
-    val height: Int,
+    val height: Float,
     val rx: Int,
     val fill: String,
     val stroke: String = "#000000",

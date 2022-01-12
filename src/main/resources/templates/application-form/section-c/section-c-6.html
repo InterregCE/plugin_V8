@@ -18,16 +18,16 @@
 
         <svg xmlns="http://www.w3.org/2000/svg" th:width="${timeplanData.width}" th:height="${timeplanData.height}" th:viewBox="${timeplanData.viewBox}">
             <!-- headers -->
-            <rect x="0" y="0" th:width="${timeplanData.width}" th:height="${timeplanData.rowHeight}" fill="#EEEEEE"/>
+            <rect x="0" y="0" th:width="${timeplanData.width}" th:height="${timeplanData.firstRowHeight}" fill="#EEEEEE"/>
 
             <th:block th:each="period, rowStat: ${timeplanData.periodColumns}"
                       th:object="${period}">
                 <text th:if="${timeplanData.periodColumns.size <= 16}"
                       th:text="#{project.application.form.section.part.e.period.column.title} + ' ' + ${period.number}"
-                      th:x="${period.xTextMiddle}" y="15" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
+                      th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
                 <text th:if="${timeplanData.periodColumns.size > 16}"
                       th:text="${period.number}"
-                      th:x="${period.xTextMiddle}" y="15" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
+                      th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
             </th:block>
 
             <!-- column lines -->
