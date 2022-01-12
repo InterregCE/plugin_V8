@@ -7,7 +7,7 @@
 <th:block th:fragment="applicationFormIndex(projectData, callData, timeplanData)">
     <bookmarks>
         <bookmark
-                th:name="#{jems.standard.application.form.export.application.form.title(${projectData.sectionA?.customIdentifier},${projectData.sectionA?.acronym})}"
+                th:name="#{export.application.form.title(${projectData.sectionA?.customIdentifier},${projectData.sectionA?.acronym})}"
                 href="#first-page"
         >
         <bookmark th:name="#{project.application.form.section.part.a}" href="#section-a">
@@ -25,12 +25,12 @@
 
         <th:block th:object="${projectData}">
             <bookmark th:name="#{project.application.form.section.part.b}" href="#section-b">
-                <bookmark th:name="#{jems.standard.application.form.export.partner.overview}"
+                <bookmark th:name="#{project.application.form.section.part.b.partners}"
                           href="#partners-overview">
                     <bookmark
                             th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectData.sectionB.partners)}"
                             th:object="${partner}"
-                            th:with="partnerTitle = *{role?.isLead()} ? #{jems.standard.application.form.export.partner.detail.lead.partner.title}: #{jems.standard.application.form.export.partner.detail.project.partner.title(*{sortNumber})}"
+                            th:with="partnerTitle = *{role?.isLead()} ? #{export.partner.detail.lead.partner.title}: #{export.partner.detail.project.partner.title(*{sortNumber})}"
                             th:name="${partner.role?.isLead() ? 'LP' : 'PP'} + *{sortNumber} + ' ' + ${partner.abbreviation}"
                             th:href="'#'+${partnerTitle}">
                     </bookmark>
@@ -59,7 +59,7 @@
                     <bookmark
                             th:each="wp, rowStat: ${projectData.sectionC?.projectWorkPackages}"
                             th:object="${wp}"
-                            th:name="#{jems.standard.application.form.export.section.c.wp}+*{workPackageNumber}"
+                            th:name="#{export.workpackage.wp}+*{workPackageNumber}"
                             th:href="'#wp-'+*{workPackageNumber}">
                     </bookmark>
                 </bookmark>
