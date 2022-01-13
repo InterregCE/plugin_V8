@@ -29,9 +29,11 @@
 
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT">
                 <th th:text="#{project.application.form.work.package.output.programme.output.indicator}">indicator name</th>
-                <td clf:textTranslationByExportLanguage="*{programmeOutputIndicatorName}"></td>
+                <td>
+                    <th:block th:text="*{programmeOutputIndicatorIdentifier + ': '}"></th:block>
+                    <th:block clf:textTranslationByExportLanguage="*{programmeOutputIndicatorName}"></th:block>
+                </td>
             </tr>
-
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT">
                 <th th:text="#{project.application.form.work.package.output.measurement.unit}">indicator measure unit</th>
                 <td  clf:textTranslationByExportLanguage="*{programmeOutputIndicatorMeasurementUnit}"></td>

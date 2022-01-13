@@ -19,7 +19,7 @@
         </div>
 
         <div class="input-data" th:if="${specificObjective?.programmeObjectivePolicy != null}"
-             th:text="${#messages.msg('programme.policy.' + specificObjective?.programmeObjectivePolicy)}">
+             th:text="${projectDataSectionA.specificObjective?.code + ': ' + #messages.msg('programme.policy.' + specificObjective?.programmeObjectivePolicy)}">
             Specific objective
         </div>
     </div>
