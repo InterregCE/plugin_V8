@@ -52,7 +52,7 @@
             </th>
             <td>
                 <span th:if="${projectDataSectionA.specificObjective?.programmeObjectivePolicy != null}"
-                      th:text="${#messages.msg('programme.policy.' + projectDataSectionA.specificObjective?.programmeObjectivePolicy)}">
+                      th:text="${projectDataSectionA.specificObjective?.code + ': ' + #messages.msg('programme.policy.' + projectDataSectionA.specificObjective?.programmeObjectivePolicy)}">
                 </span>
             </td>
         </tr>

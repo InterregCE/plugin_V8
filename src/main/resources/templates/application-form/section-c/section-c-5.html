@@ -30,7 +30,10 @@
                 <tbody class="table-body">
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">
                     <th th:text="#{project.results.result.indicator}">Indicator</th>
-                    <td clf:textTranslationByExportLanguage="*{programmeResultName}">indic name</td>
+                    <td>
+                        <th:block th:text="${result.programmeResultIndicatorIdentifier + ': '}"></th:block>
+                        <th:block clf:textTranslationByExportLanguage="*{programmeResultName}"></th:block>
+                    </td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">
                     <th th:text="#{project.results.result.measurement.unit}">measure_unit</th>
