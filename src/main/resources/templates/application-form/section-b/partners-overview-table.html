@@ -55,7 +55,7 @@
             </thead>
             <tbody class="table-body">
             <tr th:if="${projectDataSectionB.partners.size() == 0}">
-                <td colspan="6"></td>
+                <td colspan="8"></td>
             </tr>
             <tr th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
                 th:object="${partner}">

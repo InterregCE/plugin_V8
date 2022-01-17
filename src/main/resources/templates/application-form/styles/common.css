@@ -1,3 +1,27 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-Regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-Bold.ttf);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-Italic.ttf);
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-BoldItalic.ttf);
+    font-weight: bold;
+    font-style: italic;
+}
+
 @page {
     size: A4 portrait;
     margin: 20mm 15mm;
@@ -120,6 +144,10 @@ tr, td, th, .table-header {
     page-break-inside: avoid;
 }
 
+td, th{
+    white-space: pre-wrap;
+}
+
 .long-text {
     word-wrap: break-word;
 }
@@ -173,6 +201,7 @@ tr, td, th, .table-header {
 }
 
 .input-data{
+    white-space: pre-wrap;
     background-color: #f4fafe;
     padding: 16px ;
     margin: 8px 0;
