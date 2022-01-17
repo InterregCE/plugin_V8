@@ -144,9 +144,6 @@ tr, td, th, .table-header {
     page-break-inside: avoid;
 }
 
-td, th{
-    white-space: pre-wrap;
-}
 
 .long-text {
     word-wrap: break-word;
@@ -201,7 +198,6 @@ td, th{
 }
 
 .input-data{
-    white-space: pre-wrap;
     background-color: #f4fafe;
     padding: 16px ;
     margin: 8px 0;
