@@ -137,15 +137,84 @@ internal class ChecksSectionB {
         )
     }
 
-
     @Test
-    fun `should show ERROR when project partners are not provided`() {
+    fun `should show ERROR when at least one project partner is not active`() {
         CallDataContainer.set(oneStepCallData)
         LifecycleDataContainer.set(projectLifecycleData)
+
+        val partner = createProjectPartnerData()
+
+        val sectionBData = ProjectDataSectionB(
+            partners = setOf(partner),
+            associatedOrganisations = emptySet()
+        )
+
         val checkSectionB = checkSectionB(sectionBData)
         assertThat(checkSectionB.messageType == MessageType.ERROR).isTrue
         assertThat(checkSectionB.subSectionMessages.any { preConditionCheckMessage ->
-            preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.error.at.least.one.partner.should.be.added"
+            preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.error.at.least.one.partner.should.be.active"
+        }).isTrue
+    }
+
+    @Test
+    fun `should show INFO sub message when at least one project partner is active`() {
+        CallDataContainer.set(oneStepCallData)
+        LifecycleDataContainer.set(projectLifecycleData)
+
+        val partner1 = createProjectPartnerData()
+
+        val partner2 = createProjectPartnerData(ProjectPartnerRoleData.PARTNER, true)
+
+        val sectionBData = ProjectDataSectionB(
+            partners = setOf(partner1, partner2),
+            associatedOrganisations = emptySet()
+        )
+
+        val checkSectionB = checkSectionB(sectionBData)
+        assertThat(checkSectionB.messageType == MessageType.ERROR).isTrue
+        assertThat(checkSectionB.subSectionMessages.any { preConditionCheckMessage ->
+            preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.info.at.least.one.partner.is.active"
+        }).isTrue
+    }
+
+    @Test
+    fun `should show ERROR when excatly one project lead partner is not active`() {
+        CallDataContainer.set(oneStepCallData)
+        LifecycleDataContainer.set(projectLifecycleData)
+
+        val partner1 = createProjectPartnerData(ProjectPartnerRoleData.LEAD_PARTNER, false)
+        val partner2 = createProjectPartnerData(ProjectPartnerRoleData.PARTNER, true)
+        val sectionBData = ProjectDataSectionB(
+            partners = setOf(partner1, partner2),
+            associatedOrganisations = emptySet()
+        )
+
+        val checkSectionB = checkSectionB(sectionBData)
+        assertThat(checkSectionB.messageType == MessageType.ERROR).isTrue
+        assertThat(checkSectionB.subSectionMessages.any { preConditionCheckMessage ->
+            preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.error.exactly.one.lead.partner.should.be.active"
+        }).isTrue
+    }
+
+
+    @Test
+    fun `should show INFO sub message when excatly one project lead partner is active`() {
+        CallDataContainer.set(oneStepCallData)
+        LifecycleDataContainer.set(projectLifecycleData)
+
+        val partner1 = createProjectPartnerData(ProjectPartnerRoleData.LEAD_PARTNER, false)
+
+        val partner2 = createProjectPartnerData(ProjectPartnerRoleData.LEAD_PARTNER, true)
+
+        val sectionBData = ProjectDataSectionB(
+            partners = setOf(partner1, partner2),
+            associatedOrganisations = emptySet()
+        )
+
+        val checkSectionB = checkSectionB(sectionBData)
+        assertThat(checkSectionB.messageType == MessageType.ERROR).isTrue
+        assertThat(checkSectionB.subSectionMessages.any { preConditionCheckMessage ->
+            preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.info.exactly.one.lead.partner.is.active"
         }).isTrue
     }
 
@@ -247,5 +316,31 @@ internal class ChecksSectionB {
                             "jems.standard.pre.condition.check.plugin.project.section.b.error.project.partner.department.address.is.not.provided"
                 }).isTrue
     }
+
+    private fun createProjectPartnerData(
+        role: ProjectPartnerRoleData = ProjectPartnerRoleData.PARTNER,
+        active: Boolean = false
+    ): ProjectPartnerData =
+        ProjectPartnerData(
+            id = 123L,
+            active = active,
+            abbreviation = "abbr",
+            role = role,
+            sortNumber = 1,
+            nameInOriginalLanguage = "name",
+            nameInEnglish = "name",
+            department = emptySet(),
+            partnerType = ProjectTargetGroupData.LocalPublicAuthority,
+            partnerSubType = null,
+            nace = null,
+            otherIdentifierNumber = "",
+            pic = null,
+            legalStatusId = null,
+            vat = null,
+            vatRecovery = null,
+            motivation = null,
+            stateAid = null,
+            budget = budget
+        )
 
 }
