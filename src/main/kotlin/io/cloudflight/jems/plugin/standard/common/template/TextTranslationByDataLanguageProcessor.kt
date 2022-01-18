@@ -26,8 +26,10 @@ class TextTranslationByDataLanguageProcessor(defaultDialectPrefix: String) : Abs
     ) {
         if (context != null && attributeValue != null && structureHandler != null) {
             structureHandler.setBody(
+                HtmlEscape.escapeHtml5Xml(
                     parseAttributeValue(attributeValue, context, emptySet<InputTranslationData>())
-                        .getTranslationFor(context.getVariable(DATA_LANGUAGE) as SystemLanguageData),
+                        .getTranslationFor(context.getVariable(DATA_LANGUAGE) as SystemLanguageData)
+                ),
                 false
             )
         }
