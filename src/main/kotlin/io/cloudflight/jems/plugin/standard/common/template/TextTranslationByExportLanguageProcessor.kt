@@ -10,6 +10,7 @@ import org.thymeleaf.processor.element.AbstractAttributeTagProcessor
 import org.thymeleaf.processor.element.IElementTagStructureHandler
 import org.thymeleaf.standard.StandardDialect
 import org.thymeleaf.templatemode.TemplateMode
+import org.unbescape.html.HtmlEscape
 
 class TextTranslationByExportLanguageProcessor(defaultDialectPrefix: String) :
     AbstractAttributeTagProcessor(
@@ -26,8 +27,10 @@ class TextTranslationByExportLanguageProcessor(defaultDialectPrefix: String) :
     ) {
         if (context != null && attributeValue != null && structureHandler != null) {
             structureHandler.setBody(
-                parseAttributeValue(attributeValue, context, emptySet<InputTranslationData>())
-                    .getTranslationFor(context.getVariable(EXPORT_LANGUAGE) as SystemLanguageData),
+                HtmlEscape.escapeHtml5Xml(
+                    parseAttributeValue(attributeValue, context, emptySet<InputTranslationData>())
+                        .getTranslationFor(context.getVariable(EXPORT_LANGUAGE) as SystemLanguageData)
+                ),
                 false
             )
         }
