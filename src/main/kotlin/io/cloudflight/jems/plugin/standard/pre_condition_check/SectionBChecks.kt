@@ -21,9 +21,9 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
         messageKey = "project.application.form.section.part.b", messageArgs = emptyMap(),
 
-        checkIfAtLeastOnePartnerIsAdded(sectionBData.partners),
+        checkIfAtLeastOnePartnerIsActive(sectionBData.partners),
 
-        checkIfExactlyOneLeadPartnerIsAdded(sectionBData.partners),
+        checkIfExactlyOneLeadPartnerIsActive(sectionBData.partners),
 
         checkIfPartnerIdentityContentIsProvided(sectionBData.partners),
 
@@ -59,17 +59,19 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
     )
 }
 
-private fun checkIfAtLeastOnePartnerIsAdded(partners: Set<ProjectPartnerData>?) =
+private fun checkIfAtLeastOnePartnerIsActive(partners: Set<ProjectPartnerData>?) =
     when {
-        partners.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.at.least.one.partner.should.be.added")
-        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.at.least.one.partner.is.added")
+        partners.isNullOrEmpty() || partners.filter { it.active }.isEmpty() ->
+            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.at.least.one.partner.should.be.active")
+        else ->
+            buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.at.least.one.partner.is.active")
     }
 
-private fun checkIfExactlyOneLeadPartnerIsAdded(partners: Set<ProjectPartnerData>?) =
+private fun checkIfExactlyOneLeadPartnerIsActive(partners: Set<ProjectPartnerData>?) =
     when {
-        partners.isNullOrEmpty() || partners.filter { it.role == ProjectPartnerRoleData.LEAD_PARTNER }.size != 1 ->
-            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.exactly.one.lead.partner.should.be.added")
-        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.exactly.one.lead.partner.is.added")
+        partners.isNullOrEmpty() || partners.filter { it.role == ProjectPartnerRoleData.LEAD_PARTNER && it.active}.size != 1 ->
+            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.exactly.one.lead.partner.should.be.active")
+        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.exactly.one.lead.partner.is.active")
     }
 
 private fun checkIfTotalBudgetIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
@@ -1283,8 +1285,8 @@ private fun isFieldVisible(fieldId: ApplicationFormFieldId): Boolean {
 
 private fun isDepartmentMissingWhenDepartmentAddressIsAvailable(partner: ProjectPartnerData) =
     partner.department.isNullOrEmpty() &&
-            partner.addresses.any { address -> address.type == ProjectPartnerAddressTypeData.Department}
+            partner.addresses.any { address -> address.type == ProjectPartnerAddressTypeData.Department }
 
-private fun isPartnerDepartmentAddressMissingWhenDepartmentIsAvailable(partner: ProjectPartnerData)
-=  partner.department.isNotEmpty() &&
-        partner.addresses.none { address -> address.type == ProjectPartnerAddressTypeData.Department }
+private fun isPartnerDepartmentAddressMissingWhenDepartmentIsAvailable(partner: ProjectPartnerData) =
+    partner.department.isNotEmpty() &&
+            partner.addresses.none { address -> address.type == ProjectPartnerAddressTypeData.Department }
