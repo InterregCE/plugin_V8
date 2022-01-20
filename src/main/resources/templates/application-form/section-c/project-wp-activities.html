@@ -25,7 +25,7 @@
         <tbody class="table-body">
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE">
             <th th:text="#{project.work.package.tab.activity.title}">title</th>
-            <td clf:textTranslationByDataLanguage="${activity.title}">value</td>
+            <td class="multiline" clf:textTranslationByDataLanguage="${activity.title}">value</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_START_PERIOD">
@@ -60,7 +60,7 @@
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_DESCRIPTION">
             <th th:text="#{project.work.package.tab.activity.description}">desc</th>
-            <td clf:textTranslationByDataLanguage="${activity.description}">value</td>
+            <td class="multiline" clf:textTranslationByDataLanguage="${activity.description}">value</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
@@ -93,8 +93,8 @@
         <tr th:each="deliverable, rowStat: ${activity.deliverables}"
             th:object="${deliverable}">
             <td th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber}">D.x.x</td>
-            <td clf:textTranslationByDataLanguage="${deliverable.title}">value</td>
-            <td clf:textTranslationByDataLanguage="${deliverable.description}">value</td>
+            <td class="multiline" clf:textTranslationByDataLanguage="${deliverable.title}">value</td>
+            <td class="multiline" clf:textTranslationByDataLanguage="${deliverable.description}">value</td>
             <td>
                 <th:block th:each="period, rowStat: ${periods}" th:object="${period}">
                     <span th:if="${period.number == deliverable.period}">

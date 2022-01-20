@@ -36,7 +36,7 @@
         </th:block>
         <tr clf:ifAnyFieldIsVisible="PROJECT_TITLE">
             <th th:text="#{project.application.form.field.project.title}">Project title</th>
-            <td clf:textTranslationByDataLanguage="${projectDataSectionA.title}"></td>
+            <td class="multiline" clf:textTranslationByDataLanguage="${projectDataSectionA.title}"></td>
         </tr>
         <tr>
             <th th:text="#{project.application.form.field.project.acronym}">Project acronym</th>
@@ -80,8 +80,8 @@
                 <li th:text="#{project.application.form.summary.intro.row.six}"></li>
             </ul>
         </div>
-        <div class="input-data" clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></div>
-        <div class="input-data" th:if="${dataLanguage.name != 'EN'}"
+        <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></div>
+        <div class="input-data multiline" th:if="${dataLanguage.name != 'EN'}"
              th:text="${clfUtils.getEnglishTranslation(projectDataSectionA.intro)}"></div>
     </div>
 </th:block>

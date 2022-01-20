@@ -16,7 +16,7 @@
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_TERRITORIAL_CHALLENGES">
         <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.1}"></div>
         <div th:text="#{project.application.form.relevance.field.1.intro}"></div>
-        <div class="input-data"
+        <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.territorialChallenge}"></div>
     </div>
 
@@ -24,7 +24,7 @@
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED">
         <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.2}"></div>
         <div th:text="#{project.application.form.relevance.field.2.intro}"></div>
-        <div class="input-data"
+        <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.commonChallenge}"></div>
     </div>
 
@@ -32,7 +32,7 @@
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_WHY_IS_COOPERATION_NEEDED">
         <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.3}"></div>
         <div th:text="#{project.application.form.relevance.field.3.intro}"></div>
-        <div class="input-data"
+        <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.transnationalCooperation}"></div>
     </div>
 
@@ -57,7 +57,7 @@
                     th:text="${#messages.msg('project.application.form.relevance.target.group.' + benefitData.group)}">
                     Group
                 </td>
-                <td clf:textTranslationByDataLanguage="${benefitData.specification}">
+                <td class="multiline" clf:textTranslationByDataLanguage="${benefitData.specification}">
                     Specification
                 </td>
             </tr>
@@ -87,7 +87,7 @@
                       th:text="${#messages.msg('programme.strategy.' + strategyData.strategy)}"></span>
                     Strategy
                 </td>
-                <td clf:textTranslationByDataLanguage="${strategyData.specification}">
+                <td class="multiline" clf:textTranslationByDataLanguage="${strategyData.specification}">
                     Contribution
                 </td>
             </tr>
@@ -115,10 +115,10 @@
             </thead>
             <tbody class="table-body">
             <tr th:each="synergyData : ${projectDataSectionC.projectRelevance?.projectSynergies}">
-                <td clf:textTranslationByDataLanguage="${synergyData.specification}">
+                <td class="multiline" clf:textTranslationByDataLanguage="${synergyData.specification}">
                     Specification
                 </td>
-                <td clf:textTranslationByDataLanguage="${synergyData.synergy}">Synergy</td>
+                <td class="multiline" clf:textTranslationByDataLanguage="${synergyData.synergy}">Synergy</td>
             </tr>
             </tbody>
         </table>
@@ -128,7 +128,7 @@
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HOW_BUILDS_PROJECT_ON_AVAILABLE_KNOWLEDGE">
         <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.7}"></div>
         <div th:text="#{project.application.form.relevance.field.7.intro}"></div>
-        <div class="input-data"
+        <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.availableKnowledge}"></div>
     </div>
 </th:block>

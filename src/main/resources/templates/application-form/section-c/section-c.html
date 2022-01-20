@@ -14,8 +14,7 @@
         SECTION C - Project description
     </div>
     <!-- C1 -->
-    <div
-            th:insert="~{application-form/section-c/project-objective.html :: projectObjective(${projectDataSectionC}, ${specificObjective})}"></div>
+    <div th:insert="~{application-form/section-c/section-c-1.html :: projectObjective(${projectDataSectionC}, ${specificObjective})}"></div>
     <div class="page-break-after"></div>
     <!-- C2 -->
     <div th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
@@ -43,7 +42,7 @@
     </th:block>
 
     <!-- C7 -->
-    <div th:insert="~{application-form/section-c/project-management-table.html :: projectManagement(${projectDataSectionC})}"></div>
+    <div th:insert="~{application-form/section-c/section-c-7.html :: projectManagement(${projectDataSectionC})}"></div>
     <div class="page-break-after"></div>
     <!-- C8 -->
     <div th:insert="~{application-form/section-c/section-c-8.html :: sectionC8(${projectDataSectionC})}"></div>

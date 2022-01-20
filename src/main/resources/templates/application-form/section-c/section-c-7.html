@@ -23,7 +23,7 @@
                 C.7.1 How will you coordinate your project?
             </div>
             <div th:text="#{project.application.form.management.field.1.intro}"></div>
-            <div class="input-data" clf:textTranslationByDataLanguage="${projectManagement?.projectCoordination}"></div>
+            <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectCoordination}"></div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_QUALITY_MEASURES">
@@ -31,7 +31,7 @@
                 C.7.2 Which measures will you take to ensure quality in your project?
             </div>
             <div th:text="#{project.application.form.management.field.2.intro}"></div>
-            <div class="input-data" clf:textTranslationByDataLanguage="${projectManagement?.projectQualityAssurance}"></div>
+            <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectQualityAssurance}"></div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COMMUNICATION_APPROACH">
@@ -39,7 +39,7 @@
                 the general approach you will follow to communicate about your project?
             </div>
             <div th:text="#{project.application.form.management.field.3.intro}"></div>
-            <div class="input-data" clf:textTranslationByDataLanguage="${projectManagement?.projectCommunication}"></div>
+            <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectCommunication}"></div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_FINANCIAL_MANAGEMENT_AND_REPORTING">
@@ -48,7 +48,7 @@
                 budget (within the partnership and towards the programme)?
             </div>
             <div th:text="#{project.application.form.management.field.4.intro}"></div>
-            <div class="input-data"
+            <div class="input-data multiline"
                  clf:textTranslationByDataLanguage="${projectManagement?.projectFinancialManagement}"></div>
         </div>
 
@@ -82,7 +82,7 @@
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointDevelopment == false}"
                               th:text="#{common.no}">No</span>
                     </td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointDevelopmentDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointDevelopmentDescription}"></td>
                 </tr>
                 <tr>
                     <td th:text="#{project.application.form.management.cooperation.table.row.2}">Joint implementation
@@ -93,7 +93,7 @@
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointImplementation == false}"
                               th:text="#{common.no}">No</span>
                     </td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointImplementationDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointImplementationDescription}"></td>
                 </tr>
                 <tr>
                     <td th:text="#{project.application.form.management.cooperation.table.row.3}">Joint staffing</td>
@@ -103,7 +103,7 @@
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointStaffing == false}"
                               th:text="#{common.no}">No</span>
                     </td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointStaffingDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointStaffingDescription}"></td>
                 </tr>
                 <tr>
                     <td th:text="#{project.application.form.management.cooperation.table.row.4}">Joint financing</td>
@@ -114,7 +114,7 @@
                               th:text="#{common.no}">No
                 </span>
                     </td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.projectJointFinancingDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointFinancingDescription}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -162,7 +162,7 @@
                         negative effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == null}"></td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.sustainableDevelopmentDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.sustainableDevelopmentDescription}"></td>
                 </tr>
                 <tr>
                     <td th:text="#{project.application.form.management.principles.table.row.2}">Equal opportunities and
@@ -181,7 +181,7 @@
                         negative effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect == null}"></td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.equalOpportunitiesDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.equalOpportunitiesDescription}"></td>
                 </tr>
                 <tr>
                     <td th:text="#{project.application.form.management.principles.table.row.3}">Equality between men and
@@ -200,7 +200,7 @@
                         negative effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect == null}"></td>
-                    <td clf:textTranslationByDataLanguage="${projectManagement?.sexualEqualityDescription}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.sexualEqualityDescription}"></td>
                 </tr>
                 </tbody>
             </table>
