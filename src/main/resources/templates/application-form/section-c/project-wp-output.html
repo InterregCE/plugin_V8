@@ -24,7 +24,7 @@
         <tbody class="table-body">
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_TITLE">
                 <th th:text="#{project.application.form.work.package.output.title}">title</th>
-                <td clf:textTranslationByDataLanguage="${output.title}">value</td>
+                <td class="multiline" clf:textTranslationByDataLanguage="${output.title}">value</td>
             </tr>
 
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_PROGRAMME_OUTPUT_INDICATOR_AND_MEASUREMENT_UNIT">
@@ -59,7 +59,7 @@
 
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_DESCRIPTION">
                 <th th:text="#{project.application.form.work.package.output.description}"></th>
-                <td clf:textTranslationByDataLanguage="${output.description}"></td>
+                <td class="multiline" clf:textTranslationByDataLanguage="${output.description}"></td>
             </tr>
         </tbody>
     </table>

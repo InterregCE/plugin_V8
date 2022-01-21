@@ -42,12 +42,12 @@
                 <li th:text="#{project.application.form.workpackage.form.objectives.intro.line.six}">c</li>
             </ul>
             <div th:text="#{project.application.form.workpackage.form.objectives.intro.line.one}">Define one project</div>
-            <div class="input-data" clf:textTranslationByDataLanguage="*{specificObjective}">value</div>
+            <div class="input-data multiline" clf:textTranslationByDataLanguage="*{specificObjective}">value</div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COMMUNICATION_OBJECTIVES_AND_TARGET_AUDIENCE">
             <div th:text="#{project.application.form.workpackage.form.objectives.intro.line.two}">question 2</div>
-            <div class="input-data" clf:textTranslationByDataLanguage="*{objectiveAndAudience}">answer 2</div>
+            <div class="input-data multiline" clf:textTranslationByDataLanguage="*{objectiveAndAudience}">answer 2</div>
         </div>
 
         <div class="sub-heading-1" id="activities" th:if="${clfUtils.isActivitiesSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.activities.size() > 0}"

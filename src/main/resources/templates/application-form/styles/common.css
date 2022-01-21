@@ -202,3 +202,6 @@ tr, td, th, .table-header {
     padding: 16px ;
     margin: 8px 0;
 }
+.multiline {
+    white-space: pre-wrap;
+}

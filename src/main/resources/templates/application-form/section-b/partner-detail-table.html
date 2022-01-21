@@ -52,7 +52,7 @@
                 <th th:text="#{project.organization.department.label}">
                     Department/unit/division
                 </th>
-                <td clf:textTranslationByDataLanguage="*{department}"></td>
+                <td class="multiline" clf:textTranslationByDataLanguage="*{department}"></td>
             </tr>
             </tbody>
         </table>
@@ -285,7 +285,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <td clf:textTranslationByDataLanguage="*{motivation?.organizationRelevance}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="*{motivation?.organizationRelevance}"></td>
                 </tr>
 
                 <tr clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_ROLE">
@@ -294,7 +294,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <td th:type="text" clf:textTranslationByDataLanguage="*{motivation?.organizationRole}"></td>
+                    <td class="multiline" th:type="text" clf:textTranslationByDataLanguage="*{motivation?.organizationRole}"></td>
                 </tr>
 
                 <tr clf:ifAnyFieldIsVisible="PARTNER_ROLE_EXPERIENCE">
@@ -303,7 +303,7 @@
                     </th>
                 </tr>
                 <tr>
-                    <td clf:textTranslationByDataLanguage="*{motivation?.organizationExperience}"></td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="*{motivation?.organizationExperience}"></td>
                 </tr>
             </tbody>
         </table>
