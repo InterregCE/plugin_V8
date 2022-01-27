@@ -33,7 +33,12 @@
             <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
                 th:text="#{project.partner.coFinancing.partnerContribution}">Partner contribution
             </td>
-            <td clf:number="${clfUtils.percentageDown(finance?.percentage, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+            <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
+                clf:number="${clfUtils.percentageDown(finance?.percentage, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                47593
+            </td>
+            <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
+                clf:number="${clfUtils.getPartnerContribution(partnerBudgetData.projectPartnerCoFinancing.finances, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                 47593
             </td>
             <td clf:percentage="*{percentage}">80%</td>
