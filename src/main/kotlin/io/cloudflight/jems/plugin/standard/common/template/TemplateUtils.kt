@@ -10,6 +10,8 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.Proje
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectTargetGroupData
@@ -214,6 +216,15 @@ class TemplateUtils {
                 -1
         }
 
+    fun getPartnerContribution(finances: Collection<ProjectPartnerCoFinancingData>?, total: BigDecimal): BigDecimal {
+        if (finances.isNullOrEmpty())
+            return BigDecimal.ZERO
+
+        val funds = finances.filter { it.fundType == ProjectPartnerCoFinancingFundTypeData.MainFund }
+            .map { percentageDown(it.percentage, total) }
+
+        return total.minus(funds.sumUp())
+    }
 
 }
 
@@ -228,3 +239,5 @@ fun parseAttributeValue(attributeValue: String, context: ITemplateContext): Any?
     val expression: IStandardExpression = parser.parseExpression(context, attributeValue)
     return expression.execute(context)
 }
+
+private fun Collection<BigDecimal>.sumUp() = sumOf { it }
