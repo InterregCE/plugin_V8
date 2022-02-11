@@ -10,6 +10,7 @@ import io.cloudflight.jems.plugin.contract.services.ProgrammeDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import io.cloudflight.jems.plugin.standard.common.excel.ExcelService
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProjectAndCallData
+import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
@@ -24,19 +25,33 @@ open class ProgrammeProjectDataExportDefaultImpl(
     private val callDataProvider: CallDataProvider,
     private val messageSource: MessageSource
 ) : ProgrammeDataExportPlugin {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ProgrammeProjectDataExportDefaultImpl::class.java)
+    }
+
     override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData): ExportResult {
         val programmeData = programmeDataProvider.getProgrammeData()
         val exportationDateTime = ZonedDateTime.now()
+        val failedProjectIds = mutableSetOf<Long>()
 
         val projectAndCallDataList = mutableListOf<ProjectAndCallData>()
-        getProjectsToExport(projectDataProvider.getAllProjectVersions()).forEach { projectVersion ->
-            projectAndCallDataList.add(
-                ProjectAndCallData(
-                    projectDataProvider.getProjectDataForProjectId(projectVersion.projectId, projectVersion.version),
-                    callDataProvider.getCallDataByProjectId(projectVersion.projectId),
-                    projectVersion
+        getProjectsToExport(projectDataProvider.getAllProjectVersions()).parallelStream().forEach { projectVersion ->
+            runCatching {
+                projectAndCallDataList.add(
+                    ProjectAndCallData(
+                        projectDataProvider.getProjectDataForProjectId(
+                            projectVersion.projectId,
+                            projectVersion.version
+                        ),
+                        callDataProvider.getCallDataByProjectId(projectVersion.projectId),
+                        projectVersion
+                    )
                 )
-            )
+            }.onFailure {
+                logger.warn("Failed to fetch data for project with id=${projectVersion.projectId}", it)
+                failedProjectIds.add(projectVersion.projectId)
+            }.getOrNull()
         }
 
         return ExportResult(
@@ -44,7 +59,7 @@ open class ProgrammeProjectDataExportDefaultImpl(
             fileName = getFileName(programmeData.title, exportationDateTime, exportLanguage, dataLanguage),
             content = excelService.generateExcel(
                 ProgrammeProjectDataGenerator(
-                    projectAndCallDataList, programmeData, exportationDateTime,
+                    projectAndCallDataList, failedProjectIds, programmeData, exportationDateTime,
                     exportLanguage, dataLanguage, messageSource
                 ).getData()
             ),
@@ -63,8 +78,18 @@ open class ProgrammeProjectDataExportDefaultImpl(
                 "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.xlsx"
 
     fun getProjectsToExport(projectVersions: List<ProjectVersionData>) =
-        projectVersions.filter {
-            setOf(ApplicationStatusData.APPROVED, ApplicationStatusData.SUBMITTED).contains(it.status)
+        projectVersions.filterNot {
+            setOf(
+                ApplicationStatusData.STEP1_DRAFT,
+                ApplicationStatusData.DRAFT,
+                ApplicationStatusData.RETURNED_TO_APPLICANT,
+                ApplicationStatusData.RETURNED_TO_APPLICANT_FOR_CONDITIONS,
+                ApplicationStatusData.MODIFICATION_PRECONTRACTING,
+                ApplicationStatusData.MODIFICATION_PRECONTRACTING_SUBMITTED,
+                ApplicationStatusData.IN_MODIFICATION,
+                ApplicationStatusData.MODIFICATION_REJECTED,
+                ApplicationStatusData.MODIFICATION_SUBMITTED,
+            ).contains(it.status)
         }
             .groupBy { it.projectId }.entries.mapNotNull { it.value.maxByOrNull { projectVersion -> projectVersion.createdAt } }
 
@@ -78,5 +103,5 @@ open class ProgrammeProjectDataExportDefaultImpl(
         "Standard programme project data export"
 
     override fun getVersion(): String =
-        "1.0.1"
+        "1.0.2"
 }

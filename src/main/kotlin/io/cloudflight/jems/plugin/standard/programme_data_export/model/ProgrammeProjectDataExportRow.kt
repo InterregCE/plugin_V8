@@ -15,9 +15,9 @@ import java.time.ZonedDateTime
 open class ProgrammeProjectDataExportRow(
     val callId: Long,
     val callName: String,
-    val callStartDate: ZonedDateTime,
-    val callEndDateStepOne: ZonedDateTime?,
-    val callEndDate: ZonedDateTime,
+    private val callStartDate: ZonedDateTime,
+    private val callEndDateStepOne: ZonedDateTime?,
+    private val callEndDate: ZonedDateTime,
     val periodLength: Int?,
 
     val projectId: String,
@@ -27,15 +27,15 @@ open class ProgrammeProjectDataExportRow(
     val projectStatus: ApplicationStatusData,
     val projectProgrammePriority: String?,
     val projectSpecificObjective: String?,
-    val startData : ZonedDateTime? = null, // for now the value is always null
-    val endData : ZonedDateTime? = null, // for now the value is always null
+    val startData: ZonedDateTime? = null, // for now the value is always null
+    val endData: ZonedDateTime? = null, // for now the value is always null
     val projectDuration: Int?,
     val numberOfPeriods: Int?,
     val fundInfoList: List<FundInfo>,
     val publicContribution: BigDecimal,
-    val autoPublicContribution : BigDecimal,
-    val privateContribution : BigDecimal,
-    val totalEligibleBudget : BigDecimal,
+    val autoPublicContribution: BigDecimal,
+    val privateContribution: BigDecimal,
+    val totalEligibleBudget: BigDecimal,
 
     val staffCostTotals: BudgetTotalCostInfo,
     val officeCostTotals: BigDecimal,
@@ -75,7 +75,20 @@ open class ProgrammeProjectDataExportRow(
     val eligibilityAssessmentNotes: String?,
     val qualityAssessmentResult: ProjectAssessmentQualityResultData?,
     val qualityAssessmentNotes: String?,
-    ) {
+) {
+
     fun getTotalPartnerContribution() =
         publicContribution.plus(autoPublicContribution).plus(privateContribution)
+
+    fun callStartDate() =
+        truncateToMinutes(callStartDate)
+
+    fun callEndDateStepOne() =
+        truncateToMinutes(callEndDateStepOne)
+
+    fun callEndDate() =
+        truncateToMinutes(callEndDate)
+
+    private fun truncateToMinutes(date: ZonedDateTime?) =
+        date?.withSecond(0)?.withNano(0)
 }

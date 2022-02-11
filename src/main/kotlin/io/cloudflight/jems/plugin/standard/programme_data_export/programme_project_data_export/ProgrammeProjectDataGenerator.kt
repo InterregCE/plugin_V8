@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter
 
 open class ProgrammeProjectDataGenerator(
     private val projectAndCallDataList: List<ProjectAndCallData>,
+    private val failedProjectIds: Set<Long>,
     private val programmeInfoData: ProgrammeInfoData,
     private val exportationDateTime: ZonedDateTime,
     exportLanguage: SystemLanguageData,
@@ -46,6 +47,15 @@ open class ProgrammeProjectDataGenerator(
                 sheet.addRows(getRows(generateProgrammeProjectDataExportRows()))
                 sheet.data.lastOrNull()?.borderBottom()
             }
+            if (failedProjectIds.isNotEmpty())
+                it.addSheet("Failed projects").also { sheet ->
+                    sheet.addRow(
+                        getMessage(
+                            "project.application.form.field.project.id", exportLocale, messageSource
+                        ).toErrorCellData()
+                    )
+                    sheet.addRows(failedProjectIds.map { projectId -> arrayOf(projectId.toErrorCellData()) })
+                }
         }
 
     private fun getFileTitle(programmeTitle: String?, exportationDateTime: ZonedDateTime) =
@@ -58,9 +68,9 @@ open class ProgrammeProjectDataGenerator(
             mutableListOf<CellData>().also {
                 it.add(row.callId.toCallCellData().borderLeft())
                 it.add(row.callName.toCallCellData())
-                it.add(row.callStartDate.toCallCellData())
-                it.add(row.callEndDateStepOne.toCallCellData())
-                it.add(row.callEndDate.toCallCellData())
+                it.add(row.callStartDate().toCallCellData())
+                it.add(row.callEndDateStepOne().toCallCellData())
+                it.add(row.callEndDate().toCallCellData())
                 it.add(row.periodLength.toCallCellData())
 
                 it.add(row.projectId.toProjectCellData())
