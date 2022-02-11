@@ -3,11 +3,7 @@ package io.cloudflight.jems.plugin.standard.common.excel
 import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
 import io.cloudflight.jems.plugin.standard.common.excel.model.Color
 import io.cloudflight.jems.plugin.standard.common.excel.model.ExcelData
-import org.apache.poi.ss.usermodel.BorderStyle
-import org.apache.poi.ss.usermodel.BuiltinFormats
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.FillPatternType
-import org.apache.poi.ss.usermodel.Workbook
+import org.apache.poi.ss.usermodel.*
 import org.apache.poi.xssf.streaming.SXSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFCellStyle
 import org.apache.poi.xssf.usermodel.XSSFColor
@@ -17,8 +13,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
-import java.util.Date
-import java.util.Calendar
+import java.util.*
 
 @Service
 class ExcelServiceDefaultImpl : ExcelService {
@@ -40,7 +35,7 @@ class ExcelServiceDefaultImpl : ExcelService {
                         }
                     }
                     sheet.trackAllColumnsForAutoSizing()
-                    colIndexes.forEach { index ->  sheet.autoSizeColumn(index)}
+                    colIndexes.forEach { index -> sheet.autoSizeColumn(index) }
                 }
             }
             workbook.write(this)
@@ -59,7 +54,8 @@ class ExcelServiceDefaultImpl : ExcelService {
             is Calendar -> cell.setCellValue(cellData.value)
             is String -> cell.setCellValue(cellData.value)
             is Boolean -> cell.setCellValue(cellData.value)
-            else -> cell.setCellValue(cellData.value.toString())
+            is Any -> cell.setCellValue(cellData.value.toString())
+            else -> cell.setBlank()
         }
     }
 
