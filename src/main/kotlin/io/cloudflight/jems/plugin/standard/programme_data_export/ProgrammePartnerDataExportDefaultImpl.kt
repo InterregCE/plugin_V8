@@ -51,7 +51,9 @@ open class ProgrammePartnerDataExportDefaultImpl(
             ExportResult(
                 contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 fileName = getFileName(programmeData.title, exportationDateTime, exportLanguage, dataLanguage),
-                content = excelService.generateExcel(this)
+                content = excelService.generateExcel(this),
+                startTime = exportationDateTime,
+                endTime = ZonedDateTime.now()
             )
         }
 
