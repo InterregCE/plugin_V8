@@ -13,10 +13,12 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @Service
 class ExcelServiceDefaultImpl : ExcelService {
+
     override fun generateExcel(data: ExcelData): ByteArray =
         with(ByteArrayOutputStream()) {
             val workbook = SXSSFWorkbook()
@@ -60,28 +62,48 @@ class ExcelServiceDefaultImpl : ExcelService {
     }
 
     private fun setCellStyles(workbook: Workbook, cell: Cell, cellData: CellData) {
-        workbook.createCellStyle().let { it as XSSFCellStyle }.also { style ->
-            style.fillPattern = FillPatternType.SOLID_FOREGROUND
-            style.setFillForegroundColor(cellData.cellStyle.backgroundColor.toXSSFColor())
+        getCellStyleIfItAlreadyExists(workbook, cellData).let { style ->
+            style
+                ?: workbook.createCellStyle().let { it as XSSFCellStyle }.also { newStyle ->
+                    newStyle.fillPattern = FillPatternType.SOLID_FOREGROUND
+                    newStyle.setFillForegroundColor(cellData.cellStyle.backgroundColor.toXSSFColor())
 
-            style.borderBottom = BorderStyle.valueOf(cellData.cellStyle.borderBottomStyle.code)
-            style.borderTop = BorderStyle.valueOf(cellData.cellStyle.borderTopStyle.code)
-            style.borderRight = BorderStyle.valueOf(cellData.cellStyle.borderRightStyle.code)
-            style.borderLeft = BorderStyle.valueOf(cellData.cellStyle.borderLeftStyle.code)
+                    newStyle.borderBottom = BorderStyle.valueOf(cellData.cellStyle.borderBottomStyle.code)
+                    newStyle.borderTop = BorderStyle.valueOf(cellData.cellStyle.borderTopStyle.code)
+                    newStyle.borderRight = BorderStyle.valueOf(cellData.cellStyle.borderRightStyle.code)
+                    newStyle.borderLeft = BorderStyle.valueOf(cellData.cellStyle.borderLeftStyle.code)
 
-            style.setBottomBorderColor(cellData.cellStyle.borderBottomColor.toXSSFColor())
-            style.setTopBorderColor(cellData.cellStyle.borderTopColor.toXSSFColor())
-            style.setRightBorderColor(cellData.cellStyle.borderRightColor.toXSSFColor())
-            style.setLeftBorderColor(cellData.cellStyle.borderLeftColor.toXSSFColor())
-
-            if (cellData.value is LocalDate || cellData.value is LocalDateTime || cellData.value is ZonedDateTime || cellData.value is Date)
-                style.dataFormat = BuiltinFormats.getBuiltinFormat("m/d/yy h:mm").toShort()
-
-            cell.cellStyle = style
-        }
-
+                    newStyle.setBottomBorderColor(cellData.cellStyle.borderBottomColor.toXSSFColor())
+                    newStyle.setTopBorderColor(cellData.cellStyle.borderTopColor.toXSSFColor())
+                    newStyle.setRightBorderColor(cellData.cellStyle.borderRightColor.toXSSFColor())
+                    newStyle.setLeftBorderColor(cellData.cellStyle.borderLeftColor.toXSSFColor())
+                    newStyle.dataFormat = getCellFormat(cellData)
+                }
+        }.also { style -> cell.cellStyle = style }
     }
+
+    private fun getCellStyleIfItAlreadyExists(workbook: Workbook, cellData: CellData) =
+        IntRange(0, workbook.numCellStyles - 1).map { workbook.getCellStyleAt(it) as XSSFCellStyle }
+            .firstOrNull { style ->
+                style.fillForegroundXSSFColor == cellData.cellStyle.backgroundColor.toXSSFColor() &&
+                        style.borderBottom == BorderStyle.valueOf(cellData.cellStyle.borderBottomStyle.code) &&
+                        style.borderTop == BorderStyle.valueOf(cellData.cellStyle.borderTopStyle.code) &&
+                        style.borderRight == BorderStyle.valueOf(cellData.cellStyle.borderRightStyle.code) &&
+                        style.borderLeft == BorderStyle.valueOf(cellData.cellStyle.borderLeftStyle.code) &&
+                        style.bottomBorderXSSFColor == cellData.cellStyle.borderBottomColor.toXSSFColor() &&
+                        style.topBorderXSSFColor == cellData.cellStyle.borderTopColor.toXSSFColor() &&
+                        style.rightBorderXSSFColor == cellData.cellStyle.borderRightColor.toXSSFColor() &&
+                        style.leftBorderXSSFColor == cellData.cellStyle.borderLeftColor.toXSSFColor() &&
+                        style.dataFormat == getCellFormat(cellData)
+            }
 
     private fun Color.toXSSFColor() =
         XSSFColor(byteArrayOf(this.red.toByte(), this.green.toByte(), this.blue.toByte()))
+
+    private fun getCellFormat(cellData: CellData) =
+        when (cellData.value) {
+            is LocalDateTime, is ZonedDateTime -> BuiltinFormats.getBuiltinFormat("m/d/yy h:mm").toShort()
+            is LocalDate, is Date -> BuiltinFormats.getBuiltinFormat("m/d/yy").toShort()
+            else -> BuiltinFormats.getBuiltinFormat("General").toShort()
+        }
 }

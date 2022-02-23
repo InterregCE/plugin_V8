@@ -116,3 +116,6 @@ internal fun Any?.toProjectCellData() =
 
 internal fun Any?.toAssessmentCellData() =
     CellData(this).backgroundColor(Color.LIGHT_ORANGE)
+
+internal fun Any?.toErrorCellData() =
+    CellData(this).backgroundColor(Color.LIGHT_RED)
