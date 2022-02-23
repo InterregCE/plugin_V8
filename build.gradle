@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.1.5'
+version '1.1.6'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -51,7 +51,7 @@ if (isKotlinProject(project)) {
 }
 dependencies {
     // load for local development (if projects are cloned in same root as jems)
-    // implementation files('../jems-plugin-contract/build/libs/jems-plugin-contract-1.1.2-SNAPSHOT.jar')
+//     implementation files('../jems-plugin-interface/build/libs/jems-plugin-contract-1.1.2-SNAPSHOT.jar')
     provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
     provided('org.springframework.boot:spring-boot-starter-web')
     provided('org.springframework.boot:spring-boot-starter-thymeleaf')
