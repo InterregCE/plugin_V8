@@ -10,6 +10,7 @@ import io.cloudflight.jems.plugin.contract.services.ProgrammeDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import io.cloudflight.jems.plugin.standard.common.excel.ExcelService
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProjectAndCallAndPartnerData
+import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
@@ -25,33 +26,44 @@ class ProgrammePartnerDataExportDefaultImpl(
     private val messageSource: MessageSource
 ) : ProgrammeDataExportPlugin {
 
+    companion object {
+        private val logger = LoggerFactory.getLogger(ProgrammePartnerDataExportDefaultImpl::class.java)
+    }
+
     override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData): ExportResult {
         val programmeData = programmeDataProvider.getProgrammeData()
         val exportationDateTime = ZonedDateTime.now()
-
+        val failedProjectIds = mutableSetOf<Long>()
         val partnersToExport = mutableListOf<ProjectAndCallAndPartnerData>()
-        getProjectVersionsToExport(projectDataProvider.getAllProjectVersions()).map { projectVersion ->
-            val projectData =
-                projectDataProvider.getProjectDataForProjectId(projectVersion.projectId, projectVersion.version)
-            val callData = callDataProvider.getCallDataByProjectId(projectVersion.projectId)
-            projectData.sectionB.partners.forEach { partner ->
-                partnersToExport.add(
-                    ProjectAndCallAndPartnerData(
-                        projectVersion,
-                        projectData,
-                        callData,
-                        partner
-                    )
-                )
+
+        getProjectVersionsToExport(projectDataProvider.getAllProjectVersions()).parallelStream()
+            .forEach { projectVersion ->
+                runCatching {
+                    val projectData =
+                        projectDataProvider.getProjectDataForProjectId(projectVersion.projectId, projectVersion.version)
+                    val callData = callDataProvider.getCallDataByProjectId(projectVersion.projectId)
+                    projectData.sectionB.partners.forEach { partner ->
+                        partnersToExport.add(
+                            ProjectAndCallAndPartnerData(
+                                projectVersion,
+                                projectData,
+                                callData,
+                                partner
+                            )
+                        )
+                    }
+                }.onFailure {
+                    logger.warn("Failed to fetch data for project with id=${projectVersion.projectId}", it)
+                    failedProjectIds.add(projectVersion.projectId)
+                }.getOrNull()
             }
-        }
 
         return ExportResult(
             contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             fileName = getFileName(programmeData.title, exportationDateTime, exportLanguage, dataLanguage),
             content = excelService.generateExcel(
                 ProgrammePartnerDataGenerator(
-                    partnersToExport, programmeData, exportationDateTime,
+                    partnersToExport, programmeData, failedProjectIds, exportationDateTime,
                     exportLanguage, dataLanguage, messageSource
                 ).getData()
             ),

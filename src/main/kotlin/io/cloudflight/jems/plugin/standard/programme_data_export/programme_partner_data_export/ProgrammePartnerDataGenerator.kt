@@ -7,10 +7,12 @@ import io.cloudflight.jems.plugin.standard.budget_export.CLOSURE_PERIOD
 import io.cloudflight.jems.plugin.standard.budget_export.PREPARATION_PERIOD
 import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
 import io.cloudflight.jems.plugin.standard.common.excel.model.ExcelData
+import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProjectAndCallAndPartnerData
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProgrammePartnerDataExportRow
+import io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export.toErrorCellData
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
 import java.time.ZonedDateTime
@@ -19,6 +21,7 @@ import java.time.format.DateTimeFormatter
 class ProgrammePartnerDataGenerator(
     private val partnersToExport: List<ProjectAndCallAndPartnerData>,
     private val programmeInfoData: ProgrammeInfoData,
+    private val failedProjectIds: Set<Long>,
     private val exportationDateTime: ZonedDateTime,
     private val exportLanguage: SystemLanguageData,
     private val dataLanguage: SystemLanguageData,
@@ -49,6 +52,15 @@ class ProgrammePartnerDataGenerator(
                 sheet.addRows(getRows(generateProgrammeProjectPartnerDataExportRows()))
                 sheet.data.lastOrNull()?.borderBottom()
             }
+            if (failedProjectIds.isNotEmpty())
+                it.addSheet("Failed projects").also { sheet ->
+                    sheet.addRow(
+                        getMessage(
+                            "project.application.form.field.project.id", exportLocale, messageSource
+                        ).toErrorCellData()
+                    )
+                    sheet.addRows(failedProjectIds.map { projectId -> arrayOf(projectId.toErrorCellData()) })
+                }
         }
 
     private fun getFileTitle(programmeTitle: String?, exportationDateTime: ZonedDateTime) =
