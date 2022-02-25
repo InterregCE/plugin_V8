@@ -7,6 +7,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.Pro
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetTotalCostInfo
 import io.cloudflight.jems.plugin.standard.budget_export.models.FundInfo
 import io.cloudflight.jems.plugin.standard.budget_export.models.GeneralBudgetTotalCostInfo
+import io.cloudflight.jems.plugin.standard.budget_export.models.PartnerInfo
 import java.math.BigDecimal
 
 open class ProgrammePartnerDataExportRow(
@@ -21,14 +22,8 @@ open class ProgrammePartnerDataExportRow(
     val projectProgrammePriority: String?,
     val projectSpecificObjective: String?,
 
-    val partnerNumber: String?,
+    val partnerInfo : PartnerInfo,
     val partnerRole: ProjectPartnerRoleData?,
-    val partnerAbbreviation: String?,
-    val partnerNameInOriginalLanguage: String?,
-    val partnerNameInEnglish: String?,
-    val partnerCountry: String?,
-    val partnerNuts3: String?,
-    val partnerNuts2: String?,
     val fundInfoList: List<FundInfo>,
     val publicContribution: BigDecimal,
     val automaticPublicContribution: BigDecimal,

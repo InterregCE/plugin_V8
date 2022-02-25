@@ -27,6 +27,8 @@ open class BudgetAndLumpTotalsTableGenerator(
     private val exportLanguage: SystemLanguageData,
     private val messageSource: MessageSource
 ) {
+    private val numberOfColumnsBeforeFunds = 8
+
     private val callSelectedFunds = callData.funds.filter { it.selected }.sortedBy { it.id }
     private val exportLocale = exportLanguage.toLocale()
 
@@ -161,7 +163,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                 isNameInOriginalLanguageVisible, isNameInEnglishVisible,
                 isCountryAndNutsVisible, isCountryAndNutsVisible, isCountryAndNutsVisible
             ).filter { visible -> !visible }.size
-            it.addAll((1..(6 - numberOfHiddenColumns)).map { "" })
+            it.addAll((2..(numberOfColumnsBeforeFunds - numberOfHiddenColumns)).map { "" })
             it.addAll(
                 mutableListOf(
                     *(1..callSelectedFunds.size).flatMap { listOf("", "", "") }.toTypedArray(),
@@ -205,7 +207,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                 projectData.sectionD.projectPartnerBudgetPerFundData.first { it.partner?.id == partner.id }
             val projectPartnerBudgetPerPeriodData = projectData.sectionD.projectPartnerBudgetPerPeriodData
             BudgetAndLumpSumTotalsRow(
-                partnerInfo = getPartnerInfo(partner),
+                partnerInfo = getPartnerInfo(partner, exportLocale, messageSource),
                 fundInfoList = getFoundInfoList(projectPartnerBudgetPerFundData.budgetPerFund),
                 publicContribution = projectPartnerBudgetPerFundData.publicContribution ?: BigDecimal.ZERO,
                 automaticPublicContribution = projectPartnerBudgetPerFundData.autoPublicContribution ?: BigDecimal.ZERO,

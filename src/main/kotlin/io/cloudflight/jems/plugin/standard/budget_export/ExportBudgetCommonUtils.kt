@@ -37,6 +37,7 @@ fun getPartnerHeaders(
         it.addAll(
             getMessagesWithoutArgs(
                 messageSource, exportLocale, "project.application.form.partner.table.number",
+                "project.application.form.partner.table.status",
                 "project.application.form.partner.table.name"
             )
         )
@@ -59,10 +60,11 @@ fun getPartnerHeaders(
             )
     }
 
-fun getPartnerInfo(partner: ProjectPartnerData): PartnerInfo =
+fun getPartnerInfo(partner: ProjectPartnerData, exportLocale: Locale, messageSource: MessageSource): PartnerInfo =
     partner.addresses.firstOrNull { it.type === ProjectPartnerAddressTypeData.Organization }.let { address ->
         PartnerInfo(
             if (partner.role.isLead) "LP${partner.sortNumber.toString()}" else "PP${partner.sortNumber.toString()}",
+            getMessage("project.application.form.partner.table.status.${if(partner.active) "active" else "inactive"}", exportLocale, messageSource),
             partner.abbreviation,
             partner.nameInOriginalLanguage,
             partner.nameInEnglish,

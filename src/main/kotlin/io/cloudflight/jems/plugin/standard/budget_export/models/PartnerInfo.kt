@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.budget_export.models
 
 data class PartnerInfo(
     val partnerNumber: String?,
+    val partnerStatus: String,
     val partnerAbbreviation: String?,
     val partnerNameInOriginalLanguage: String?,
     val partnerNameInEnglish: String?,
@@ -14,6 +15,7 @@ data class PartnerInfo(
     ) =
         mutableListOf<String>().also {
             it.add(partnerNumber ?: "")
+            it.add(partnerStatus)
             it.add(partnerAbbreviation ?: "")
             if (isNameInOriginalLanguageVisible)
                 it.add(partnerNameInOriginalLanguage ?: "")
