@@ -11,7 +11,7 @@ import java.util.Locale
 
 
 fun SystemLanguageData.toLocale() =
-    Locale(name.toLowerCase())
+    Locale(name.lowercase())
 
 fun Set<InputTranslationData>.getTranslationFor(
     language: SystemLanguageData, useFallBackLanguage: Boolean = true

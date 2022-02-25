@@ -64,7 +64,7 @@ open class ApplicationFormExportDefaultImpl(
         projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime,
         exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
     ): String =
-        "${projectCustomIdentifier}_${projectAcronym}_${exportLanguage.name.toLowerCase()}_${dataLanguage.name.toLowerCase()}_" +
+        "${projectCustomIdentifier}_${projectAcronym}_${exportLanguage.name.lowercase()}_${dataLanguage.name.lowercase()}_" +
                 "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.pdf"
 
     override fun getDescription(): String =

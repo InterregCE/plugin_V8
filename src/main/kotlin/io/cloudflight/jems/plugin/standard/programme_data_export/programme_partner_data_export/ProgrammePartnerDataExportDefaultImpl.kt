@@ -93,8 +93,8 @@ class ProgrammePartnerDataExportDefaultImpl(
         exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
     ) =
         "${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_partner_${
-            exportLanguage.name.toLowerCase(Locale.getDefault())
-        }_${dataLanguage.name.toLowerCase(Locale.getDefault())}_" +
+            exportLanguage.name.lowercase(Locale.getDefault())
+        }_${dataLanguage.name.lowercase(Locale.getDefault())}_" +
                 "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.xlsx"
 
     override fun getDescription(): String =
