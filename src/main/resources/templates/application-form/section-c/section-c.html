@@ -15,37 +15,49 @@
     </div>
     <!-- C1 -->
     <div th:insert="~{application-form/section-c/section-c-1.html :: projectObjective(${projectDataSectionC}, ${specificObjective})}"></div>
-    <div class="page-break-after"></div>
+
     <!-- C2 -->
-    <div th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
-            th:insert="~{application-form/section-c/project-relevance-and-context.html :: projectRelevanceAndContext(${projectDataSectionC})}"></div>
-    <div class="page-break-after"></div>
+    <th:block th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}">
+        <div class="page-break-before"></div>
+        <div th:insert="~{application-form/section-c/project-relevance-and-context.html :: projectRelevanceAndContext(${projectDataSectionC})}"></div>
+    </th:block>
+
     <!-- C3 -->
-    <div  clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
-          th:insert="~{application-form/section-c/section-c-3.html :: projectPartnership(${projectDataSectionC})}"></div>
-    <div class="page-break-after"></div>
+    <th:block clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP">
+        <div class="page-break-before"></div>
+        <div th:insert="~{application-form/section-c/section-c-3.html :: projectPartnership(${projectDataSectionC})}"></div>
+    </th:block>
 
     <!-- C4 -->
     <th:block th:if="${clfUtils.isSectionC4Available(#vars.projectData.lifecycleData, #vars.callData)}">
+        <div class="page-break-before"></div>
         <div th:insert="~{application-form/section-c/section-c-4.html :: sectionC4(${projectDataSectionC}, ${projectDataSectionB}, ${projectDataSectionA.periods})}"></div>
-        <div class="page-break-after"></div>
     </th:block>
 
     <!-- C5 -->
-    <div th:insert="~{application-form/section-c/section-c-5.html :: sectionC5(${projectDataSectionC})}"></div>
-    <div class="page-break-after"></div>
+    <th:block th:if="${clfUtils.isProjectResultsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}">
+        <div class="page-break-before"></div>
+        <div th:insert="~{application-form/section-c/section-c-5.html :: sectionC5(${projectDataSectionC})}"></div>
+    </th:block>
 
     <!-- C6 -->
     <th:block th:if="${timeplanData != null}">
+        <div class="page-break-before"></div>
         <div th:insert="~{application-form/section-c/section-c-6.html :: sectionC6(${timeplanData})}"></div>
-        <div class="page-break-after"></div>
     </th:block>
 
     <!-- C7 -->
-    <div th:insert="~{application-form/section-c/section-c-7.html :: projectManagement(${projectDataSectionC})}"></div>
-    <div class="page-break-after"></div>
+    <th:block th:if="${clfUtils.isSectionC7Available(#vars.projectData.lifecycleData, #vars.callData)}">
+        <div class="page-break-before"></div>
+        <div th:insert="~{application-form/section-c/section-c-7.html :: projectManagement(${projectDataSectionC})}"></div>
+    </th:block>
+
     <!-- C8 -->
-    <div th:insert="~{application-form/section-c/section-c-8.html :: sectionC8(${projectDataSectionC})}"></div>
+    <th:block th:if="${clfUtils.isLongTermPlansSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}">
+        <div class="page-break-before"></div>
+        <div th:insert="~{application-form/section-c/section-c-8.html :: sectionC8(${projectDataSectionC})}"></div>
+    </th:block>
+
 </th:block>
 </body>
 </html>
