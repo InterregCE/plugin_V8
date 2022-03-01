@@ -121,8 +121,8 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
 
 private fun checkIfProjectOverallObjectiveIsProvided(projectOverallObjectiveData: ProjectOverallObjectiveData?) =
     when {
-        projectOverallObjectiveData == null || projectOverallObjectiveData?.overallObjective.isNullOrEmpty() ||
-                projectOverallObjectiveData?.overallObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        projectOverallObjectiveData == null || projectOverallObjectiveData.overallObjective.isEmpty() ||
+                projectOverallObjectiveData.overallObjective.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.project.overall.objective.should.be.provided")
         else -> null
     }

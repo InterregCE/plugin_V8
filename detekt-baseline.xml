@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ComplexCondition:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.unitCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>ComplexCondition:SectionBChecks.kt$partner.stateAid?.answer1 ?: false &amp;&amp; partner.stateAid?.answer2 ?: false &amp;&amp; partner.stateAid?.answer3 ?: false &amp;&amp; partner.stateAid?.answer4 ?: false &amp;&amp; partner.stateAid?.stateAidScheme == null &amp;&amp; isFieldVisible(ApplicationFormFieldId.PARTNER_STATE_AID_SCHEME)</ID>
+    <ID>ComplexCondition:TemplateUtils.kt$TemplateUtils$(stateAidData.answer1 == false || stateAidData.answer2 == false || stateAidData.answer3 == false) &amp;&amp; stateAidData.answer4 == true</ID>
+    <ID>ComplexCondition:TemplateUtils.kt$TemplateUtils$stateAidData.answer1 == null || stateAidData.answer2 == null || stateAidData.answer3 == null || stateAidData.answer4 == null</ID>
+    <ID>ComplexCondition:TemplateUtils.kt$TemplateUtils$stateAidData.answer1 == true &amp;&amp; stateAidData.answer2 == true &amp;&amp; stateAidData.answer3 == true &amp;&amp; stateAidData.answer4 == true</ID>
+    <ID>ComplexMethod:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$private fun getGeneralCostData( typeTranslationKey: String, partnerInfo: PartnerInfo, workPackages: List&lt;ProjectWorkPackageData&gt;, generalCostData: List&lt;BudgetGeneralCostEntryData&gt;, isUnitTypeAndNumberOfUnitsVisible: Boolean, isPricePerUnitVisible: Boolean, isDescriptionVisible: Boolean, isAwardProcedureVisible: Boolean, isInvestmentVisible: Boolean ): Array&lt;BudgetDetailsRow&gt;</ID>
+    <ID>ComplexMethod:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$private fun getStaffCostData( partnerInfo: PartnerInfo, staffCostData: List&lt;BudgetStaffCostEntryData&gt;, flatRate: Int?, staffCostTotal: BigDecimal )</ID>
+    <ID>ComplexMethod:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$private fun getTravelCostsData( partnerInfo: PartnerInfo, travelCostsData: List&lt;BudgetTravelAndAccommodationCostEntryData&gt;, flatRate: Int?, travelCostTotal: BigDecimal )</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfEquipmentContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfExternalExpertiseAndServicesContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfInfrastructureAndWorksContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfOneOfAddressFieldTouched(address: ProjectPartnerAddressData): Boolean</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfPartnerAddressContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfPartnerAssociatedOrganisationIsProvided(associatedOrganizations: Set&lt;ProjectAssociatedOrganizationData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfPartnerIdentityContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfPartnerPersonContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfPeriodsAmountSumUpToBudgetEntrySum(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfStaffContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfStateAidIsValid(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfTravelAndAccommodationContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>ComplexMethod:SectionCChecks.kt$private fun checkIfActivitiesAreValid( workPackageNumber: Int, activities: List&lt;WorkPackageActivityData&gt; ): List&lt;PreConditionCheckMessage&gt;</ID>
+    <ID>ComplexMethod:SectionCChecks.kt$private fun checkIfInvestmentsAreValid( workPackageNumber: Int, investments: List&lt;WorkPackageInvestmentData&gt; ): List&lt;PreConditionCheckMessage&gt;</ID>
+    <ID>ComplexMethod:SectionCChecks.kt$private fun checkIfResultContentIsProvided(projectData: ProjectDataSectionC?)</ID>
+    <ID>ComplexMethod:TimeplanHelper.kt$fun getTimeplanData( periods: List&lt;ProjectPeriodData&gt;, workPackages: List&lt;ProjectWorkPackageData&gt;, results: List&lt;ProjectResultData&gt;, language: SystemLanguageData, ): TimeplanData?</ID>
+    <ID>EmptyDefaultConstructor:CsvServiceDefaultImpl.kt$CsvServiceDefaultImpl$()</ID>
+    <ID>EmptyDefaultConstructor:PdfServiceDefaultImpl.kt$PdfServiceDefaultImpl$()</ID>
+    <ID>LongParameterList:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$( typeTranslationKey: String, partnerInfo: PartnerInfo, workPackages: List&lt;ProjectWorkPackageData&gt;, generalCostData: List&lt;BudgetGeneralCostEntryData&gt;, isUnitTypeAndNumberOfUnitsVisible: Boolean, isPricePerUnitVisible: Boolean, isDescriptionVisible: Boolean, isAwardProcedureVisible: Boolean, isInvestmentVisible: Boolean )</ID>
+    <ID>MaxLineLength:ApplicationFormFieldUtils.kt$callData.isTwoStepCall() &amp;&amp; lifecycleData.status.isInStepOne() &amp;&amp; fieldConfiguration.visibilityStatus == FieldVisibilityStatusData.STEP_TWO_ONLY -&gt; false</ID>
+    <ID>MaxLineLength:BudgetAndLumpTotalsTableGenerator.kt$BudgetAndLumpTotalsTableGenerator$partnerBudgetPerPeriod = projectPartnerBudgetPerPeriodData.partnersBudgetPerPeriod.firstOrNull { it.partner.id == partner.id }?.periodBudgets ?: emptyList()</ID>
+    <ID>MaxLineLength:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$description = if(shouldBeVisible(PROJECT_LUMP_SUMS_DESCRIPTION)) lumpSum.programmeLumpSum?.description?.getTranslationFor(dataLanguage) ?: "" else ""</ID>
+    <ID>MaxLineLength:ChecksSectionB.kt$ChecksSectionB$preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.error.exactly.one.lead.partner.should.be.active"</ID>
+    <ID>MaxLineLength:ChecksUtils.kt$this == ApplicationStatusData.STEP1_DRAFT || this == ApplicationStatusData.STEP1_SUBMITTED || this == ApplicationStatusData.STEP1_ELIGIBLE || this == ApplicationStatusData.STEP1_INELIGIBLE || this == ApplicationStatusData.STEP1_APPROVED</ID>
+    <ID>MaxLineLength:ProgrammeProjectDataExportDefaultImpl.kt$ProgrammeProjectDataExportDefaultImpl$"${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_project_${exportLanguage.name.toLowerCase()}_${dataLanguage.name.toLowerCase()}_"</ID>
+    <ID>MaxLineLength:ProgrammeProjectDataGenerator.kt$ProgrammeProjectDataGenerator$equipmentCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.equipmentCosts })</ID>
+    <ID>MaxLineLength:ProgrammeProjectDataGenerator.kt$ProgrammeProjectDataGenerator$infrastructureCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.infrastructureCosts })</ID>
+    <ID>MaxLineLength:SectionAChecks.kt$(programmePriority == null || programmePriority.code.isBlank())</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$if</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.unitCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
+    <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerCoFinancing.partnerContributions.any { partnerContribution -&gt; partnerContribution.amount ?: BigDecimal.ZERO &lt;= BigDecimal.ZERO }</ID>
+    <ID>MaxLineLength:SectionCChecks.kt$mapOf("id" to (workPackageNumber.toString() + "." + activity.activityNumber.toString() + "." + deliverable.deliverableNumber.toString()))</ID>
+    <ID>MaxLineLength:TimeplanHelper.kt$titles.addMinorTitle(y = currentTableHeight, title = "A${wp.workPackageNumber}.${activity.activityNumber} ${activity.title.getTranslationFor(language, false)}")</ID>
+    <ID>NestedBlockDepth:ExcelServiceDefaultImpl.kt$ExcelServiceDefaultImpl$override fun generateExcel(data: ExcelData): ByteArray</ID>
+    <ID>NestedBlockDepth:PdfServiceDefaultImpl.kt$PdfServiceDefaultImpl$override fun generatePdfFromHtml(html: String): ByteArray</ID>
+    <ID>NestedBlockDepth:SectionBChecks.kt$private fun checkIfPartnerAddressContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>NestedBlockDepth:SectionBChecks.kt$private fun checkIfPartnerAssociatedOrganisationIsProvided(associatedOrganizations: Set&lt;ProjectAssociatedOrganizationData&gt;)</ID>
+    <ID>NestedBlockDepth:SectionBChecks.kt$private fun checkIfPartnerContributionEqualsToBudget(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>NestedBlockDepth:SectionBChecks.kt$private fun checkIfPartnerPersonContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>NestedBlockDepth:SectionBChecks.kt$private fun checkIfStateAidIsValid(partners: Set&lt;ProjectPartnerData&gt;)</ID>
+    <ID>NestedBlockDepth:SectionCChecks.kt$private fun checkIfActivitiesAreValid( workPackageNumber: Int, activities: List&lt;WorkPackageActivityData&gt; ): List&lt;PreConditionCheckMessage&gt;</ID>
+    <ID>PackageNaming:ApplicationFormExportDefaultImpl.kt$package io.cloudflight.jems.plugin.standard.application_form_export</ID>
+    <ID>PackageNaming:BudgetAndLumpSumTotalsRow.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:BudgetAndLumpTotalsTableGenerator.kt$package io.cloudflight.jems.plugin.standard.budget_export</ID>
+    <ID>PackageNaming:BudgetDetailsRow.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:BudgetDetailsTableGenerator.kt$package io.cloudflight.jems.plugin.standard.budget_export</ID>
+    <ID>PackageNaming:BudgetExportDefaultImpl.kt$package io.cloudflight.jems.plugin.standard.budget_export</ID>
+    <ID>PackageNaming:BudgetTotalCostInfo.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:CallDataContainer.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check.helpers</ID>
+    <ID>PackageNaming:ChecksUtils.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
+    <ID>PackageNaming:CsvData.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:ExportBudgetCommonUtils.kt$package io.cloudflight.jems.plugin.standard.budget_export</ID>
+    <ID>PackageNaming:FundInfo.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:LifecycleDataContainer.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check.helpers</ID>
+    <ID>PackageNaming:PartnerAddress.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:PartnerContact.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:PartnerInfo.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:PeriodColumn.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
+    <ID>PackageNaming:PeriodInfo.kt$package io.cloudflight.jems.plugin.standard.budget_export.models</ID>
+    <ID>PackageNaming:PreConditionCheckDefaultImpl.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
+    <ID>PackageNaming:ProgrammePartnerDataExportDefaultImpl.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export</ID>
+    <ID>PackageNaming:ProgrammePartnerDataExportRow.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:ProgrammePartnerDataGenerator.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export</ID>
+    <ID>PackageNaming:ProgrammePartnerDataHeaderGenerator.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export</ID>
+    <ID>PackageNaming:ProgrammePartnerDataUtils.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export</ID>
+    <ID>PackageNaming:ProgrammeProjectDataExportDefaultImpl.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export</ID>
+    <ID>PackageNaming:ProgrammeProjectDataExportRow.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:ProgrammeProjectDataGenerator.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export</ID>
+    <ID>PackageNaming:ProgrammeProjectDataHeaderGenerator.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export</ID>
+    <ID>PackageNaming:ProgrammeProjectDataUtils.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export</ID>
+    <ID>PackageNaming:ProjectAndCallAndPartnerData.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:ProjectAndCallData.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:Rectangle.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
+    <ID>PackageNaming:RectangleText.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
+    <ID>PackageNaming:SectionAChecks.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
+    <ID>PackageNaming:SectionBChecks.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
+    <ID>PackageNaming:SectionCChecks.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
+    <ID>PackageNaming:SectionEChecks.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
+    <ID>PackageNaming:TimeplanData.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
+    <ID>PackageNaming:TimeplanHelper.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
+    <ID>PackageNaming:TranslatedText.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
+    <ID>ReturnCount:ProgrammePartnerDataUtils.kt$internal fun getStateAidCheck(projectPartnerStateAidData: ProjectPartnerStateAidData?, exportLocale: Locale, messageSource: MessageSource): String</ID>
+    <ID>TooGenericExceptionThrown:CallDataContainer.kt$CallDataContainer$throw Exception("CallData was not initialized!")</ID>
+    <ID>TooGenericExceptionThrown:LifecycleDataContainer.kt$LifecycleDataContainer$throw Exception("ProjectLifecycleData was not initialized!")</ID>
+    <ID>TooManyFunctions:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator</ID>
+    <ID>TooManyFunctions:ProgrammePartnerDataUtils.kt$io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export.ProgrammePartnerDataUtils.kt</ID>
+    <ID>TooManyFunctions:SectionBChecks.kt$io.cloudflight.jems.plugin.standard.pre_condition_check.SectionBChecks.kt</ID>
+    <ID>TooManyFunctions:SectionCChecks.kt$io.cloudflight.jems.plugin.standard.pre_condition_check.SectionCChecks.kt</ID>
+    <ID>TooManyFunctions:TemplateUtils.kt$TemplateUtils</ID>
+    <ID>UnusedPrivateMember:SectionAChecks.kt$private const val SECTION_A_INFO_MESSAGES_PREFIX = "$SECTION_A_MESSAGES_PREFIX.info"</ID>
+    <ID>UnusedPrivateMember:SectionEChecks.kt$private const val SECTION_E_INFO_MESSAGES_PREFIX = "$SECTION_E_MESSAGES_PREFIX.info"</ID>
+  </CurrentIssues>
+</SmellBaseline>

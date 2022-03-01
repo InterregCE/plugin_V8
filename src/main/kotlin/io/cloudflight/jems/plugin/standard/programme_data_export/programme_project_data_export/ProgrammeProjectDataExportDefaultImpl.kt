@@ -74,7 +74,7 @@ open class ProgrammeProjectDataExportDefaultImpl(
         exportationDateTime: ZonedDateTime,
         exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
     ): String =
-        "${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_project_${exportLanguage.name.toLowerCase()}_${dataLanguage.name.toLowerCase()}_" +
+        "${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_project_${exportLanguage.name.lowercase()}_${dataLanguage.name.lowercase()}_" +
                 "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.xlsx"
 
     fun getProjectsToExport(projectVersions: List<ProjectVersionData>) =

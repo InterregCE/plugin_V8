@@ -265,7 +265,7 @@ internal class ChecksSectionB {
         }
         assertThat(checkSectionB.messageType == MessageType.ERROR).isTrue
         assertThat(identitySubSection != null &&
-                identitySubSection?.subSectionMessages?.any { preConditionCheckMessage ->
+                identitySubSection.subSectionMessages.any { preConditionCheckMessage ->
                     preConditionCheckMessage.message.i18nKey ==
                             "jems.standard.pre.condition.check.plugin.project.section.b.error.project.partner.department.is.not.provided"
                 }).isTrue

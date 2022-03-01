@@ -1,7 +1,7 @@
 import io.cloudflight.gradle.RepositoryVisibility
 
 plugins {
-    id "cloudflight-gradle-plugin" version "5.15.2"
+    id "cloudflight-gradle-plugin" version "6.4.0"
 }
 
 description "Jems standard plugins"
@@ -27,6 +27,7 @@ configurations {
 jar {
     enabled = true
     from { (configurations.compileClasspath - configurations.provided).collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 if (isKotlinProject(project)) {
@@ -37,7 +38,7 @@ if (isKotlinProject(project)) {
         kapt platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
 
         constraints {
-            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.1.2')
+            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.1.4')
             implementation('com.opencsv:opencsv:5.5.2')
             implementation("com.openhtmltopdf:openhtmltopdf-core:1.0.10")
             implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10")
