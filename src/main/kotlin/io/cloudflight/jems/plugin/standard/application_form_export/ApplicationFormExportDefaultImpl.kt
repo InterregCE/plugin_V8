@@ -84,5 +84,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.12"
+        "1.0.13"
 }

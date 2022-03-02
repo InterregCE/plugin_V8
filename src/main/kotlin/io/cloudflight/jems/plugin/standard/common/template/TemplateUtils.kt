@@ -79,9 +79,10 @@ class TemplateUtils {
 
     fun getEuFundsOverview(fundOverviews: List<ProjectCoFinancingByFundOverview>) =
         fundOverviews.filter { it.fundType != ProgrammeFundTypeData.OTHER }
+            .sortedWith(compareBy ({it.fundType?.name}, {it.fundId}))
 
     fun getOtherFundsOverview(fundOverviews: List<ProjectCoFinancingByFundOverview>) =
-        fundOverviews.filter { it.fundType == ProgrammeFundTypeData.OTHER }
+        fundOverviews.filter { it.fundType == ProgrammeFundTypeData.OTHER }.sortedBy { it.fundId }
 
     fun getLinesSorted(resultLines: List<IndicatorOverviewLine>) =
         transformIdsOfIndicatorsToRowIds(resultLines)

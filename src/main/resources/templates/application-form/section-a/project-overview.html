@@ -43,12 +43,12 @@
             <td th:text="${projectDataSectionA?.acronym}"></td>
         </tr>
         <tr>
-            <th th:text="#{project.application.project.priority}">Programme priority</th>
+            <th th:text="#{project.application.form.field.project.priority}">Programme priority</th>
             <td clf:textTranslationByExportLanguage="${projectDataSectionA.programmePriority?.title}"></td>
         </tr>
         <tr>
-            <th th:text="#{project.application.project.priority.title}">Programme priority
-                specific objective
+            <th th:text="#{project.application.form.field.project.objective}">
+                Specific objective
             </th>
             <td>
                 <span th:if="${projectDataSectionA.specificObjective?.programmeObjectivePolicy != null}"
