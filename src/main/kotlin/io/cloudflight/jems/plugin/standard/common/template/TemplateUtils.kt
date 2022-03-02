@@ -116,6 +116,9 @@ class TemplateUtils {
     fun isSectionC4Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectWorkPackageSectionVisible(lifecycleData, callData)
 
+    fun isSectionC7Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isProjectManagementSectionVisible(lifecycleData, callData)
+
     fun isProjectResultsSectionAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectResultsSectionVisible(lifecycleData, callData)
 

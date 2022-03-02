@@ -60,6 +60,12 @@ html, body {
     page-break-after: always;
 }
 
+.page-break-before {
+    display: block;
+    clear: both;
+    page-break-before: always;
+}
+
 .keep-together {
     page-break-inside: avoid;
 }
