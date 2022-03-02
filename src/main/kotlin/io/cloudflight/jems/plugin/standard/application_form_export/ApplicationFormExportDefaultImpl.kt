@@ -17,6 +17,7 @@ import org.thymeleaf.ITemplateEngine
 import org.thymeleaf.context.Context
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.regex.Pattern
 
 
 @Service
@@ -27,6 +28,12 @@ open class ApplicationFormExportDefaultImpl(
     @Qualifier(PLUGIN_DEFAULT_TEMPLATE_ENGINE)
     val templateEngine: ITemplateEngine
 ) : ApplicationFormExportPlugin {
+
+    companion object {
+        private val p = Pattern.compile("[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u10000-\u10FFF]+")
+        private fun String.getRidOfInvalidAsciiCharsFromXML() = p.matcher(this).replaceAll("")
+    }
+
     override fun export(
         projectId: Long, exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, version: String?
     ): ExportResult {
@@ -55,7 +62,7 @@ open class ApplicationFormExportDefaultImpl(
                             language = dataLanguage,
                         ))
                     }
-                )
+                ).getRidOfInvalidAsciiCharsFromXML()
             )
         )
     }
