@@ -107,5 +107,5 @@ class ProgrammePartnerDataExportDefaultImpl(
         "Standard programme partner data export"
 
     override fun getVersion(): String =
-        "1.0.1"
+        "1.0.2"
 }

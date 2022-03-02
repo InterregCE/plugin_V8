@@ -60,6 +60,7 @@ fun getPartnerBudgetDataHeaders(
         *getMessagesWithoutArgs(
             messageSource, exportLocale,
             "project.application.form.partner.table.number",
+            "project.application.form.partner.table.status",
             "project.application.form.partner.table.role",
             "project.partner.name.label",
             "project.organization.original.name.label",

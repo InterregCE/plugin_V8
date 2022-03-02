@@ -83,14 +83,15 @@ class ProgrammePartnerDataGenerator(
                 it.add(row.projectProgrammePriority.toProjectCellData())
                 it.add(row.projectSpecificObjective.toProjectCellData())
 
-                it.add(row.partnerNumber.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerNumber.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerStatus.toPartnerBudgetData())
                 it.add(row.partnerRole.toMessage(exportLocale, messageSource).toPartnerBudgetData())
-                it.add(row.partnerAbbreviation.toPartnerBudgetData())
-                it.add(row.partnerNameInOriginalLanguage.toPartnerBudgetData())
-                it.add(row.partnerNameInEnglish.toPartnerBudgetData())
-                it.add(row.partnerCountry.toPartnerBudgetData())
-                it.add(row.partnerNuts3.toPartnerBudgetData())
-                it.add(row.partnerNuts2.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerAbbreviation.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerNameInOriginalLanguage.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerNameInEnglish.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerCountry.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerNuts3.toPartnerBudgetData())
+                it.add(row.partnerInfo.partnerNuts2.toPartnerBudgetData())
                 it.addAll(row.fundInfoList.flatMap { it.toStringList() }.map { it.toPartnerBudgetData() })
                 it.add(row.publicContribution.toPartnerBudgetData())
                 it.add(row.automaticPublicContribution.toPartnerBudgetData())
@@ -186,15 +187,8 @@ class ProgrammePartnerDataGenerator(
                 projectStatus = projectData.lifecycleData.status,
                 projectProgrammePriority = projectData.sectionA?.programmePriority?.code,
                 projectSpecificObjective = projectData.sectionA?.specificObjective?.code,
-
-                partnerNumber = getPartnerInfo(partnerData).partnerNumber,
+                partnerInfo = getPartnerInfo(partnerData, exportLocale, messageSource),
                 partnerRole = partnerData.role,
-                partnerAbbreviation = getPartnerInfo(partnerData).partnerAbbreviation,
-                partnerNameInOriginalLanguage = getPartnerInfo(partnerData).partnerNameInOriginalLanguage,
-                partnerNameInEnglish = getPartnerInfo(partnerData).partnerNameInEnglish,
-                partnerCountry = getPartnerInfo(partnerData).partnerCountry,
-                partnerNuts3 = getPartnerInfo(partnerData).partnerNuts3,
-                partnerNuts2 = getPartnerInfo(partnerData).partnerNuts2,
                 fundInfoList = getFoundInfoList(projectPartnerBudgetPerFundData.budgetPerFund, programmeInfoData),
                 publicContribution = projectPartnerBudgetPerFundData.publicContribution ?: BigDecimal.ZERO,
                 automaticPublicContribution = projectPartnerBudgetPerFundData.autoPublicContribution ?: BigDecimal.ZERO,
