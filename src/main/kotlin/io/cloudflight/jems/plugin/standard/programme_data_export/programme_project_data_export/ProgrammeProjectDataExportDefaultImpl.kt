@@ -103,5 +103,5 @@ open class ProgrammeProjectDataExportDefaultImpl(
         "Standard programme project data export"
 
     override fun getVersion(): String =
-        "1.0.2"
+        "1.0.3"
 }

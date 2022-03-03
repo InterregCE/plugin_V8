@@ -1,23 +1,28 @@
 package io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export
 
+import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundData
 import io.cloudflight.jems.plugin.standard.budget_export.CLOSURE_PERIOD
 import io.cloudflight.jems.plugin.standard.budget_export.PREPARATION_PERIOD
 import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
 import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getMessagesWithoutArgs
+import io.cloudflight.jems.plugin.standard.common.getTranslationFor
+import io.cloudflight.jems.plugin.standard.common.toLocale
 import org.springframework.context.MessageSource
 import java.util.Locale
 
 internal fun getHeaderRow(
     maximalPeriodNumbers: List<Int>, programmeFunds: List<ProgrammeFundData>,
-    exportLocale: Locale, messageSource: MessageSource
-): Array<CellData> =
-    listOf(
+    exportLanguage: SystemLanguageData, messageSource: MessageSource
+): Array<CellData> {
+    val exportLocale = exportLanguage.toLocale()
+    return listOf(
         *getCallDataHeaders(exportLocale, messageSource),
-        *getProjectDataHeaders(maximalPeriodNumbers, programmeFunds, exportLocale, messageSource),
+        *getProjectDataHeaders(maximalPeriodNumbers, programmeFunds, exportLocale, exportLanguage, messageSource),
         *getProjectAssessmentDataHeaders(exportLocale, messageSource)
     ).toTypedArray()
+}
 
 private fun getCallDataHeaders(exportLocale: Locale, messageSource: MessageSource) =
     listOf(
@@ -34,7 +39,7 @@ private fun getCallDataHeaders(exportLocale: Locale, messageSource: MessageSourc
 
 private fun getProjectDataHeaders(
     maximalPeriodNumbers: List<Int>, programmeFunds: List<ProgrammeFundData>,
-    exportLocale: Locale, messageSource: MessageSource
+    exportLocale: Locale, exportLanguage: SystemLanguageData, messageSource: MessageSource
 ) =
     listOf(
         *getMessagesWithoutArgs(
@@ -51,13 +56,14 @@ private fun getProjectDataHeaders(
         ).map { it.toProjectCellData() }.toTypedArray(),
 
         *programmeFunds.flatMap { fund ->
+            val abbreviation = fund.abbreviation.getTranslationFor(exportLanguage)
             listOf(
-                fund.type.name.toProjectCellData(),
-                fund.type.name.plus(" ")
+                abbreviation.toProjectCellData(),
+                abbreviation.plus(" ")
                     .plus(getMessage("project.partner.percentage", exportLocale, messageSource, arrayOf(fund)))
                     .toProjectCellData(),
                 getMessage("export.budget.totals.fund.percentage.of.total", exportLocale, messageSource).plus(" ")
-                    .plus(fund.type.name)
+                    .plus(abbreviation)
                     .toProjectCellData()
             )
         }.toTypedArray(),
@@ -107,10 +113,10 @@ private fun getProjectDataHeaders(
             messageSource, exportLocale,
             "project.organization.original.name.label",
             "project.organization.english.name.label"
-        ).map { it.toProjectCellData() }.toTypedArray(),
+        ).map { prefixWithLP(it).toProjectCellData() }.toTypedArray(),
 
         *with(
-            getMessage("project.partner.main-address.header", exportLocale, messageSource).plus(" - ")
+            prefixWithLP(getMessage("project.partner.main-address.header", exportLocale, messageSource)).plus(" - ")
         ) {
             listOf(
                 this.plus(getMessage("project.partner.main-address.country", exportLocale, messageSource))
@@ -162,3 +168,5 @@ private fun getProjectAssessmentDataHeaders(exportLocale: Locale, messageSource:
             .toAssessmentCellData().borderRight()
     ).toTypedArray()
 
+    private fun prefixWithLP(text: String) =
+        "LP - ".plus(text)

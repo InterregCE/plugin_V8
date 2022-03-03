@@ -48,6 +48,7 @@ class ExcelServiceDefaultImpl : ExcelService {
         when (cellData.value) {
             is BigDecimal -> cell.setCellValue(cellData.value.toDouble())
             is Int -> cell.setCellValue(cellData.value.toDouble())
+            is Long -> cell.setCellValue(cellData.value.toDouble())
             is Double -> cell.setCellValue(cellData.value)
             is Date -> cell.setCellValue(cellData.value)
             is LocalDateTime -> cell.setCellValue(cellData.value)
