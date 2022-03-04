@@ -25,7 +25,7 @@ internal fun getBudgetPerPeriod(projectData: ProjectData) =
                 map[PREPARATION_PERIOD] =
                     projectData.sectionD.projectPartnerBudgetPerPeriodData.totals.firstOrNull() ?: BigDecimal.ZERO
                 map[CLOSURE_PERIOD] =
-                    projectData.sectionD.projectPartnerBudgetPerPeriodData.totals.lastOrNull() ?: BigDecimal.ZERO
+                    projectData.sectionD.projectPartnerBudgetPerPeriodData.totals.dropLast(1).lastOrNull() ?: BigDecimal.ZERO
             }
         }
     }

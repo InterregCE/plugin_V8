@@ -169,7 +169,9 @@ class ProgrammePartnerDataGenerator(
         }
 
     private fun generateProgrammeProjectPartnerDataExportRows(): List<ProgrammePartnerDataExportRow> =
-        partnersToExport.map { entry ->
+        partnersToExport
+            .sortedWith(compareBy({ it.callDetailData.id }, { it.projectData.sectionA?.customIdentifier }, {it.projectPartnerData.sortNumber}))
+            .map { entry ->
             val projectVersion = entry.projectVersionData
             val projectData = entry.projectData
             val callData = entry.callDetailData

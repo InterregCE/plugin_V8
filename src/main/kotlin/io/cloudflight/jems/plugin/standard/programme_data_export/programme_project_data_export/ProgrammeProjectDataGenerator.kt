@@ -25,7 +25,7 @@ open class ProgrammeProjectDataGenerator(
     private val failedProjectIds: Set<Long>,
     private val programmeInfoData: ProgrammeInfoData,
     private val exportationDateTime: ZonedDateTime,
-    exportLanguage: SystemLanguageData,
+    private val exportLanguage: SystemLanguageData,
     private val dataLanguage: SystemLanguageData,
     private val messageSource: MessageSource
 ) {
@@ -42,7 +42,7 @@ open class ProgrammeProjectDataGenerator(
         ExcelData().also {
             it.addSheet("Project data").also { sheet ->
                 sheet.addRow(CellData(getFileTitle(programmeInfoData.title, exportationDateTime)))
-                sheet.addRow(*getHeaderRow(maximalPeriods, programmeInfoData.funds, exportLocale, messageSource))
+                sheet.addRow(*getHeaderRow(maximalPeriods, programmeInfoData.funds, exportLanguage, messageSource))
                     .borderTop()
                 sheet.addRows(getRows(generateProgrammeProjectDataExportRows()))
                 sheet.data.lastOrNull()?.borderBottom()
@@ -150,76 +150,85 @@ open class ProgrammeProjectDataGenerator(
         }
 
     private fun generateProgrammeProjectDataExportRows(): List<ProgrammeProjectDataExportRow> =
-        projectAndCallDataList.map { entry ->
-            val projectVersion = entry.projectVersion
-            val projectData = entry.projectData
-            val callDetailData = entry.callDetailData
-            ProgrammeProjectDataExportRow(
-                callId = callDetailData.id,
-                callName = callDetailData.name,
-                callStartDate = callDetailData.startDateTime,
-                callEndDateStepOne = callDetailData.endDateTimeStep1,
-                callEndDate = callDetailData.endDateTime,
-                periodLength = callDetailData.lengthOfPeriod,
-                projectId = projectData.sectionA?.customIdentifier!!,
-                projectAcronym = projectData.sectionA?.acronym,
-                projectTitle = projectData.sectionA?.title?.getTranslationFor(dataLanguage),
-                projectVersion = projectVersion.version,
-                projectStatus = projectData.lifecycleData.status,
-                projectProgrammePriority = projectData.sectionA?.programmePriority?.code,
-                projectSpecificObjective = projectData.sectionA?.specificObjective?.code,
-                projectDuration = projectData.sectionA?.duration,
-                numberOfPeriods = projectData.sectionA?.periods?.size,
-                fundInfoList = getFundInfo(projectData, programmeInfoData.funds),
-                publicContribution = sumOfContributionByType(projectData, ProjectPartnerContributionStatusData.Public),
-                autoPublicContribution = sumOfContributionByType(
-                    projectData, ProjectPartnerContributionStatusData.AutomaticPublic
-                ),
-                privateContribution = sumOfContributionByType(
-                    projectData, ProjectPartnerContributionStatusData.Private
-                ),
-                totalEligibleBudget = projectData.sectionD.projectPartnerBudgetPerFundData.firstOrNull { it.partner == null }?.totalEligibleBudget
-                    ?: BigDecimal.ZERO,
-                staffCostTotals = getStaffCostTotals(projectData.sectionB.partners),
-                officeCostTotals = projectData.sectionB.partners.map { it.budget.projectBudgetCostsCalculationResult.officeAndAdministrationCosts }
-                    .sumOf { it },
-                officeCostFlatRatesTotals = projectData.sectionB.partners.map { it.budget.projectBudgetCostsCalculationResult.officeAndAdministrationCosts }
-                    .sumOf { it },
-                travelCostTotals = getTravelCostTotals(projectData.sectionB.partners),
-                externalCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.externalCosts }),
-                equipmentCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.equipmentCosts }),
-                infrastructureCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.infrastructureCosts }),
-                otherCosts = projectData.sectionB.partners.map { it.budget.projectBudgetCostsCalculationResult.otherCosts }
-                    .sumOf { it },
-                unitCostsCoveringMultipleCostCategories = projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.unitCosts }
-                    .sumOf { it.rowSum ?: BigDecimal.ZERO },
-                lumpSumsCoveringMultipleCostCategories = projectData.sectionE.projectLumpSums.flatMap { it.lumpSumContributions }
-                    .sumOf { it.amount },
-                budgetPerPeriod = getBudgetPerPeriod(projectData),
-                leadPartnerOrganizationName = projectData.sectionB.partners.firstOrNull { it.role.isLead }?.nameInOriginalLanguage,
-                leadPartnerOrganizationNameInEnglish = projectData.sectionB.partners.firstOrNull { it.role.isLead }?.nameInEnglish,
-                leadPartnerMainAddressData = getLeadPartnerMainAddress(projectData),
-                submissionDateStep1 = projectData.lifecycleData.submissionDateStepOne,
-                firstSubmissionDate = projectData.lifecycleData.firstSubmissionDate,
-                latestResubmissionDate = projectData.lifecycleData.lastResubmissionDate,
-                eligibilityDecisionStep1 = projectData.lifecycleData.assessmentStep1?.eligibilityDecision?.status,
-                eligibilityDecisionDateStep1 = projectData.lifecycleData.assessmentStep1?.eligibilityDecision?.decisionDate,
-                fundingDecisionStep1 = projectData.lifecycleData.assessmentStep1?.fundingDecision?.status,
-                fundingDecisionDateStep1 = projectData.lifecycleData.assessmentStep1?.fundingDecision?.decisionDate,
-                eligibilityAssessmentResultStep1 = projectData.lifecycleData.assessmentStep1?.assessmentEligibility?.result,
-                eligibilityAssessmentNotesStep1 = projectData.lifecycleData.assessmentStep1?.assessmentEligibility?.note,
-                qualityAssessmentResultStep1 = projectData.lifecycleData.assessmentStep1?.assessmentQuality?.result,
-                qualityAssessmentNotesStep1 = projectData.lifecycleData.assessmentStep1?.assessmentQuality?.note,
-                eligibilityDecision = projectData.lifecycleData.assessmentStep2?.eligibilityDecision?.status,
-                eligibilityDecisionDate = projectData.lifecycleData.assessmentStep2?.eligibilityDecision?.decisionDate,
-                fundingDecision = projectData.lifecycleData.assessmentStep2?.fundingDecision?.status,
-                fundingDecisionDate = projectData.lifecycleData.assessmentStep2?.fundingDecision?.decisionDate,
-                eligibilityAssessmentResult = projectData.lifecycleData.assessmentStep2?.assessmentEligibility?.result,
-                eligibilityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentEligibility?.note,
-                qualityAssessmentResult = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.result,
-                qualityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.note,
-            )
-        }
+        projectAndCallDataList
+            .sortedWith(compareBy({ it.callDetailData.id }, { it.projectData.sectionA?.customIdentifier }))
+            .map { entry ->
+                val projectVersion = entry.projectVersion
+                val projectData = entry.projectData
+                val callDetailData = entry.callDetailData
+                ProgrammeProjectDataExportRow(
+                    callId = callDetailData.id,
+                    callName = callDetailData.name,
+                    callStartDate = callDetailData.startDateTime,
+                    callEndDateStepOne = callDetailData.endDateTimeStep1,
+                    callEndDate = callDetailData.endDateTime,
+                    periodLength = callDetailData.lengthOfPeriod,
+                    projectId = projectData.sectionA?.customIdentifier!!,
+                    projectAcronym = projectData.sectionA?.acronym,
+                    projectTitle = projectData.sectionA?.title?.getTranslationFor(dataLanguage),
+                    projectVersion = projectVersion.version,
+                    projectStatus = projectData.lifecycleData.status,
+                    projectProgrammePriority = projectData.sectionA?.programmePriority?.code,
+                    projectSpecificObjective = projectData.sectionA?.specificObjective?.code,
+                    projectDuration = projectData.sectionA?.duration,
+                    numberOfPeriods = projectData.sectionA?.periods?.size,
+                    fundInfoList = getFundInfo(projectData, programmeInfoData.funds),
+                    publicContribution = sumOfContributionByType(
+                        projectData,
+                        ProjectPartnerContributionStatusData.Public
+                    ),
+                    autoPublicContribution = sumOfContributionByType(
+                        projectData, ProjectPartnerContributionStatusData.AutomaticPublic
+                    ),
+                    privateContribution = sumOfContributionByType(
+                        projectData, ProjectPartnerContributionStatusData.Private
+                    ),
+                    totalEligibleBudget = projectData.sectionD.projectPartnerBudgetPerFundData.firstOrNull { it.partner == null }?.totalEligibleBudget
+                        ?: BigDecimal.ZERO,
+                    staffCostTotals = getStaffCostTotals(projectData.sectionB.partners),
+                    officeCostTotals = projectData.sectionB.partners
+                        .map { it.budget.projectBudgetCostsCalculationResult.officeAndAdministrationCosts }.sumOf { it },
+                    officeCostFlatRatesTotals = projectData.sectionB.partners
+                        .map { it.budget.projectBudgetCostsCalculationResult.officeAndAdministrationCosts }.sumOf { it },
+                    travelCostTotals = getTravelCostTotals(projectData.sectionB.partners),
+                    externalCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners
+                        .flatMap { it.budget.projectPartnerBudgetCosts.externalCosts }),
+                    equipmentCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners
+                        .flatMap { it.budget.projectPartnerBudgetCosts.equipmentCosts }),
+                    infrastructureCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners
+                        .flatMap { it.budget.projectPartnerBudgetCosts.infrastructureCosts }),
+                    otherCosts = projectData.sectionB.partners.map { it.budget.projectBudgetCostsCalculationResult.otherCosts }
+                        .sumOf { it },
+                    unitCostsCoveringMultipleCostCategories = projectData.sectionB.partners
+                        .flatMap { it.budget.projectPartnerBudgetCosts.unitCosts }
+                        .sumOf { it.rowSum ?: BigDecimal.ZERO },
+                    lumpSumsCoveringMultipleCostCategories = projectData.sectionE.projectLumpSums
+                        .flatMap { it.lumpSumContributions }.sumOf { it.amount },
+                    budgetPerPeriod = getBudgetPerPeriod(projectData),
+                    leadPartnerOrganizationName = projectData.sectionB.partners.firstOrNull { it.role.isLead }?.nameInOriginalLanguage,
+                    leadPartnerOrganizationNameInEnglish = projectData.sectionB.partners.firstOrNull { it.role.isLead }?.nameInEnglish,
+                    leadPartnerMainAddressData = getLeadPartnerMainAddress(projectData),
+                    submissionDateStep1 = projectData.lifecycleData.submissionDateStepOne,
+                    firstSubmissionDate = projectData.lifecycleData.firstSubmissionDate,
+                    latestResubmissionDate = projectData.lifecycleData.lastResubmissionDate,
+                    eligibilityDecisionStep1 = projectData.lifecycleData.assessmentStep1?.eligibilityDecision?.status,
+                    eligibilityDecisionDateStep1 = projectData.lifecycleData.assessmentStep1?.eligibilityDecision?.decisionDate,
+                    fundingDecisionStep1 = projectData.lifecycleData.assessmentStep1?.fundingDecision?.status,
+                    fundingDecisionDateStep1 = projectData.lifecycleData.assessmentStep1?.fundingDecision?.decisionDate,
+                    eligibilityAssessmentResultStep1 = projectData.lifecycleData.assessmentStep1?.assessmentEligibility?.result,
+                    eligibilityAssessmentNotesStep1 = projectData.lifecycleData.assessmentStep1?.assessmentEligibility?.note,
+                    qualityAssessmentResultStep1 = projectData.lifecycleData.assessmentStep1?.assessmentQuality?.result,
+                    qualityAssessmentNotesStep1 = projectData.lifecycleData.assessmentStep1?.assessmentQuality?.note,
+                    eligibilityDecision = projectData.lifecycleData.assessmentStep2?.eligibilityDecision?.status,
+                    eligibilityDecisionDate = projectData.lifecycleData.assessmentStep2?.eligibilityDecision?.decisionDate,
+                    fundingDecision = projectData.lifecycleData.assessmentStep2?.fundingDecision?.status,
+                    fundingDecisionDate = projectData.lifecycleData.assessmentStep2?.fundingDecision?.decisionDate,
+                    eligibilityAssessmentResult = projectData.lifecycleData.assessmentStep2?.assessmentEligibility?.result,
+                    eligibilityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentEligibility?.note,
+                    qualityAssessmentResult = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.result,
+                    qualityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.note,
+                )
+            }
 
     private fun ProjectAssessmentEligibilityResultData?.toMessage() =
         if (this == null) null else
