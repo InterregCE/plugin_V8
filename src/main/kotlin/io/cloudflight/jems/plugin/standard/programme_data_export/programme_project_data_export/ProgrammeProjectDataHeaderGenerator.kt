@@ -165,6 +165,8 @@ private fun getProjectAssessmentDataHeaders(exportLocale: Locale, messageSource:
         ).map { "2 - ".plus(it).toAssessmentCellData() }.toTypedArray(),
 
         getMessage("project.assessment.qualityCheck.dialog.field.note", exportLocale, messageSource)
+            .toAssessmentCellData(),
+        getMessage("project.detail.table.contracted", exportLocale, messageSource)
             .toAssessmentCellData().borderRight()
     ).toTypedArray()
 

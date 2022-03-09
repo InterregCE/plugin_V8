@@ -57,6 +57,7 @@ open class ProgrammeProjectDataExportRow(
     val submissionDateStep1: ZonedDateTime?,
     val firstSubmissionDate: ZonedDateTime?,
     val latestResubmissionDate: ZonedDateTime?,
+    val contractedDate: ZonedDateTime?,
 
     val eligibilityDecisionStep1: ApplicationStatusData?,
     val eligibilityDecisionDateStep1: LocalDate?,
