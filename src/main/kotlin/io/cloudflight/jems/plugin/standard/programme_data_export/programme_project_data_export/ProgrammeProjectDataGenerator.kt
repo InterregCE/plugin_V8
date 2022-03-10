@@ -145,7 +145,8 @@ open class ProgrammeProjectDataGenerator(
                 it.add(row.eligibilityAssessmentResult.toMessage().toAssessmentCellData())
                 it.add(row.eligibilityAssessmentNotes.toAssessmentCellData())
                 it.add(row.qualityAssessmentResult.toMessage().toAssessmentCellData())
-                it.add(row.qualityAssessmentNotes.toAssessmentCellData().borderRight())
+                it.add(row.qualityAssessmentNotes.toAssessmentCellData())
+                it.add(row.contractedDate.toAssessmentCellData().borderRight())
             }.toTypedArray()
         }
 
@@ -211,6 +212,7 @@ open class ProgrammeProjectDataGenerator(
                     submissionDateStep1 = projectData.lifecycleData.submissionDateStepOne,
                     firstSubmissionDate = projectData.lifecycleData.firstSubmissionDate,
                     latestResubmissionDate = projectData.lifecycleData.lastResubmissionDate,
+                    contractedDate = projectData.lifecycleData.contractedDate,
                     eligibilityDecisionStep1 = projectData.lifecycleData.assessmentStep1?.eligibilityDecision?.status,
                     eligibilityDecisionDateStep1 = projectData.lifecycleData.assessmentStep1?.eligibilityDecision?.decisionDate,
                     fundingDecisionStep1 = projectData.lifecycleData.assessmentStep1?.fundingDecision?.status,
