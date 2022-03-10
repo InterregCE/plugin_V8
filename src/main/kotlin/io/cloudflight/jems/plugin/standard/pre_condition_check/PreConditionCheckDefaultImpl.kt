@@ -23,18 +23,27 @@ open class PreConditionCheckDefaultImpl(
             val callData = callDataProvider.getCallDataByProjectId(projectId)
             CallDataContainer.set(callData)
             LifecycleDataContainer.set(projectData.lifecycleData)
-            mutableListOf<PreConditionCheckMessage>().plus(
-                arrayOf(
-                    checkSectionA(projectData.sectionA),
-                    checkSectionB(projectData.sectionB),
-                    checkSectionC(projectData.sectionC),
-                    checkSectionE(projectData.sectionE)
-                )
-            ).let { messages ->
+
+            if(projectData.lifecycleData.status.isInStepOne()) {
+                // TODO: Develop your rules for 1step here
                 PreConditionCheckResult(
-                    messages = messages,
-                    isSubmissionAllowed = messages.none { it.messageType == MessageType.ERROR }
+                    messages = mutableListOf(),
+                    isSubmissionAllowed =  false
                 )
+            } else {
+                mutableListOf<PreConditionCheckMessage>().plus(
+                    arrayOf(
+                        checkSectionA(projectData.sectionA),
+                        checkSectionB(projectData.sectionB),
+                        checkSectionC(projectData.sectionC),
+                        checkSectionE(projectData.sectionE)
+                    )
+                ).let { messages ->
+                    PreConditionCheckResult(
+                        messages = messages,
+                        isSubmissionAllowed = messages.none { it.messageType == MessageType.ERROR }
+                    )
+                }
             }
         }
 
