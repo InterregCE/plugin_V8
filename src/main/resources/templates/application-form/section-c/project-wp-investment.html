@@ -37,7 +37,7 @@
         justification
     </div>
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED">
-        <div th:text="#{project.application.form.workpackage.investment.justification.explanation}">explanation</div>
+        <div clf:textBasedOnCallType="project.application.form.workpackage.investment.justification.explanation">explanation</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.justificationExplanation}">value</div>
     </div>
 

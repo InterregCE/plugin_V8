@@ -22,13 +22,13 @@
         </tr>
         <th:block th:with="leadPartner=${clfUtils.getLeadPartner(projectPartners)}">
             <tr clf:ifAnyFieldIsVisible="PARTNER_ORIGINAL_NAME_OF_ORGANISATION">
-                <th th:text="#{project.application.form.field.project.nameOfTheLeadPartner}">
+                <th clf:textBasedOnCallType="project.application.form.field.project.nameOfTheLeadPartner">
                     Name of the lead partner organisation /original language
                 </th>
                 <td th:text="${leadPartner?.nameInOriginalLanguage}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION">
-                <th th:text="#{project.application.form.field.project.nameOfTheLeadPartnerInEnglish}">
+                <th clf:textBasedOnCallType="project.application.form.field.project.nameOfTheLeadPartnerInEnglish">
                     Name of the lead partner organisation/English
                 </th>
                 <td th:text="${leadPartner?.nameInEnglish}"></td>

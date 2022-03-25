@@ -14,10 +14,15 @@
         <table class="default-vertical-table">
             <thead class="table-header">
             <tr class="sub-heading-2">
+                <td colspan="2" th:if="${isSPFCall == true}"
+                    th:text="#{spf.common.label.project.partner.role.LEAD_PARTNER}"
+                    th:id="*{sortNumber}"
+                ></td>
                 <td colspan="2"
+                    th:if="${isSPFCall == false}"
                     th:with="partnerTitle=*{role?.isLead()} ? #{export.partner.detail.lead.partner.title} : #{export.partner.detail.project.partner.title(*{sortNumber})}"
                     th:text="${partnerTitle}"
-                    th:id="${partnerTitle}"
+                    th:id="*{sortNumber}"
                 >
                     Partner title
                 </td>
@@ -166,6 +171,16 @@
                     </span>
                 </td>
             </tr>
+            <th:block th:if="${isSPFCall == true}">
+                <tr clf:ifAnyFieldIsVisible="PARTNER_TYPE">
+                    <th th:text="#{spf.beneficiary.type}">Type of SPF beneficiary</th>
+                    <td>
+                    <span th:if="${partner.partnerType != null}"
+                          th:text="#{${clfUtils.getPartnerSpfBeneficiaryTypeTranslationKey(partner.partnerType)}}">
+                    </span>
+                    </td>
+                </tr>
+            </th:block>
             <tr clf:ifAnyFieldIsVisible="PARTNER_SUB_TYPE">
                 <th th:text="#{project.partner.subType}">Partner sub type</th>
                 <td>
@@ -298,7 +313,7 @@
                 </tr>
 
                 <tr clf:ifAnyFieldIsVisible="PARTNER_ROLE_EXPERIENCE">
-                    <th th:text="#{project.partner.motivation.organization.experience}">
+                    <th clf:textBasedOnCallType="project.partner.motivation.organization.experience">
                         Organization experience
                     </th>
                 </tr>
