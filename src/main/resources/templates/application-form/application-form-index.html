@@ -32,7 +32,7 @@
                             th:object="${partner}"
                             th:with="partnerTitle = *{role?.isLead()} ? #{export.partner.detail.lead.partner.title}: #{export.partner.detail.project.partner.title(*{sortNumber})}"
                             th:name="${partner.role?.isLead() ? 'LP' : 'PP'} + *{sortNumber} + ' ' + ${partner.abbreviation}"
-                            th:href="'#'+${partnerTitle}">
+                            th:href="'#'+ *{sortNumber}">
                     </bookmark>
                 </bookmark>
                 <bookmark clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS"

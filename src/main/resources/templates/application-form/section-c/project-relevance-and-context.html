@@ -30,8 +30,8 @@
 
     <!-- C 2.3 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_WHY_IS_COOPERATION_NEEDED">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.3}"></div>
-        <div th:text="#{project.application.form.relevance.field.3.intro}"></div>
+        <div class="sub-heading-1" clf:textBasedOnCallType="project.application.form.relevance.field.3"></div>
+        <div clf:textBasedOnCallType="project.application.form.relevance.field.3.intro"></div>
         <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.transnationalCooperation}"></div>
     </div>
@@ -65,6 +65,36 @@
         </table>
     </div>
 
+    <!-- C 2.4a -->
+    <th:block th:if="${isSPFCall == true}">
+        <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_RECIPIENT_GROUP">
+            <div class="sub-heading-1" th:text="#{spf.project.application.form.relevance.field.4a}"></div>
+            <div th:text="#{spf.project.application.form.relevance.field.4a.intro}"></div>
+            <table class="default-table mt-1">
+                <thead class="table-header">
+                <tr>
+                    <th th:text="#{spf.project.application.form.relevance.recipient.group}">
+                        Recipient group
+                    </th>
+                    <th th:text="#{project.application.form.relevance.specification}">
+                        Specifications
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="table-body">
+                <tr th:each="recipient : ${projectDataSectionC.projectRelevance?.projectSpfRecipients}">
+                    <td class="m-column"
+                        th:text="${#messages.msg('project.application.form.relevance.target.group.' + recipient.recipientGroup)}">
+                        Recipient Group
+                    </td>
+                    <td class="multiline" clf:textTranslationByDataLanguage="${recipient.specification}">
+                        Specification
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
     <!-- C 2.5 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_STRATEGY_CONTRIBUTION">
         <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.5}"></div>

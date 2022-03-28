@@ -10,10 +10,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.Proje
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.*
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.*
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectTargetGroupData
 import io.cloudflight.jems.plugin.standard.common.*
 import org.thymeleaf.IEngineConfiguration
@@ -54,19 +51,19 @@ class TemplateUtils {
     fun getDepartmentAddress(addresses: List<ProjectPartnerAddressData>) =
         addresses.firstOrNull { it.type == ProjectPartnerAddressTypeData.Department }
 
-    fun getPublicContributionSubTotal(partnerContributions: Collection<ProjectPartnerContributionData>) =
+    fun getPublicContributionSubTotal(partnerContributions: Collection<ProjectContributionData>) =
         partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Public }
             .sumOf { it.amount ?: BigDecimal.ZERO }
 
-    fun getAutomaticPublicContributionSubTotal(partnerContributions: Collection<ProjectPartnerContributionData>) =
+    fun getAutomaticPublicContributionSubTotal(partnerContributions: Collection<ProjectContributionData>) =
         partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.AutomaticPublic }
             .sumOf { it.amount ?: BigDecimal.ZERO }
 
-    fun getPrivateContributionSubTotal(partnerContributions: Collection<ProjectPartnerContributionData>) =
+    fun getPrivateContributionSubTotal(partnerContributions: Collection<ProjectContributionData>) =
         partnerContributions.filter { it.status == ProjectPartnerContributionStatusData.Private }
             .sumOf { it.amount ?: BigDecimal.ZERO }
 
-    fun getContributionTotal(partnerContributions: Collection<ProjectPartnerContributionData>) =
+    fun getContributionTotal(partnerContributions: Collection<ProjectContributionData>) =
         partnerContributions.sumOf { it.amount ?: BigDecimal.ZERO }
 
     // it is used in the templates
@@ -144,6 +141,15 @@ class TemplateUtils {
             return "project.application.form.relevance.target.group.$partnerType"
         }
         return ""
+    }
+
+    fun getPartnerSpfBeneficiaryTypeTranslationKey(partnerType: ProjectTargetGroupData?): String {
+        val partnerTypeTranslationPrefix = "project.application.form.relevance.target.group."
+        return when (partnerType) {
+            ProjectTargetGroupData.Egtc -> "$partnerTypeTranslationPrefix.${ProjectTargetGroupData.Egtc.name}"
+            ProjectTargetGroupData.CrossBorderLegalBody -> "$partnerTypeTranslationPrefix.${ProjectTargetGroupData.CrossBorderLegalBody.name}"
+            else -> "spf.beneficiary.type.input.option"
+        }
     }
 
     fun getPartnerSubTypeTranslationString(partnerSubType: PartnerSubTypeData?): String {

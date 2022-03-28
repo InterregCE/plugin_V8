@@ -14,7 +14,7 @@
          th:text="#{project.application.form.section.part.c.subsection.seven}">
         C.7 Project management
     </div>
-    <div th:text="#{project.application.form.management.intro}">
+    <div clf:textBasedOnCallType="project.application.form.management.intro">
         Project management intro
     </div>
     <th:block th:with="projectManagement=${projectDataSectionC?.projectManagement}">
@@ -22,7 +22,7 @@
             <div class="sub-heading-1" th:text="#{project.application.form.management.field.1}">
                 C.7.1 How will you coordinate your project?
             </div>
-            <div th:text="#{project.application.form.management.field.1.intro}"></div>
+            <div clf:textBasedOnCallType="project.application.form.management.field.1.intro"></div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectCoordination}"></div>
         </div>
 
@@ -38,7 +38,7 @@
             <div class="sub-heading-1" th:text="#{project.application.form.management.field.3}">C.7.3 What will be
                 the general approach you will follow to communicate about your project?
             </div>
-            <div th:text="#{project.application.form.management.field.3.intro}"></div>
+            <div clf:textBasedOnCallType="project.application.form.management.field.3.intro"></div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectCommunication}"></div>
         </div>
 

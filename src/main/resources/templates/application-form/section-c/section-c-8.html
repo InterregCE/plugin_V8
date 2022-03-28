@@ -15,7 +15,7 @@
         <span th:text="#{project.application.form.future.plans.intro}">intro text</span>
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_OWNERSHIP">
             <div class="sub-heading-1" th:text="#{project.application.form.future.plans.field.1}">C.8.1 ownr</div>
-            <div th:text="#{project.application.form.future.plans.field.1.intro}">pls dscr who will ensure the financial and institutional support</div>
+            <div clf:textBasedOnCallType="project.application.form.future.plans.field.1.intro">pls dscr who will ensure the financial and institutional support</div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectDataSectionC?.projectLongTermPlans?.projectOwnership}">Lorem ipsum</div>
         </div>
 
