@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="partnerBudgetData" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.PartnerBudgetData"*/-->
-<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfBudgetUtils" type="io.cloudflight.jems.plugin.standard.common.BudgetUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -34,11 +34,11 @@
                     clf:textBasedOnCallType="project.partner.coFinancing.partnerContribution">Partner contribution
                 </td>
                 <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
-                    clf:number="${clfUtils.percentageDown(finance?.percentage, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                    clf:number="${clfBudgetUtils.percentageDown(finance?.percentage, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     47593
                 </td>
                 <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
-                    clf:number="${clfUtils.getPartnerContribution(partnerBudgetData.projectPartnerCoFinancing.finances, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                    clf:number="${clfBudgetUtils.getPartnerContribution(partnerBudgetData.projectPartnerCoFinancing.finances, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     47593
                 </td>
                 <td clf:percentage="*{percentage}">80%</td>
@@ -81,7 +81,7 @@
                 <td class="break-long-word" th:unless="*{isPartner}" th:text="*{name}">name</td>
                 <td th:text="*{status}">private</td>
                 <td clf:number="*{amount}">45900</td>
-                <td clf:percentage="${clfUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                <td clf:percentage="${clfBudgetUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     34.00
                 </td>
             </tr>
@@ -97,38 +97,38 @@
             </tr>
             </thead>
             <tbody class="table-body">
-            <tr th:with="publicAmount = ${clfUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <tr th:with="publicAmount = ${clfBudgetUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
                 <th th:text="#{project.partner.coFinancing.contribution.sub.total.public.contribution}">
                     Sub-total public contribution
                 </th>
                 <td clf:number="${publicAmount}">34</td>
-                <td clf:percentage="${clfUtils.percentageDownTo(publicAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                <td clf:percentage="${clfBudgetUtils.percentageDownTo(publicAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     55%
                 </td>
             </tr>
-            <tr th:with="automaticPublicAmount = ${clfUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <tr th:with="automaticPublicAmount = ${clfBudgetUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
                 <th th:text="#{project.partner.coFinancing.contribution.sub.total.automatic.public.contribution}">
                     Sub-total automatic public
                     contribution
                 </th>
                 <td clf:number="${automaticPublicAmount}">124</td>
-                <td clf:percentage="${clfUtils.percentageDownTo(automaticPublicAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                <td clf:percentage="${clfBudgetUtils.percentageDownTo(automaticPublicAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     10%
                 </td>
             </tr>
-            <tr th:with="privateAmount = ${clfUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <tr th:with="privateAmount = ${clfBudgetUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
                 <th th:text="#{project.partner.coFinancing.contribution.sub.total.private.contribution}">
                     Sub-total private contribution
                 </th>
                 <td clf:number="${privateAmount}">5455</td>
-                <td clf:percentage="${clfUtils.percentageDownTo(privateAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                <td clf:percentage="${clfBudgetUtils.percentageDownTo(privateAmount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     32%
                 </td>
             </tr>
-            <tr class="row-bordered" th:with="total = ${clfUtils.getContributionTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
+            <tr class="row-bordered" th:with="total = ${clfBudgetUtils.getContributionTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
                 <th clf:textBasedOnCallType="project.partner.coFinancing.contribution.total">total</th>
                 <td clf:number="${total}">4757</td>
-                <td clf:percentage="${clfUtils.percentageDownTo(total, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
+                <td clf:percentage="${clfBudgetUtils.percentageDownTo(total, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     100%
                 </td>
             </tr>
@@ -162,11 +162,11 @@
                         th:text="#{project.partner.coFinancing.spf.partnerContribution}">Small projects' contribution
                     </td>
                     <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
-                        clf:number="${clfUtils.percentageDown(finance?.percentage, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                        clf:number="${clfBudgetUtils.percentageDown(finance?.percentage, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         47593
                     </td>
                     <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
-                        clf:number="${clfUtils.getPartnerContribution(partnerBudgetData.projectPartnerSpfCoFinancing.finances, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                        clf:number="${clfBudgetUtils.getPartnerContribution(partnerBudgetData.projectPartnerSpfCoFinancing.finances, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         47593
                     </td>
                     <td clf:percentage="*{percentage}">80%</td>
@@ -211,7 +211,7 @@
                     <td class="break-long-word" th:text="*{name}">name</td>
                     <td th:text="*{status}">private</td>
                     <td clf:number="*{amount}">45900</td>
-                    <td clf:percentage="${clfUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                    <td clf:percentage="${clfBudgetUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         34.00
                     </td>
                 </tr>
@@ -227,39 +227,39 @@
                 </tr>
                 </thead>
                 <tbody class="table-body">
-                <tr th:with="publicAmount = ${clfUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
+                <tr th:with="publicAmount = ${clfBudgetUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
                     <th th:text="#{project.partner.coFinancing.contribution.sub.total.public.contribution}">
                         Sub-total public contribution
                     </th>
                     <td clf:number="${publicAmount}">34</td>
-                    <td clf:percentage="${clfUtils.percentageDownTo(publicAmount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                    <td clf:percentage="${clfBudgetUtils.percentageDownTo(publicAmount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         55%
                     </td>
                 </tr>
-                <tr th:with="automaticPublicAmount = ${clfUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
+                <tr th:with="automaticPublicAmount = ${clfBudgetUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
                     <th th:text="#{project.partner.coFinancing.contribution.sub.total.automatic.public.contribution}">
                         Sub-total automatic public
                         contribution
                     </th>
                     <td clf:number="${automaticPublicAmount}">124</td>
-                    <td clf:percentage="${clfUtils.percentageDownTo(automaticPublicAmount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                    <td clf:percentage="${clfBudgetUtils.percentageDownTo(automaticPublicAmount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         10%
                     </td>
                 </tr>
-                <tr th:with="privateAmount = ${clfUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
+                <tr th:with="privateAmount = ${clfBudgetUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
                     <th th:text="#{project.partner.coFinancing.contribution.sub.total.private.contribution}">
                         Sub-total private contribution
                     </th>
                     <td clf:number="${privateAmount}">5455</td>
-                    <td clf:percentage="${clfUtils.percentageDownTo(privateAmount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                    <td clf:percentage="${clfBudgetUtils.percentageDownTo(privateAmount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         32%
                     </td>
                 </tr>
                 <tr class="row-bordered"
-                    th:with="total = ${clfUtils.getContributionTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
+                    th:with="total = ${clfBudgetUtils.getContributionTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
                     <th th:text="#{project.partner.coFinancing.spf.contribution.total}">total spf</th>
                     <td clf:number="${total}">4757</td>
-                    <td clf:percentage="${clfUtils.percentageDownTo(total, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
+                    <td clf:percentage="${clfBudgetUtils.percentageDownTo(total, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         100%
                     </td>
                 </tr>

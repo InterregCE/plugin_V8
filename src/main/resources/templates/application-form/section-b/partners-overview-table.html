@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
-<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -57,7 +57,7 @@
             <tr th:if="${projectDataSectionB.partners.size() == 0}">
                 <td colspan="8"></td>
             </tr>
-            <tr th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
+            <tr th:each="partner, rowStat: ${clfPartnerUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
                 th:object="${partner}">
                 <td th:text="*{sortNumber}"></td>
                 <td th:text="${partner.active}  ? #{project.application.form.partner.table.status.active} : #{project.application.form.partner.table.status.inactive}"></td>
@@ -65,7 +65,7 @@
                     th:text="*{nameInEnglish}">
                 </td>
                 <td clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS"
-                    th:with="mainAddress=${clfUtils.getMainAddress(partner.addresses)}"
+                    th:with="mainAddress=${clfPartnerUtils.getMainAddress(partner.addresses)}"
                     th:text="${mainAddress?.country}">
                 </td>
                 <td clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME"

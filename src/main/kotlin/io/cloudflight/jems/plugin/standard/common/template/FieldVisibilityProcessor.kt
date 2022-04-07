@@ -3,6 +3,8 @@ package io.cloudflight.jems.plugin.standard.common.template
 import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.ProjectData
+import io.cloudflight.jems.plugin.standard.common.CALL_DATA
+import io.cloudflight.jems.plugin.standard.common.PROJECT_DATA
 import io.cloudflight.jems.plugin.standard.common.isAnyFieldVisible
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.engine.AttributeName

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
-<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfProjectUtils" type="io.cloudflight.jems.plugin.standard.common.ProjectUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -55,11 +55,11 @@
                 </th>
             </tr>
             </thead>
-            <th:block th:with="linesSorted=${clfUtils.getLinesSorted(projectDataSectionA.resultIndicatorOverview.indicatorLines)}">
+            <th:block th:with="linesSorted=${clfProjectUtils.getLinesSorted(projectDataSectionA.resultIndicatorOverview.indicatorLines)}">
                 <th:block
-                        th:with="resultIndicatorSpan=${clfUtils.getResultIndicatorSpan(linesSorted)}">
+                        th:with="resultIndicatorSpan=${clfProjectUtils.getResultIndicatorSpan(linesSorted)}">
                     <th:block
-                        th:with="outputIndicatorSpan=${clfUtils.getOutputIndicatorSpan(linesSorted)}">
+                        th:with="outputIndicatorSpan=${clfProjectUtils.getOutputIndicatorSpan(linesSorted)}">
                         <tbody class="table-body">
                             <tr th:each="indicatorLine, rowStat: ${linesSorted}"
                                 th:object="${indicatorLine}">

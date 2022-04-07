@@ -2,14 +2,12 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>ComplexCondition:ProjectUtils.kt$ProjectUtils$(stateAidData.answer1 == false || stateAidData.answer2 == false || stateAidData.answer3 == false) &amp;&amp; stateAidData.answer4 == true</ID>
+    <ID>ComplexCondition:ProjectUtils.kt$ProjectUtils$stateAidData.answer1 == null || stateAidData.answer2 == null || stateAidData.answer3 == null || stateAidData.answer4 == null</ID>
+    <ID>ComplexCondition:ProjectUtils.kt$ProjectUtils$stateAidData.answer1 == true &amp;&amp; stateAidData.answer2 == true &amp;&amp; stateAidData.answer3 == true &amp;&amp; stateAidData.answer4 == true</ID>
     <ID>ComplexCondition:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.staffCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.travelCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.externalCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.infrastructureCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } } || partner.budget.projectPartnerBudgetCosts.unitCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
     <ID>ComplexCondition:SectionBChecks.kt$partner.stateAid?.answer1 ?: false &amp;&amp; partner.stateAid?.answer2 ?: false &amp;&amp; partner.stateAid?.answer3 ?: false &amp;&amp; partner.stateAid?.answer4 ?: false &amp;&amp; partner.stateAid?.stateAidScheme == null &amp;&amp; isFieldVisible(ApplicationFormFieldId.PARTNER_STATE_AID_SCHEME)</ID>
-    <ID>ComplexCondition:TemplateUtils.kt$TemplateUtils$(stateAidData.answer1 == false || stateAidData.answer2 == false || stateAidData.answer3 == false) &amp;&amp; stateAidData.answer4 == true</ID>
-    <ID>ComplexCondition:TemplateUtils.kt$TemplateUtils$stateAidData.answer1 == null || stateAidData.answer2 == null || stateAidData.answer3 == null || stateAidData.answer4 == null</ID>
-    <ID>ComplexCondition:TemplateUtils.kt$TemplateUtils$stateAidData.answer1 == true &amp;&amp; stateAidData.answer2 == true &amp;&amp; stateAidData.answer3 == true &amp;&amp; stateAidData.answer4 == true</ID>
     <ID>ComplexMethod:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$private fun getGeneralCostData( typeTranslationKey: String, partnerInfo: PartnerInfo, workPackages: List&lt;ProjectWorkPackageData&gt;, generalCostData: List&lt;BudgetGeneralCostEntryData&gt;, isUnitTypeAndNumberOfUnitsVisible: Boolean, isPricePerUnitVisible: Boolean, isDescriptionVisible: Boolean, isAwardProcedureVisible: Boolean, isInvestmentVisible: Boolean ): Array&lt;BudgetDetailsRow&gt;</ID>
-    <ID>ComplexMethod:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$private fun getStaffCostData( partnerInfo: PartnerInfo, staffCostData: List&lt;BudgetStaffCostEntryData&gt;, flatRate: Int?, staffCostTotal: BigDecimal )</ID>
-    <ID>ComplexMethod:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$private fun getTravelCostsData( partnerInfo: PartnerInfo, travelCostsData: List&lt;BudgetTravelAndAccommodationCostEntryData&gt;, flatRate: Int?, travelCostTotal: BigDecimal )</ID>
     <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfEquipmentContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
     <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfExternalExpertiseAndServicesContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
     <ID>ComplexMethod:SectionBChecks.kt$private fun checkIfInfrastructureAndWorksContentIsProvided(partners: Set&lt;ProjectPartnerData&gt;)</ID>
@@ -31,12 +29,8 @@
     <ID>LongParameterList:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$( typeTranslationKey: String, partnerInfo: PartnerInfo, workPackages: List&lt;ProjectWorkPackageData&gt;, generalCostData: List&lt;BudgetGeneralCostEntryData&gt;, isUnitTypeAndNumberOfUnitsVisible: Boolean, isPricePerUnitVisible: Boolean, isDescriptionVisible: Boolean, isAwardProcedureVisible: Boolean, isInvestmentVisible: Boolean )</ID>
     <ID>MaxLineLength:ApplicationFormFieldUtils.kt$callData.isTwoStepCall() &amp;&amp; lifecycleData.status.isInStepOne() &amp;&amp; fieldConfiguration.visibilityStatus == FieldVisibilityStatusData.STEP_TWO_ONLY -&gt; false</ID>
     <ID>MaxLineLength:BudgetAndLumpTotalsTableGenerator.kt$BudgetAndLumpTotalsTableGenerator$partnerBudgetPerPeriod = projectPartnerBudgetPerPeriodData.partnersBudgetPerPeriod.firstOrNull { it.partner.id == partner.id }?.periodBudgets ?: emptyList()</ID>
-    <ID>MaxLineLength:BudgetDetailsTableGenerator.kt$BudgetDetailsTableGenerator$description = if(shouldBeVisible(PROJECT_LUMP_SUMS_DESCRIPTION)) lumpSum.programmeLumpSum?.description?.getTranslationFor(dataLanguage) ?: "" else ""</ID>
     <ID>MaxLineLength:ChecksSectionB.kt$ChecksSectionB$preConditionCheckMessage.message.i18nKey == "jems.standard.pre.condition.check.plugin.project.section.b.error.exactly.one.lead.partner.should.be.active"</ID>
     <ID>MaxLineLength:ChecksUtils.kt$this == ApplicationStatusData.STEP1_DRAFT || this == ApplicationStatusData.STEP1_SUBMITTED || this == ApplicationStatusData.STEP1_ELIGIBLE || this == ApplicationStatusData.STEP1_INELIGIBLE || this == ApplicationStatusData.STEP1_APPROVED</ID>
-    <ID>MaxLineLength:ProgrammeProjectDataExportDefaultImpl.kt$ProgrammeProjectDataExportDefaultImpl$"${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_project_${exportLanguage.name.toLowerCase()}_${dataLanguage.name.toLowerCase()}_"</ID>
-    <ID>MaxLineLength:ProgrammeProjectDataGenerator.kt$ProgrammeProjectDataGenerator$equipmentCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.equipmentCosts })</ID>
-    <ID>MaxLineLength:ProgrammeProjectDataGenerator.kt$ProgrammeProjectDataGenerator$infrastructureCostTotals = getGeneralBudgetCostTotalsFor(projectData.sectionB.partners.flatMap { it.budget.projectPartnerBudgetCosts.infrastructureCosts })</ID>
     <ID>MaxLineLength:SectionAChecks.kt$(programmePriority == null || programmePriority.code.isBlank())</ID>
     <ID>MaxLineLength:SectionBChecks.kt$if</ID>
     <ID>MaxLineLength:SectionBChecks.kt$partner.budget.projectPartnerBudgetCosts.equipmentCosts.any { budgetEntry -&gt; budgetEntry.rowSum != budgetEntry.budgetPeriods.sumOf { it.amount } }</ID>
@@ -103,7 +97,6 @@
     <ID>TooManyFunctions:ProgrammePartnerDataUtils.kt$io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export.ProgrammePartnerDataUtils.kt</ID>
     <ID>TooManyFunctions:SectionBChecks.kt$io.cloudflight.jems.plugin.standard.pre_condition_check.SectionBChecks.kt</ID>
     <ID>TooManyFunctions:SectionCChecks.kt$io.cloudflight.jems.plugin.standard.pre_condition_check.SectionCChecks.kt</ID>
-    <ID>TooManyFunctions:TemplateUtils.kt$TemplateUtils</ID>
     <ID>UnusedPrivateMember:SectionAChecks.kt$private const val SECTION_A_INFO_MESSAGES_PREFIX = "$SECTION_A_MESSAGES_PREFIX.info"</ID>
     <ID>UnusedPrivateMember:SectionEChecks.kt$private const val SECTION_E_INFO_MESSAGES_PREFIX = "$SECTION_E_MESSAGES_PREFIX.info"</ID>
   </CurrentIssues>

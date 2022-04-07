@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.common.template
 
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
+import io.cloudflight.jems.plugin.standard.common.DATA_LANGUAGE
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.engine.AttributeName

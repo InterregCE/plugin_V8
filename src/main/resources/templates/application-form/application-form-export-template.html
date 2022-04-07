@@ -10,8 +10,10 @@
             th:insert="~{application-form/application-form-index.html :: applicationFormIndex(${projectData}, ${callData}, ${timeplanData})}"></th:block>
 </head>
 
-<body id="first-page"  th:with="isSPFCall=${callData.getType() == T(io.cloudflight.jems.plugin.contract.models.call.CallTypeData).SPF}">
-    <div th:insert="~{application-form/section-a/section-a.html :: sectionA(${projectData.sectionA}, ${projectData.sectionB.partners}, ${callData})}"></div>
+<body id="first-page"  th:with="isSPFCall=${callData.getType() == T(io.cloudflight.jems.plugin.contract.models.call.CallTypeData).SPF},
+                                lifecycleData=${projectData.getLifecycleData()},
+                                callData=${callData}">
+    <div th:insert="~{application-form/section-a/section-a.html :: sectionA(${projectData.sectionA}, ${projectData.sectionB.partners})}"></div>
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
     <div class="page-break-after"></div>

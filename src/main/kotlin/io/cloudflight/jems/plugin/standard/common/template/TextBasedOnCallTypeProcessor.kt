@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.common.template
 
 import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.call.CallTypeData
+import io.cloudflight.jems.plugin.standard.common.CALL_DATA
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.engine.AttributeName
 import org.thymeleaf.model.IProcessableElementTag
