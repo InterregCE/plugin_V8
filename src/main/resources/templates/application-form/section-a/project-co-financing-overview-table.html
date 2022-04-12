@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
-<!--/*@thymesVar id="projectCoFinancingOverview" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverview"*/-->
+<!--/*@thymesVar id="projectCoFinancingOverview" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverviewData"*/-->
+<!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
+<!--/*@thymesVar id="lifecycleData" type="io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData"*/-->
+<!--/*@thymesVar id="clfProjectUtils" type="io.cloudflight.jems.plugin.standard.common.ProjectUtils"*/-->
+<!--/*@thymesVar id="clfBudgetUtils" type="io.cloudflight.jems.plugin.standard.common.BudgetUtils"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 
 <head>
@@ -11,123 +15,245 @@
 <th:block th:fragment="projectCofinancingOverviewTable(projectCoFinancingOverview)">
     <div id="section-a-3" class="landscape" clf:ifAnyFieldIsVisible="PROJECT_A3">
         <div class="title" th:text="#{project.application.form.section.part.a.subsection.three}"></div>
-        <table class="default-table">
+        <table class="default-table-no-pagination">
             <thead class="table-header">
-            <tr>
-                <th class="text-center right-border" colspan="3"
-                    th:text="#{project.application.form.overview.budget.table.programme.funding}">
-                    Programme funding
-                </th>
+                <tr>
+                    <th class="text-center right-border" colspan="3"
+                        th:text="#{project.application.form.overview.budget.table.programme.funding}">
+                        Programme funding
+                    </th>
 
-                <th class="text-center right-border" colspan="5"
-                    th:text="#{project.application.form.overview.budget.table.contribution}">
-                    Contribution
-                </th>
+                    <th class="text-center right-border" th:colspan="${clfUtils.isFieldAvailable('PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN', lifecycleData, callData)} ? 5 : 4"
+                        th:text="#{project.application.form.overview.budget.table.contribution}">
+                        Contribution
+                    </th>
 
-                <th class="text-center right-border" rowspan="2"
-                    th:text="#{project.application.form.overview.budget.table.total}">
-                    Total
-                </th>
-            </tr>
-            <tr>
-                <th th:text="#{project.application.form.overview.budget.table.funding.source}">Funding
-                    source
-                </th>
-                <th class="text-right" th:text="#{project.application.form.overview.budget.table.funding.amount}">Funding
-                    amount
-                </th>
-                <th class="right-border text-right"
-                    th:text="#{project.application.form.overview.budget.table.cofinancing.rate}">
-                    Co-financing rate (%)
-                </th>
+                    <th class="text-center right-border" rowspan="2"
+                        th:text="#{project.application.form.overview.budget.table.total}">
+                        Total
+                    </th>
+                </tr>
+                <tr>
+                    <th th:text="#{project.application.form.overview.budget.table.funding.source}">Funding
+                        source
+                    </th>
+                    <th class="text-right" th:text="#{project.application.form.overview.budget.table.funding.amount}">
+                        Funding
+                        amount
+                    </th>
+                    <th class="right-border text-right"
+                        th:text="#{project.application.form.overview.budget.table.cofinancing.rate}">
+                        Co-financing rate (%)
+                    </th>
 
-                <th class="text-right" th:text="#{project.application.form.overview.budget.table.auto.public}">
-                    Automatic public contribution
-                </th>
-                <th class="text-right" th:text="#{project.application.form.overview.budget.table.other.public}">
-                    Other public contribution
-                </th>
-                <th class="text-right" th:text="#{project.application.form.overview.budget.table.total.public}">
-                    Total public contribution
-                </th>
-                <th class="text-right" th:text="#{project.application.form.overview.budget.table.private}">
-                    Private contribution
-                </th>
-                <th class="right-border text-right"
-                    th:text="#{project.application.form.overview.budget.table.total.contribution}">
-                    Total contribution
-                </th>
-            </tr>
+                    <th clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN" class="text-right"
+                        th:text="#{project.application.form.overview.budget.table.auto.public}">
+                        Automatic public contribution
+                    </th>
+                    <th class="text-right" th:text="#{project.application.form.overview.budget.table.other.public}">
+                        Other public contribution
+                    </th>
+                    <th class="text-right" th:text="#{project.application.form.overview.budget.table.total.public}">
+                        Total public contribution
+                    </th>
+                    <th class="text-right" th:text="#{project.application.form.overview.budget.table.private}">
+                        Private contribution
+                    </th>
+                    <th class="right-border text-right"
+                        th:text="#{project.application.form.overview.budget.table.total.contribution}">
+                        Total contribution
+                    </th>
+                </tr>
+                <tr th:if="${isSPFCall == true}">
+                    <th class="text-left" colspan="9"
+                        th:text="#{project.application.form.overview.budget.table.spf.cofinacing}">
+                        Small project Fund
+                    </th>
+                </tr>
             </thead>
+
             <tbody class="table-body">
-            <th:block th:with="euFundOverviews = ${clfUtils.getEuFundsOverview(projectCoFinancingOverview.fundOverviews)}">
-                <tr th:if="${euFundOverviews.size() == 0}">
-                    <td class="right-border" colspan="3"></td>
-                    <td class="right-border" colspan="5"></td>
-                    <td></td>
+            <!--SPF Costs-->
+            <th:block th:if="${isSPFCall == true}" th:with="spfCoFinancing=${projectCoFinancingOverview.projectSpfCoFinancing}">
+                <!-- SPF EU FUNDS -->
+                <th:block th:with="euFundOverviews = ${clfProjectUtils.getEuFundsOverview(spfCoFinancing.fundOverviews)}">
+                    <tr th:if="${euFundOverviews.size() == 0}">
+                        <td class="right-border" colspan="3"></td>
+                        <td class="right-border" colspan="5"></td>
+                        <td></td>
+                    </tr>
+                    <tr th:each="euFundOverview, rowStat: ${euFundOverviews}" th:object="${euFundOverview}">
+                        <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
+                        <td clf:number="*{fundingAmount}"></td>
+                        <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
+
+                        <td clf:number="*{autoPublicContribution}" clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"></td>
+                        <td clf:number="*{otherPublicContribution}"></td>
+                        <td clf:number="*{totalPublicContribution}"></td>
+                        <td clf:number="*{privateContribution}"></td>
+                        <td class="right-border" clf:number="*{totalContribution}"></td>
+
+                        <td clf:number="*{totalFundAndContribution}"></td>
+                    </tr>
+                </th:block>
+               <!--SPF TOTAL EU FUNDS -->
+                <tr class="row-bordered">
+                    <td th:text="#{project.application.form.overview.budget.table.total.eu}"></td>
+                    <td clf:number="${spfCoFinancing.totalEuFundingAmount}"></td>
+                    <td class="right-border" clf:percentage="${spfCoFinancing.averageEuFinancingRate}"></td>
+
+                    <td clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"
+                        clf:number="${spfCoFinancing.totalEuAutoPublicContribution}"></td>
+                    <td clf:number="${spfCoFinancing.totalEuOtherPublicContribution}"></td>
+                    <td clf:number="${spfCoFinancing.totalEuPublicContribution}"></td>
+                    <td clf:number="${spfCoFinancing.totalEuPrivateContribution}"></td>
+                    <td class="right-border" clf:number="${spfCoFinancing.totalEuContribution}"></td>
+
+                    <td clf:number="${spfCoFinancing.totalEuFundAndContribution}"></td>
                 </tr>
-                <tr th:each="euFundOverview, rowStat: ${euFundOverviews}" th:object="${euFundOverview}">
-                    <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
-                    <td clf:number="*{fundingAmount}"></td>
-                    <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
+                <!-- SPF NON EU FUNDS -->
+                <th:block th:with="otherFundOverviews = ${clfProjectUtils.getOtherFundsOverview(spfCoFinancing.fundOverviews)}">
+                    <tr th:if="${otherFundOverviews.size() == 0}">
+                        <td class="right-border" colspan="3"></td>
+                        <td class="right-border" colspan="5"></td>
+                        <td></td>
+                    </tr>
+                    <tr th:each="otherFundOverview, rowStat: ${otherFundOverviews}" th:object="${otherFundOverview}">
+                        <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
+                        <td clf:number="*{fundingAmount}"></td>
+                        <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
 
-                    <td clf:number="*{autoPublicContribution}"></td>
-                    <td clf:number="*{otherPublicContribution}"></td>
-                    <td clf:number="*{totalPublicContribution}"></td>
-                    <td clf:number="*{privateContribution}"></td>
-                    <td class="right-border" clf:number="*{totalContribution}"></td>
+                        <td clf:number="*{autoPublicContribution}" clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"></td>
+                        <td clf:number="*{otherPublicContribution}"></td>
+                        <td clf:number="*{totalPublicContribution}"></td>
+                        <td clf:number="*{privateContribution}"></td>
+                        <td class="right-border" clf:number="*{totalContribution}"></td>
 
-                    <td clf:number="*{totalFundAndContribution}"></td>
+                        <td clf:number="*{totalFundAndContribution}"></td>
+                    </tr>
+                </th:block>
+                <!--TOTAL SPF-->
+                <tr class="row-bordered">
+                    <td th:text="#{project.application.form.overview.budget.table.total.spf}"></td>
+                    <td clf:number="${spfCoFinancing.totalFundingAmount}"></td>
+                    <td class="right-border" clf:percentage="${spfCoFinancing.averageCoFinancingRate}"></td>
+
+                    <td clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"
+                        clf:number="${spfCoFinancing.totalAutoPublicContribution}"></td>
+                    <td clf:number="${spfCoFinancing.totalOtherPublicContribution}"></td>
+                    <td clf:number="${spfCoFinancing.totalPublicContribution}"></td>
+                    <td clf:number="${spfCoFinancing.totalPrivateContribution}"></td>
+                    <td class="right-border" clf:number="${spfCoFinancing.totalContribution}"></td>
+
+                    <td clf:number="${spfCoFinancing.totalFundAndContribution}"></td>
                 </tr>
             </th:block>
-            <tr class="row-bordered">
-                <td th:text="#{project.application.form.overview.budget.table.total.eu}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalEuFundingAmount}"></td>
-                <td class="right-border" clf:percentage="${projectCoFinancingOverview.averageEuFinancingRate}"></td>
 
-                <td clf:number="${projectCoFinancingOverview.totalEuAutoPublicContribution}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalEuOtherPublicContribution}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalEuPublicContribution}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalEuPrivateContribution}"></td>
-                <td class="right-border" clf:number="${projectCoFinancingOverview.totalEuContribution}"></td>
-
-                <td clf:number="${projectCoFinancingOverview.totalEuFundAndContribution}"></td>
+            <tr class="table-header" th:if="${isSPFCall == true}">
+                <th class="text-left" colspan="9"
+                    th:text="#{project.application.form.overview.budget.table.cofinacing}">
+                    Management costs
+                </th>
             </tr>
-            <th:block
-                    th:with="otherFundOverviews = ${clfUtils.getOtherFundsOverview(projectCoFinancingOverview.fundOverviews)}">
-                <tr th:if="${otherFundOverviews.size() == 0}">
-                    <td class="right-border" colspan="3"></td>
-                    <td class="right-border" colspan="5"></td>
-                    <td></td>
+
+            <!-- Management Costs -->
+            <th:block th:with="managementCoFinancing=${projectCoFinancingOverview.projectManagementCoFinancing}">
+                <!--Management EU FUNDS -->
+                <th:block th:with="euFundOverviews = ${clfProjectUtils.getEuFundsOverview(managementCoFinancing.fundOverviews)}">
+                    <tr th:if="${euFundOverviews.size() == 0}">
+                        <td class="right-border" colspan="3"></td>
+                        <td class="right-border" colspan="5"></td>
+                        <td></td>
+                    </tr>
+                    <tr th:each="euFundOverview, rowStat: ${euFundOverviews}" th:object="${euFundOverview}">
+                        <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
+                        <td clf:number="*{fundingAmount}"></td>
+                        <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
+
+                        <td clf:number="*{autoPublicContribution}" clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"></td>
+                        <td clf:number="*{otherPublicContribution}"></td>
+                        <td clf:number="*{totalPublicContribution}"></td>
+                        <td clf:number="*{privateContribution}"></td>
+                        <td class="right-border" clf:number="*{totalContribution}"></td>
+
+                        <td clf:number="*{totalFundAndContribution}"></td>
+                    </tr>
+                </th:block>
+                <!-- Management TOTAL EU FUNDS-->
+                <tr class="row-bordered">
+                    <td th:text="#{project.application.form.overview.budget.table.total.eu}"></td>
+                    <td clf:number="${managementCoFinancing.totalEuFundingAmount}"></td>
+                    <td class="right-border" clf:percentage="${managementCoFinancing.averageEuFinancingRate}"></td>
+
+                    <td clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"
+                        clf:number="${managementCoFinancing.totalEuAutoPublicContribution}"></td>
+                    <td clf:number="${managementCoFinancing.totalEuOtherPublicContribution}"></td>
+                    <td clf:number="${managementCoFinancing.totalEuPublicContribution}"></td>
+                    <td clf:number="${managementCoFinancing.totalEuPrivateContribution}"></td>
+                    <td class="right-border" clf:number="${managementCoFinancing.totalEuContribution}"></td>
+
+                    <td clf:number="${managementCoFinancing.totalEuFundAndContribution}"></td>
                 </tr>
-                <tr th:each="otherFundOverview, rowStat: ${otherFundOverviews}" th:object="${otherFundOverview}">
-                    <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
-                    <td clf:number="*{fundingAmount}"></td>
-                    <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
+                <!-- Management NON EU FUNDS -->
+                <th:block
+                        th:with="otherFundOverviews = ${clfProjectUtils.getOtherFundsOverview(managementCoFinancing.fundOverviews)}">
+                    <tr th:if="${otherFundOverviews.size() == 0}">
+                        <td class="right-border" colspan="3"></td>
+                        <td class="right-border" colspan="5"></td>
+                        <td></td>
+                    </tr>
+                    <tr th:each="otherFundOverview, rowStat: ${otherFundOverviews}" th:object="${otherFundOverview}">
+                        <td clf:textTranslationByDataLanguage="*{fundAbbreviation}"></td>
+                        <td clf:number="*{fundingAmount}"></td>
+                        <td class="right-border" clf:percentage="*{coFinancingRate}"></td>
 
-                    <td clf:number="*{autoPublicContribution}"></td>
-                    <td clf:number="*{otherPublicContribution}"></td>
-                    <td clf:number="*{totalPublicContribution}"></td>
-                    <td clf:number="*{privateContribution}"></td>
-                    <td class="right-border" clf:number="*{totalContribution}"></td>
+                        <td clf:number="*{autoPublicContribution}" clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"></td>
+                        <td clf:number="*{otherPublicContribution}"></td>
+                        <td clf:number="*{totalPublicContribution}"></td>
+                        <td clf:number="*{privateContribution}"></td>
+                        <td class="right-border" clf:number="*{totalContribution}"></td>
 
-                    <td clf:number="*{totalFundAndContribution}"></td>
+                        <td clf:number="*{totalFundAndContribution}"></td>
+                    </tr>
+                </th:block>
+                <!-- Management TOTAL -->
+                <tr class="row-bordered">
+                    <td th:if="${isSPFCall == true}" th:text="#{project.application.form.overview.budget.table.total.management}"></td>
+                    <td th:if="${isSPFCall == false}" th:text="#{project.application.form.overview.budget.table.total}"></td>
+                    <td clf:number="${managementCoFinancing.totalFundingAmount}"></td>
+                    <td class="right-border" clf:percentage="${managementCoFinancing.averageCoFinancingRate}"></td>
+
+                    <td clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"
+                        clf:number="${managementCoFinancing.totalAutoPublicContribution}"></td>
+                    <td clf:number="${managementCoFinancing.totalOtherPublicContribution}"></td>
+                    <td clf:number="${managementCoFinancing.totalPublicContribution}"></td>
+                    <td clf:number="${managementCoFinancing.totalPrivateContribution}"></td>
+                    <td class="right-border" clf:number="${managementCoFinancing.totalContribution}"></td>
+
+                    <td clf:number="${managementCoFinancing.totalFundAndContribution}"></td>
                 </tr>
             </th:block>
-            <tr class="row-bordered">
+
+
+            <!-- TOTAL BUDGET FOR MANAGEMENT AND SPF -->
+            <tr th:if="${isSPFCall == true}" class="row-bordered"
+                th:with="managementCoFinancing=${projectCoFinancingOverview.projectManagementCoFinancing},
+                         spfCoFinancing=${projectCoFinancingOverview.projectSpfCoFinancing}">
+
                 <td th:text="#{project.application.form.overview.budget.table.total}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalFundingAmount}"></td>
-                <td class="right-border" clf:percentage="${projectCoFinancingOverview.averageCoFinancingRate}"></td>
+                <td clf:number="${managementCoFinancing.totalFundingAmount + spfCoFinancing.totalFundingAmount}"></td>
+                <td class="right-border" clf:percentage="${clfBudgetUtils.getTotalCoFinancingRateForCostCategories(projectCoFinancingOverview)}"></td>
 
-                <td clf:number="${projectCoFinancingOverview.totalAutoPublicContribution}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalOtherPublicContribution}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalPublicContribution}"></td>
-                <td clf:number="${projectCoFinancingOverview.totalPrivateContribution}"></td>
-                <td class="right-border" clf:number="${projectCoFinancingOverview.totalContribution}"></td>
+                <td clf:ifAnyFieldIsVisible="PARTNER_ADD_NEW_CONTRIBUTION_ORIGIN"
+                    clf:number="${managementCoFinancing.totalAutoPublicContribution + spfCoFinancing.totalAutoPublicContribution}"></td>
+                <td clf:number="${managementCoFinancing.totalOtherPublicContribution + spfCoFinancing.totalOtherPublicContribution}"></td>
+                <td clf:number="${managementCoFinancing.totalPublicContribution + spfCoFinancing.totalPublicContribution}"></td>
+                <td clf:number="${managementCoFinancing.totalPrivateContribution + spfCoFinancing.totalPrivateContribution}"></td>
+                <td class="right-border" clf:number="${managementCoFinancing.totalContribution + spfCoFinancing.totalContribution}"></td>
 
-                <td clf:number="${projectCoFinancingOverview.totalFundAndContribution}"></td>
-
+                <td clf:number="${managementCoFinancing.totalFundAndContribution + spfCoFinancing.totalFundAndContribution}"></td>
             </tr>
+
             </tbody>
         </table>
     </div>

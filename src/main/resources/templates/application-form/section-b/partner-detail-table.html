@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
-<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -9,7 +9,7 @@
 </head>
 <body>
 <th:block th:fragment="partnerDetailTable(projectDataSectionB)">
-    <th:block th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
+    <th:block th:each="partner, rowStat: ${clfPartnerUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
               th:object="${partner}">
         <table class="default-vertical-table">
             <thead class="table-header">
@@ -63,7 +63,7 @@
         </table>
         <table class="default-vertical-table"
                clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS,PARTNER_MAIN_ADDRESS_HOMEPAGE,PARTNER_MAIN_ADDRESS_STREET,PARTNER_MAIN_ADDRESS_HOUSE_NUMBER,PARTNER_MAIN_ADDRESS_POSTAL_CODE,PARTNER_MAIN_ADDRESS_CITY"
-               th:with="mainAddress=${clfUtils.getMainAddress(partner.addresses)}">
+               th:with="mainAddress=${clfPartnerUtils.getMainAddress(partner.addresses)}">
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2" th:text="#{project.partner.main-address.header}">Main
@@ -110,7 +110,7 @@
         </table>
         <table class="default-vertical-table"
                clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS,PARTNER_SECONDARY_ADDRESS_STREET,PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER,PARTNER_SECONDARY_ADDRESS_POSTAL_CODE,PARTNER_SECONDARY_ADDRESS_CITY,PARTNER_CONTACT_PERSON_TELEPHONE,PARTNER_MOTIVATION_ROLE"
-               th:with="departmentAddress=${clfUtils.getDepartmentAddress(partner.addresses)}">
+               th:with="departmentAddress=${clfPartnerUtils.getDepartmentAddress(partner.addresses)}">
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2"
@@ -167,7 +167,7 @@
                 <th th:text="#{project.partner.type}">Partner type</th>
                 <td>
                     <span th:if="${partner.partnerType != null}"
-                          th:text="#{${clfUtils.getPartnerTypeTranslationString(partner.partnerType)}}">
+                          th:text="#{${clfPartnerUtils.getPartnerTypeTranslationString(partner.partnerType)}}">
                     </span>
                 </td>
             </tr>
@@ -176,7 +176,7 @@
                     <th th:text="#{spf.beneficiary.type}">Type of SPF beneficiary</th>
                     <td>
                     <span th:if="${partner.partnerType != null}"
-                          th:text="#{${clfUtils.getPartnerSpfBeneficiaryTypeTranslationKey(partner.partnerType)}}">
+                          th:text="#{${clfPartnerUtils.getPartnerSpfBeneficiaryTypeTranslationKey(partner.partnerType)}}">
                     </span>
                     </td>
                 </tr>
@@ -185,7 +185,7 @@
                 <th th:text="#{project.partner.subType}">Partner sub type</th>
                 <td>
                     <span th:if="${partner.partnerSubType != null}"
-                          th:text="#{${clfUtils.getPartnerSubTypeTranslationString(partner.partnerSubType)}}">
+                          th:text="#{${clfPartnerUtils.getPartnerSubTypeTranslationString(partner.partnerSubType)}}">
                     </span>
                 </td>
             </tr>
@@ -197,7 +197,7 @@
                 <th th:text="#{project.partner.nace}">NACE</th>
                 <td>
                     <span th:if="${partner.nace != null}"
-                          th:text="${clfUtils.getPartnerNaceTranslationString(partner.nace)}">
+                          th:text="${clfPartnerUtils.getPartnerNaceTranslationString(partner.nace)}">
                     </span>
                 </td>
             </tr>
@@ -243,7 +243,7 @@
             </tr>
             </thead>
             <tbody class="table-body">
-            <th:block th:with="legalRepresentative=${clfUtils.getLegalRepresentative(partner.contacts)}">
+            <th:block th:with="legalRepresentative=${clfPartnerUtils.getLegalRepresentative(partner.contacts)}">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_TITLE,PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME">
                     <th th:text="#{project.partner.representative.header.detail}">Legal
                         representative
@@ -259,7 +259,7 @@
                     </td>
                 </tr>
             </th:block>
-            <th:block th:with="contactPerson=${clfUtils.getContactPerson(partner.contacts)}">
+            <th:block th:with="contactPerson=${clfPartnerUtils.getContactPerson(partner.contacts)}">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TITLE,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME">
                     <th th:text="#{project.partner.contact.header.detail}">Contact person
                     </th>

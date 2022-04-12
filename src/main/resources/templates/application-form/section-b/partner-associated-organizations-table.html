@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="associatedOrganizations" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData>"*/-->
-<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -36,7 +36,7 @@
         <tr th:if="${projectDataSectionB.associatedOrganisations.size() == 0}">
             <td colspan="4"></td>
         </tr>
-        <tr th:each="organization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(projectDataSectionB.associatedOrganisations)}"
+        <tr th:each="organization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(projectDataSectionB.associatedOrganisations)}"
             th:object="${organization}">
             <td th:text="*{sortNumber}"></td>
             <td th:text="${organization.active}  ? #{project.application.form.associatedOrganization.table.status.active} : #{project.application.form.associatedOrganization.table.status.inactive}"></td>
@@ -47,7 +47,7 @@
         </tbody>
     </table>
 
-    <th:block th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(associatedOrganizations)}"
+    <th:block th:each="associatedOrganization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(associatedOrganizations)}"
               th:object="${associatedOrganization}">
         <table class="default-vertical-table mt-2rem">
             <thead class="table-header">
@@ -106,7 +106,7 @@
                 </td>
             </tr>
             <th:block
-                    th:with="legalRepresentative=${clfUtils.getLegalRepresentative(associatedOrganization?.contacts)}">
+                    th:with="legalRepresentative=${clfPartnerUtils.getLegalRepresentative(associatedOrganization?.contacts)}">
                 <tr>
                     <th th:text="#{project.partner.representative.header.detail}">Legal
                         representative
@@ -118,7 +118,7 @@
                     </td>
                 </tr>
             </th:block>
-            <th:block th:with="contactPerson=${clfUtils.getContactPerson(associatedOrganization.contacts)}">
+            <th:block th:with="contactPerson=${clfPartnerUtils.getContactPerson(associatedOrganization.contacts)}">
                 <tr>
                     <th th:text="#{project.partner.contact.header.detail}">Contact person
                     </th>

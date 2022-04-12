@@ -7,9 +7,20 @@ import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.getTimeplanData
-import io.cloudflight.jems.plugin.standard.common.pdf.PdfService
-import io.cloudflight.jems.plugin.standard.common.template.*
 import io.cloudflight.jems.plugin.standard.common.toLocale
+import io.cloudflight.jems.plugin.standard.common.CLF_BUDGET_UTILS
+import io.cloudflight.jems.plugin.standard.common.CLF_PARTNER_UTILS
+import io.cloudflight.jems.plugin.standard.common.CLF_PROJECT_UTILS
+import io.cloudflight.jems.plugin.standard.common.BudgetUtils
+import io.cloudflight.jems.plugin.standard.common.PartnerUtils
+import io.cloudflight.jems.plugin.standard.common.ProjectUtils
+import io.cloudflight.jems.plugin.standard.common.CALL_DATA
+import io.cloudflight.jems.plugin.standard.common.PROJECT_DATA
+import io.cloudflight.jems.plugin.standard.common.DATA_LANGUAGE
+import io.cloudflight.jems.plugin.standard.common.EXPORT_LANGUAGE
+import io.cloudflight.jems.plugin.standard.common.pdf.PdfService
+import io.cloudflight.jems.plugin.standard.common.template.CLF_UTILS
+import io.cloudflight.jems.plugin.standard.common.template.TemplateUtils
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -55,6 +66,9 @@ open class ApplicationFormExportDefaultImpl(
                         it.setVariable(DATA_LANGUAGE, dataLanguage)
                         it.setVariable(EXPORT_LANGUAGE, exportLanguage)
                         it.setVariable(CLF_UTILS, TemplateUtils())
+                        it.setVariable(CLF_PARTNER_UTILS, PartnerUtils())
+                        it.setVariable(CLF_BUDGET_UTILS, BudgetUtils())
+                        it.setVariable(CLF_PROJECT_UTILS, ProjectUtils())
                         it.setVariable("timeplanData", getTimeplanData(
                             periods = projectData.sectionA?.periods ?: emptyList(),
                             workPackages = projectData.sectionC.projectWorkPackages,
@@ -84,5 +98,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.14"
+        "1.0.15"
 }

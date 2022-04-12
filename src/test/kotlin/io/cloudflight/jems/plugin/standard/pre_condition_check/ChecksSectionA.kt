@@ -12,7 +12,8 @@ import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ApplicationStatusData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA
-import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverview
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingCategoryOverviewData
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverviewData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.ProjectResultIndicatorOverview
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
@@ -58,24 +59,26 @@ internal class ChecksSectionA {
                 ),
             inputLanguages = mandatoryLanguages)
         val projectLifecycleData = ProjectLifecycleData(status = ApplicationStatusData.DRAFT)
-        val coFinancingOverview = ProjectCoFinancingOverview(
-            emptyList(),
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO,
-            BigDecimal.ZERO
+        val coFinancingOverview = ProjectCoFinancingOverviewData(
+            projectManagementCoFinancing = ProjectCoFinancingCategoryOverviewData(
+                emptyList(),
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO,
+                BigDecimal.ZERO),
+            projectSpfCoFinancing = ProjectCoFinancingCategoryOverviewData()
         )
         val resultIndicatorOverview = ProjectResultIndicatorOverview(emptyList())
         val sectionAData = ProjectDataSectionA(

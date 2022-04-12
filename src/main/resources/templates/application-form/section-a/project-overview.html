@@ -3,6 +3,7 @@
 <!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
 <!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
           th:href="@{../styles/common.css}"/>
@@ -20,7 +21,7 @@
             <th th:text="#{project.application.form.field.project.id}">ID (automatically created)</th>
             <td th:text="${projectDataSectionA.customIdentifier}"></td>
         </tr>
-        <th:block th:with="leadPartner=${clfUtils.getLeadPartner(projectPartners)}">
+        <th:block th:with="leadPartner=${clfPartnerUtils.getLeadPartner(projectPartners)}">
             <tr clf:ifAnyFieldIsVisible="PARTNER_ORIGINAL_NAME_OF_ORGANISATION">
                 <th clf:textBasedOnCallType="project.application.form.field.project.nameOfTheLeadPartner">
                     Name of the lead partner organisation /original language

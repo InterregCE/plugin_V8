@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="partnerStateAidData" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerStateAidData"*/-->
-<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfProjectUtils" type="io.cloudflight.jems.plugin.standard.common.ProjectUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -99,7 +99,7 @@
             <th th:text="#{project.partner.state.aid.check.result}">
                 Result of State aid criteria self-check
             </th>
-            <td th:text="#{${clfUtils.getStateAidCheckResultTranslationKey(partnerStateAidData)}}"></td>
+            <td th:text="#{${clfProjectUtils.getStateAidCheckResultTranslationKey(partnerStateAidData)}}"></td>
         </tr>
         <tr clf:ifAnyFieldIsVisible="PARTNER_STATE_AID_RELEVANT_ACTIVITIES">
             <th th:text="#{project.partner.state.aid.relevant.activities}">

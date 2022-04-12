@@ -3,6 +3,7 @@
 <!--/*@thymesVar id="projectData" type="io.cloudflight.jems.plugin.contract.models.project.ProjectData"*/-->
 <!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 <body>
 <th:block th:fragment="applicationFormIndex(projectData, callData, timeplanData)">
     <bookmarks>
@@ -28,7 +29,7 @@
                 <bookmark th:name="#{project.application.form.section.part.b.partners}"
                           href="#partners-overview">
                     <bookmark
-                            th:each="partner, rowStat: ${clfUtils.sortPartnersBySortNumber(projectData.sectionB.partners)}"
+                            th:each="partner, rowStat: ${clfPartnerUtils.sortPartnersBySortNumber(projectData.sectionB.partners)}"
                             th:object="${partner}"
                             th:with="partnerTitle = *{role?.isLead()} ? #{export.partner.detail.lead.partner.title}: #{export.partner.detail.project.partner.title(*{sortNumber})}"
                             th:name="${partner.role?.isLead() ? 'LP' : 'PP'} + *{sortNumber} + ' ' + ${partner.abbreviation}"
@@ -39,7 +40,7 @@
                           href="#associated-organizations"
                           th:name="#{project.application.form.section.part.b.associatedOrganizations}">
                     <bookmark
-                            th:each="associatedOrganization, rowStat: ${clfUtils.sortAssociatedOrganizationsBySortNumber(projectData.sectionB.associatedOrganisations)}"
+                            th:each="associatedOrganization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(projectData.sectionB.associatedOrganisations)}"
                             th:object="${associatedOrganization}"
                             th:with="associatedOrganizationTitle = ${associatedOrganization.nameInOriginalLanguage} + ' ' + ${'AO'+associatedOrganization.sortNumber}"
                             th:name="${associatedOrganizationTitle}"
