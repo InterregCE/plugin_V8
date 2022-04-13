@@ -51,6 +51,10 @@ class BudgetUtils {
     fun percentageDown(percentage: BigDecimal, total: BigDecimal) =
         total.percentageDown(percentage)
 
+    // used in the templates
+    fun percentageDownTo(amount: BigDecimal, total: BigDecimal) =
+        amount.percentageTo(total)
+
     private fun Collection<BigDecimal>.sumUp() = sumOf { it }
 
 }
