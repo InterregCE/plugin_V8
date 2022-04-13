@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="workPackage" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.ProjectWorkPackageData"*/-->
 <!--/*@thymesVar id="investment" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageInvestmentData"*/-->
+<!--/*@thymesVar id="clfProjectUtils" type="io.cloudflight.jems.plugin.standard.common.ProjectUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -22,7 +23,7 @@
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_PERIOD" th:if="${investment?.expectedDeliveryPeriod} != null">
         <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.expected.delivery.period}">period</div>
-        <th:block th:with="period = ${clfUtils.getPeriod(investment?.expectedDeliveryPeriod, periods)}">
+        <th:block th:with="period = ${clfProjectUtils.getPeriod(investment?.expectedDeliveryPeriod, periods)}">
             <span th:unless="${period == null}">
                             <span th:text="#{project.partner.budget.table.period}">Per</span>
                             <span th:text="${period.number}">x</span><span>, </span>
