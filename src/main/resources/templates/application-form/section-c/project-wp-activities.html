@@ -5,6 +5,7 @@
 <!--/*@thymesVar id="activity" type="io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityData"*/-->
 <!--/*@thymesVar id="periods" type="kotlin.collections.List<io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData>"*/-->
 <!--/*@thymesVar id="period" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -66,7 +67,7 @@
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
             <th th:text="#{project.work.package.tab.activity.partnersInvolved}">partners involved</th>
             <td>
-                <th:block th:each="partner, rowStat : ${clfUtils.getPartnerListForActivity(activity.partnerIds, projectDataSectionB.partners)}" th:object="${partner}">
+                <th:block th:each="partner, rowStat : ${clfPartnerUtils.getPartnerListForActivity(activity.partnerIds, projectDataSectionB.partners)}" th:object="${partner}">
                     <span  th:text="${partner.abbreviation} + (!${rowStat.last} ? ', ' : '') "></span>
                 </th:block>
             </td>
