@@ -6,6 +6,7 @@
 <!--/*@thymesVar id="periods" type="kotlin.collections.List<io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData>"*/-->
 <!--/*@thymesVar id="period" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriodData"*/-->
 <!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="clfProjectUtils" type="io.cloudflight.jems.plugin.standard.common.ProjectUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -91,7 +92,7 @@
         </thead>
 
         <tbody class="table-body long-text">
-        <tr th:each="deliverable, rowStat: ${activity.deliverables}"
+        <tr th:each="deliverable, rowStat: ${clfProjectUtils.sortDeliverablesByDeliverableNumber(activity.deliverables)}"
             th:object="${deliverable}">
             <td th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber}">D.x.x</td>
             <td class="multiline" clf:textTranslationByDataLanguage="${deliverable.title}">value</td>
