@@ -5,6 +5,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectPeriod
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingByFundOverviewData
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA4.IndicatorOverviewLine
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerStateAidData
+import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageActivityDeliverableData
 
 const val CLF_PROJECT_UTILS = "clfProjectUtils"
 const val MAX_INDICATOR_ID_FROM_DB = 1_000_000_000_000
@@ -42,6 +43,8 @@ class ProjectUtils {
     fun getPeriod(periodNumber: Number, periods: List<ProjectPeriodData>): ProjectPeriodData? =
         periods.filter { it.number == periodNumber }.firstOrNull()
 
+    fun sortDeliverablesByDeliverableNumber(deliverables: List<WorkPackageActivityDeliverableData>) =
+        deliverables.sortedBy { it.deliverableNumber }
 
 
     private fun transformIdsOfIndicatorsToRowIds(data: List<IndicatorOverviewLine>): List<IndicatorOverviewLine> =
