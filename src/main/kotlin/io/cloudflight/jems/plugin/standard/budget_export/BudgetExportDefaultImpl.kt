@@ -60,5 +60,5 @@ open class BudgetExportDefaultImpl(
         "Standard budget export"
 
     override fun getVersion(): String =
-        "1.0.4"
+        "1.0.5"
 }

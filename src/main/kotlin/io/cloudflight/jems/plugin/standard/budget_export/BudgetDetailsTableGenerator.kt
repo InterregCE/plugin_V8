@@ -328,6 +328,7 @@ open class BudgetDetailsTableGenerator(
             description = getValueBasedOnFieldVisibility(PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_DESCRIPTION,
                 if (budget.unitCostId == null) budget.description.getTranslationFor(dataLanguage)
                 else unitCost?.description?.getTranslationFor(dataLanguage) ?: "", ""),
+            comments = budget.comments.getTranslationFor(dataLanguage),
             periodAmounts = if (arePeriodColumnsVisible)
                 getBudgetPeriodAmounts(periodNumbers, budget.budgetPeriods) else emptyList(),
             total = budget.rowSum ?: BigDecimal.ZERO
@@ -381,6 +382,7 @@ open class BudgetDetailsTableGenerator(
                         dataLanguage
                     ) ?: ""
                 } else "",
+                comments = budget.comments.getTranslationFor(dataLanguage),
                 awardProcedure = if (isAwardProcedureVisible) budget.awardProcedures.getTranslationFor(dataLanguage) else "",
                 investmentNumber = if (isInvestmentVisible)
                     getInvestmentNumber(budget.investmentId, workPackages) else "",
