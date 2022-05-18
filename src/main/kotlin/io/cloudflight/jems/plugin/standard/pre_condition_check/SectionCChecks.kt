@@ -1,5 +1,6 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
+import io.cloudflight.jems.plugin.contract.models.call.CallTypeData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.ProjectDataSectionC
@@ -11,6 +12,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionC.management.Pr
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.overallObjective.ProjectOverallObjectiveData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.partnership.ProjectPartnershipData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceBenefitData
+import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceSpfRecipientData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceStrategyData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectRelevanceSynergyData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.results.ProjectResultData
@@ -49,7 +51,13 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
 
             checkIfAtLeastOneTargetGroupIsAdded(sectionCData?.projectRelevance?.projectBenefits),
 
+            if (isSpf())
+                checkIfAtLeastOneRecipientGroupIsAdded(sectionCData?.projectRelevance?.projectSpfRecipients) else null,
+
             checkIfSpecificationIsProvidedForAllTargetGroups(sectionCData?.projectRelevance?.projectBenefits),
+
+            if (isSpf())
+                checkIfSpecificationIsProvidedForAllRecipientGroups(sectionCData?.projectRelevance?.projectSpfRecipients) else null,
 
             checkIfAtLeastOneStrategyIsAdded(sectionCData?.projectRelevance?.projectStrategies),
 
@@ -60,11 +68,11 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
             checkIfAvailableKnowledgeAreNotEmpty(sectionCData?.projectRelevance?.availableKnowledge)
         ),
 
-        buildPreConditionCheckMessage(
-            messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c3", messageArgs = emptyMap(),
-
-            checkIfProjectPpartnershipIsAdded(sectionCData?.projectPartnership)
-        ),
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_PARTNERSHIP))
+            buildPreConditionCheckMessage(
+                messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c3", messageArgs = emptyMap(),
+                checkIfProjectPartnershipIsAdded(sectionCData?.projectPartnership)
+            ) else null,
 
         buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c4", messageArgs = emptyMap(),
@@ -107,7 +115,10 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
             checkIfDescriptionForTypeOfContributionIsProvided(sectionCData?.projectManagement)
         ),
 
-        buildPreConditionCheckMessage(
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_OWNERSHIP) ||
+            isFieldVisible(ApplicationFormFieldId.PROJECT_DURABILITY) ||
+            isFieldVisible(ApplicationFormFieldId.PROJECT_TRANSFERABILITY)
+        ) buildPreConditionCheckMessage(
             messageKey = "$SECTION_C_INFO_MESSAGES_PREFIX.project.c8", messageArgs = emptyMap(),
 
             checkIfOwnershipIsValid(sectionCData?.projectLongTermPlans),
@@ -115,7 +126,7 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
             checkIfDurabilityIsValid(sectionCData?.projectLongTermPlans),
 
             checkIfTransferabilityIsValid(sectionCData?.projectLongTermPlans)
-        )
+        ) else null,
     )
 }
 
@@ -158,12 +169,31 @@ private fun checkIfAtLeastOneTargetGroupIsAdded(projectBenefits: List<ProjectRel
         else -> null
     }
 
+private fun checkIfAtLeastOneRecipientGroupIsAdded(projectSpfRecipients: List<ProjectRelevanceSpfRecipientData>?) =
+    when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_RECIPIENT_GROUP) ->
+            null
+        projectSpfRecipients.isNullOrEmpty() ->
+            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.recipient.group.should.be.added")
+        else ->
+            null
+    }
+
 private fun checkIfSpecificationIsProvidedForAllTargetGroups(projectBenefits: List<ProjectRelevanceBenefitData>?) =
     when {
         !isFieldVisible(ApplicationFormFieldId.PROJECT_TARGET_GROUP) -> null
         projectBenefits.isNullOrEmpty() -> null
         projectBenefits.any { it.specification.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
         -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.specifications.for.all.target.groups.should.be.added")
+        else -> null
+    }
+
+private fun checkIfSpecificationIsProvidedForAllRecipientGroups(projectSpfRecipients: List<ProjectRelevanceSpfRecipientData>?) =
+    when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_RECIPIENT_GROUP) -> null
+        projectSpfRecipients.isNullOrEmpty() -> null
+        projectSpfRecipients.any { it.specification.isNotFullyTranslated(CallDataContainer.get().inputLanguages) }
+        -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.specifications.for.all.recipient.groups.should.be.added")
         else -> null
     }
 
@@ -271,8 +301,10 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
 
 private fun checkIfAtLeastOneWorkPackageIsAdded(workPackages: List<ProjectWorkPackageData>?) =
     when {
-        workPackages.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.should.be.added")
-        else -> null
+        workPackages.isNullOrEmpty() || (isSpf() && workPackages.size > 1) ->
+            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.should.be.added".suffixSpf())
+        else ->
+            null
     }
 
 private fun checkIfNamesOfWorkPackagesAreProvided(workPackages: List<ProjectWorkPackageData>?) =
@@ -333,8 +365,10 @@ private fun checkIfAtLeastOneResultIsAdded(results: List<ProjectResultData>?) =
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_TARGET_VALUE) &&
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DELIVERY_PERIOD) &&
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DESCRIPTION) -> null
-        results.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.result.should.be.added")
-        else -> null
+        results.isNullOrEmpty() || (isSpf() && results.size > 1) ->
+            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.result.should.be.added".suffixSpf())
+        else ->
+            null
     }
 
 private fun checkIfResultContentIsProvided(projectData: ProjectDataSectionC?) =
@@ -766,7 +800,7 @@ private fun checkIfInvestmentsAreValid(
     return errorInvestmentsMessages
 }
 
-private fun checkIfProjectPpartnershipIsAdded(projectPartnership: ProjectPartnershipData?) =
+private fun checkIfProjectPartnershipIsAdded(projectPartnership: ProjectPartnershipData?) =
     when {
         !isFieldVisible(ApplicationFormFieldId.PROJECT_PARTNERSHIP) -> null
         projectPartnership?.partnership == null ||
@@ -862,3 +896,7 @@ private fun checkIfProjectHasAtLeastOneWorkPackageOutput(workPackages: List<Proj
         )
         else -> null
     }
+
+private fun isSpf() = CallDataContainer.get().type == CallTypeData.SPF
+
+private fun String.suffixSpf() = if (isSpf()) "$this.spf" else this
