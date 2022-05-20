@@ -1,5 +1,6 @@
 package io.cloudflight.jems.plugin.standard.pre_condition_check
 
+import io.cloudflight.jems.plugin.contract.models.call.CallTypeData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.associatedOrganisation.ProjectAssociatedOrganizationData
@@ -12,10 +13,14 @@ import io.cloudflight.jems.plugin.standard.common.sumOf
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.LifecycleDataContainer
 import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 private const val SECTION_B_MESSAGES_PREFIX = "$MESSAGES_PREFIX.section.b"
 private const val SECTION_B_ERROR_MESSAGES_PREFIX = "$SECTION_B_MESSAGES_PREFIX.error"
 private const val SECTION_B_INFO_MESSAGES_PREFIX = "$SECTION_B_MESSAGES_PREFIX.info"
+
+private val decimalFormat = DecimalFormat("#,###.00")
 
 fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
     return buildPreConditionCheckMessage(
@@ -23,9 +28,13 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
 
         checkIfAtLeastOnePartnerIsActive(sectionBData.partners),
 
-        checkIfExactlyOneLeadPartnerIsActive(sectionBData.partners),
+        if (isNotSpf())
+            checkIfExactlyOneLeadPartnerIsActive(sectionBData.partners) else null,
 
         checkIfPartnerIdentityContentIsProvided(sectionBData.partners),
+
+        if (isSpf() && sectionBData.partners.isNotEmpty())
+            checkIfPartnerTypeIsFilledIn(sectionBData.partners) else null,
 
         checkIfPartnerAddressContentIsProvided(sectionBData.partners),
 
@@ -45,13 +54,31 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
 
         checkIfInfrastructureAndWorksContentIsProvided(sectionBData.partners),
 
+        if (isSpf())
+            checkIfSpfContentIsProvided(sectionBData.partners) else null,
+
         checkIfUnitCostsContentIsProvided(sectionBData.partners),
 
         checkIfTotalBudgetIsGreaterThanZero(sectionBData.partners),
 
+        if (isSpf())
+            checkIfTotalSpfBudgetIsGreaterThanZero(sectionBData.partners) else null,
+
+        if (isSpf())
+            checkIfTotalManagementBudgetIsNotGreaterThanSpfBudget(sectionBData.partners.onlyActive()) else null,
+
         checkIfPeriodsAmountSumUpToBudgetEntrySum(sectionBData.partners),
 
+        if (isSpf() && isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_PERIODS))
+            checkIfSpfPeriodsAmountSumUpToCorrectSum(sectionBData.partners) else null,
+
         checkIfCoFinancingContentIsProvided(sectionBData.partners),
+
+        if (isSpf())
+            checkIfSpfCoFinancingContentIsProvided(sectionBData.partners) else null,
+
+        if (isSpf())
+            checkIfSpfOriginOfContributionIsProvided(sectionBData.partners) else null,
 
         checkIfPartnerContributionEqualsToBudget(sectionBData.partners),
 
@@ -59,12 +86,19 @@ fun checkSectionB(sectionBData: ProjectDataSectionB): PreConditionCheckMessage {
     )
 }
 
-private fun checkIfAtLeastOnePartnerIsActive(partners: Set<ProjectPartnerData>?) =
-    when {
-        partners.isNullOrEmpty() || partners.filter { it.active }.isEmpty() ->
-            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.at.least.one.partner.should.be.active")
-        else ->
-            buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.at.least.one.partner.is.active")
+private fun checkIfAtLeastOnePartnerIsActive(partners: Set<ProjectPartnerData>?): PreConditionCheckMessage =
+    when (CallDataContainer.get().type) {
+        CallTypeData.SPF ->
+            if (partners == null || partners.filter { it.active }.size != 1)
+                buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.exactly.one.partner.should.be.active")
+            else
+                buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.exactly.one.partner.is.active")
+
+        CallTypeData.STANDARD, null ->
+            if (partners.isNullOrEmpty() || partners.none { it.active })
+                buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.at.least.one.partner.should.be.active")
+            else
+                buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.at.least.one.partner.is.active")
     }
 
 private fun checkIfExactlyOneLeadPartnerIsActive(partners: Set<ProjectPartnerData>?) =
@@ -77,9 +111,34 @@ private fun checkIfExactlyOneLeadPartnerIsActive(partners: Set<ProjectPartnerDat
 private fun checkIfTotalBudgetIsGreaterThanZero(partners: Set<ProjectPartnerData>) =
     when {
         partners.sumOf { it.budget.projectBudgetCostsCalculationResult.totalCosts } <= BigDecimal.ZERO ->
-            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.budget.should.be.greater.than.zero")
-        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.budget.is.greater.than.zero")
+            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.budget.should.be.greater.than.zero".suffixSpf())
+        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.budget.is.greater.than.zero".suffixSpf())
     }
+
+private fun checkIfTotalSpfBudgetIsGreaterThanZero(activePartners: Set<ProjectPartnerData>) =
+    when {
+        activePartners.sumOf { it.budget.projectPartnerSpfBudgetTotalCost } <= BigDecimal.ZERO ->
+            buildErrorPreConditionCheckMessage("$SECTION_B_ERROR_MESSAGES_PREFIX.total.spf.budget.should.be.greater.than.zero")
+        else -> buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.total.spf.budget.is.greater.than.zero")
+    }
+
+private fun checkIfTotalManagementBudgetIsNotGreaterThanSpfBudget(activePartners: Collection<ProjectPartnerData>): PreConditionCheckMessage {
+    val partnersWithInvalidBudget = activePartners
+        .filter { it.budget.projectBudgetCostsCalculationResult.totalCosts > it.budget.projectPartnerSpfBudgetTotalCost.multiply(BigDecimal.valueOf(2, 1)) }
+    if (partnersWithInvalidBudget.isEmpty())
+        return buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.share.management.budget.not.over.20.percent")
+    else
+        return buildErrorPreConditionCheckMessages(
+            messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.share.management.budget",
+            messageArgs = emptyMap(),
+            checkResults = partnersWithInvalidBudget.map { partner ->
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_B_ERROR_MESSAGES_PREFIX.share.management.budget.should.not.be.over.20.percent",
+                    mapOf("name" to (partner.abbreviation))
+                )
+            }
+        )
+}
 
 private fun checkIfCoFinancingContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
@@ -111,7 +170,7 @@ private fun checkIfCoFinancingContentIsProvided(partners: Set<ProjectPartnerData
             }
             if (errorMessages.count() > 0) {
                 buildErrorPreConditionCheckMessages(
-                    "$SECTION_B_ERROR_MESSAGES_PREFIX.co.financing",
+                    "$SECTION_B_ERROR_MESSAGES_PREFIX.co.financing".suffixSpf(),
                     messageArgs = emptyMap(),
                     errorMessages
                 )
@@ -121,6 +180,73 @@ private fun checkIfCoFinancingContentIsProvided(partners: Set<ProjectPartnerData
         }
         else -> null
     }
+
+private fun checkIfSpfCoFinancingContentIsProvided(partners: Set<ProjectPartnerData>): PreConditionCheckMessage? {
+    val emptySourcesPartners = partners.onlyActive().filter { partner ->
+        partner.budget.projectPartnerSpfCoFinancing?.partnerContributions?.isEmpty() ?: true
+    }
+
+    val invalidSourceNamePartners = partners.onlyActive().filter { partner ->
+        partner.budget.projectPartnerSpfCoFinancing?.partnerContributions?.any { source -> source.name.isNullOrBlank()  } ?: false
+    }
+
+    val invalidSourceStatus = partners.onlyActive().filter { partner ->
+        partner.budget.projectPartnerSpfCoFinancing?.partnerContributions?.any { source -> source.status == null  } ?: false
+    }
+
+    val invalidSourceAmount = partners.onlyActive().filter { partner ->
+        partner.budget.projectPartnerSpfCoFinancing?.partnerContributions?.any { source ->
+            source.amount == null || source.amount!! <= BigDecimal.ZERO
+        } ?: false
+    }
+
+    val checkResults = listOf(
+        emptySourcesPartners.extractErrorsFor("spf.co.financing.is.not.provided"),
+        invalidSourceNamePartners.extractErrorsFor("spf.co.financing.name.is.not.provided"),
+        invalidSourceStatus.extractErrorsFor("spf.co.financing.status.is.not.provided"),
+        invalidSourceAmount.extractErrorsFor("spf.co.financing.amount.is.not.provided"),
+    ).flatten()
+
+    if (checkResults.isEmpty())
+        return null
+
+    return buildErrorPreConditionCheckMessages(
+        messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.spf.co.financing",
+        messageArgs = emptyMap(),
+        checkResults = checkResults,
+    )
+}
+
+private fun checkIfSpfOriginOfContributionIsProvided(partners: Set<ProjectPartnerData>): PreConditionCheckMessage? {
+    val invalidPartners = partners.onlyActive().map { partner ->
+        val partnerFundsSumUp = partner.budget.projectPartnerSpfCoFinancing?.finances
+            ?.filter { it.fundType == ProjectPartnerCoFinancingFundTypeData.MainFund }
+            ?.map { it.percentage.multiply(BigDecimal.valueOf(1, 2)).multiply(partner.budget.projectPartnerSpfBudgetTotalCost).setScale(2, RoundingMode.DOWN) }
+            ?.sumOf { it } ?: BigDecimal.ZERO
+        val partnerContribution = partner.budget.projectPartnerSpfBudgetTotalCost - partnerFundsSumUp
+
+        Triple<String, BigDecimal, BigDecimal>(
+            partner.abbreviation /* partner abbr */,
+            partnerContribution /* actual contribution */,
+            (partner.budget.projectPartnerSpfCoFinancing?.partnerContributions
+                ?.sumOf { it.amount ?: BigDecimal.ZERO } ?: BigDecimal.ZERO) /* expected contribution */,
+        )
+    }.filter { it.second.compareTo(it.third) != 0 }
+
+    if (invalidPartners.isEmpty())
+        return null
+
+    return buildErrorPreConditionCheckMessages(
+        messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.spf.co.financing.contribution",
+        messageArgs = emptyMap(),
+        checkResults = invalidPartners.map { partnerData ->
+            buildErrorPreConditionCheckMessage(
+                messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.spf.co.financing.contribution.not.match",
+                mapOf("name" to partnerData.first, "actual" to decimalFormat.format(partnerData.second), "expected" to decimalFormat.format(partnerData.third))
+            )
+        },
+    )
+}
 
 private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartnerData>) =
     when {
@@ -151,7 +277,7 @@ private fun checkIfPartnerContributionEqualsToBudget(partners: Set<ProjectPartne
             }
             if (errorMessages.size > 0) {
                 buildErrorPreConditionCheckMessages(
-                    "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.partner.contribution",
+                    "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.partner.contribution".suffixSpf(),
                     messageArgs = emptyMap(),
                     errorMessages
                 )
@@ -202,6 +328,28 @@ private fun checkIfPeriodsAmountSumUpToBudgetEntrySum(partners: Set<ProjectPartn
         }
         else -> null
     }
+
+private fun checkIfSpfPeriodsAmountSumUpToCorrectSum(partners: Set<ProjectPartnerData>): PreConditionCheckMessage? {
+    val invalidPartners = partners.filter { partner ->
+        partner.budget.projectPartnerBudgetCosts.spfCosts.any { budgetEntry ->
+            budgetEntry.budgetPeriods.sumOf { it.amount }.compareTo(budgetEntry.rowSum ?: BigDecimal.ZERO) != 0
+        }
+    }
+
+    return when {
+        invalidPartners.isEmpty() -> null
+        else -> buildErrorPreConditionCheckMessages(
+            messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.allocation.periods.spf",
+            messageArgs = emptyMap(),
+            checkResults = invalidPartners.map { partner ->
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.allocation.periods.spf.not.provided",
+                    mapOf("name" to (partner.abbreviation))
+                )
+            },
+        )
+    }
+}
 
 private fun checkIfStaffContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
@@ -553,6 +701,51 @@ private fun checkIfInfrastructureAndWorksContentIsProvided(partners: Set<Project
         else -> null
     }
 
+private fun checkIfSpfContentIsProvided(partners: Set<ProjectPartnerData>): PreConditionCheckMessage? {
+    val partnersMissingUnitType = if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_SPF_UNIT_TYPE_AND_NUMBER_OF_UNITS))
+        partners.filter { partner -> partner.budget.projectPartnerBudgetCosts.spfCosts.any { budgetEntry ->
+            budgetEntry.unitType.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        } } else emptyList()
+
+    val partnersMissingNumberOfUnits = if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_SPF_UNIT_TYPE_AND_NUMBER_OF_UNITS))
+        partners.filter { partner -> partner.budget.projectPartnerBudgetCosts.spfCosts.any { budgetEntry ->
+            budgetEntry.numberOfUnits <= BigDecimal.ZERO
+        } } else emptyList()
+
+    val partnersMissingDescription = if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_SPF_DESCRIPTION))
+        partners.filter { partner -> partner.budget.projectPartnerBudgetCosts.spfCosts.any { budgetEntry ->
+            budgetEntry.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        } } else emptyList()
+
+    val partnersMissingPricePerUnit = if (isFieldVisible(ApplicationFormFieldId.PARTNER_BUDGET_SPF_PRICE_PER_UNIT))
+        partners.filter { partner -> partner.budget.projectPartnerBudgetCosts.spfCosts.any { budgetEntry ->
+            budgetEntry.pricePerUnit <= BigDecimal.ZERO
+        } } else emptyList()
+
+    val checkResults = listOf(
+        partnersMissingUnitType.extractErrorsFor("budget.unit.type.is.not.provided"),
+        partnersMissingNumberOfUnits.extractErrorsFor("budget.unit.no.is.not.provided"),
+        partnersMissingDescription.extractErrorsFor("budget.description.is.not.provided"),
+        partnersMissingPricePerUnit.extractErrorsFor("budget.unit.price.is.not.provided"),
+    ).flatten()
+
+    if (checkResults.isEmpty())
+        return null
+
+    return buildErrorPreConditionCheckMessages(
+        messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.budget.spf",
+        messageArgs = emptyMap(),
+        checkResults = checkResults,
+    )
+}
+
+private fun List<ProjectPartnerData>.extractErrorsFor(messageKeySuffix: String) = map { partner ->
+    buildErrorPreConditionCheckMessage(
+        messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.$messageKeySuffix",
+        mapOf("name" to (partner.abbreviation))
+    )
+}
+
 private fun checkIfUnitCostsContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
         partners.any { partner ->
@@ -673,6 +866,23 @@ private fun checkIfPartnerIdentityContentIsProvided(partners: Set<ProjectPartner
         }
         else -> null
     }
+
+private fun checkIfPartnerTypeIsFilledIn(partners: Set<ProjectPartnerData>): PreConditionCheckMessage {
+    val partnersWithInvalidType = partners.onlyActive().filter { it.partnerType == null }
+    if (partnersWithInvalidType.isEmpty())
+        return buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.project.partner.type")
+    else
+        return buildErrorPreConditionCheckMessages(
+            messageKey = "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.type",
+            messageArgs = emptyMap(),
+            checkResults = partnersWithInvalidType.map { partner ->
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_B_ERROR_MESSAGES_PREFIX.project.partner.type.is.not.provided",
+                    mapOf("name" to (partner.abbreviation))
+                )
+            }
+        )
+}
 
 private fun checkIfPartnerAddressContentIsProvided(partners: Set<ProjectPartnerData>) =
     when {
@@ -1290,3 +1500,11 @@ private fun isDepartmentMissingWhenDepartmentAddressIsAvailable(partner: Project
 private fun isPartnerDepartmentAddressMissingWhenDepartmentIsAvailable(partner: ProjectPartnerData) =
     partner.department.isNotEmpty() &&
             partner.addresses.none { address -> address.type == ProjectPartnerAddressTypeData.Department }
+
+private fun String.suffixSpf() = if (isSpf()) "$this.spf" else this
+
+private fun isSpf() = CallDataContainer.get().type == CallTypeData.SPF
+
+private fun isNotSpf() = !isSpf()
+
+private fun Set<ProjectPartnerData>.onlyActive() = filter { it.active }
