@@ -9,7 +9,7 @@ data class BudgetTotalCostInfo(
     val unitCostTotal: BigDecimal
 ) {
     fun toStringList() =
-        listOf(total.toString(), flatRateTotal.toString(), realCostTotal.toString(), unitCostTotal.toString())
+        listOf(total, flatRateTotal, realCostTotal, unitCostTotal)
 }
 
 data class GeneralBudgetTotalCostInfo(
@@ -19,5 +19,5 @@ data class GeneralBudgetTotalCostInfo(
     fun getTotal() = realCostTotal.plus(unitCostTotal)
 
     fun toStringList() =
-        listOf(getTotal().toString(), realCostTotal.toString(), unitCostTotal.toString())
+        listOf(getTotal(), realCostTotal, unitCostTotal)
 }

@@ -53,6 +53,7 @@ class TemplateUtils {
         isFieldVisible(ApplicationFormFieldId.valueOf(fieldId), lifecycleData, callData)
 }
 
+@Suppress("UNCHECKED_CAST")
 fun <T> parseAttributeValue(attributeValue: String, context: ITemplateContext, defaultValue: T): T =
     parseAttributeValue(attributeValue, context)?.let {
             it as T

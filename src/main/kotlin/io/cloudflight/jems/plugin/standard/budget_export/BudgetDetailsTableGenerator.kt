@@ -12,6 +12,9 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionD.ProjectPartne
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetDetailsRow
 import io.cloudflight.jems.plugin.standard.budget_export.models.PartnerInfo
 import io.cloudflight.jems.plugin.standard.budget_export.models.PeriodInfo
+import io.cloudflight.jems.plugin.standard.common.excel.model.BorderStyle
+import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
+import io.cloudflight.jems.plugin.standard.common.excel.model.Color
 import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getMessagesWithoutArgs
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
@@ -20,6 +23,7 @@ import io.cloudflight.jems.plugin.standard.common.isInvestmentSectionVisible
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import java.util.Locale
 import kotlin.collections.sumOf
 
@@ -56,17 +60,17 @@ open class BudgetDetailsTableGenerator(
     )
     private val exportLocale = exportLanguage.toLocale()
 
-    fun getData(): List<List<String?>> =
-        mutableListOf<List<String>>().also { result ->
+    fun getData(): List<Array<CellData>> =
+        mutableListOf<List<CellData>>().also { result ->
             val data = generateBudgetDetailsTableData()
-            result.add(getHeaderRow(periodNumbers, exportLocale, messageSource))
-            result.addAll(getRows(data))
-            result.add(getTotalRow(data))
-        }
+            result.add(getHeaderRow(periodNumbers, exportLocale, messageSource).also { it.last().borderRight(BorderStyle.THIN) })
+            result.addAll(getRows(data).also { it.forEach { it.last().borderRight(BorderStyle.THIN) } })
+            result.add(getTotalRow(data).also { it.last().borderRight(BorderStyle.THIN) })
+        }.map { it.toTypedArray() }
 
     private fun getHeaderRow(
         periodsNumber: List<Int>, exportLocale: Locale, messageSource: MessageSource
-    ): List<String> =
+    ): List<CellData> =
         mutableListOf<String>().also {
             it.addAll(
                 getPartnerHeaders(
@@ -128,11 +132,12 @@ open class BudgetDetailsTableGenerator(
             it.add(
                 getMessage("project.partner.budget.table.total", exportLocale, messageSource),
             )
-        }
+        }.map { CellData(it).borderRight(BorderStyle.DOTTED).borderLeft(BorderStyle.DOTTED)
+            .borderTop(BorderStyle.THIN).backgroundColor(Color.GREY) }
 
-    private fun getRows(data: List<BudgetDetailsRow>): List<List<String>> =
+    private fun getRows(data: List<BudgetDetailsRow>): List<List<CellData>> =
         data.map { row ->
-            mutableListOf<String>().also {
+            mutableListOf<Any>().also {
                 it.addAll(
                     row.partnerInfo.toStringList(
                         isNameInOriginalLanguageVisible, isNameInEnglishVisible, isCountryAndNutsVisible
@@ -144,19 +149,22 @@ open class BudgetDetailsTableGenerator(
                 if (isAwardProcedureColumnVisible) it.add((row.awardProcedure))
                 if (isInvestmentColumnVisible) it.add((row.investmentNumber))
                 it.add(row.lumpSumName)
-                it.add((row.flatRate ?: "").toString())
+                it.add(row.flatRate ?: 0)
                 it.add(row.unitCost)
-                if (isUnitTypeAndNumberOfUnitColumnsVisible)
-                    it.addAll(listOf(row.unitType, (row.numberOfUnits ?: "").toString()))
-                if (isPricePerUnitColumnVisible) it.add((row.pricePerUnit ?: "").toString())
+                if (isUnitTypeAndNumberOfUnitColumnsVisible) {
+                    it.add(row.unitType)
+                    it.add(row.numberOfUnits ?: ZERO)
+                }
+                if (isPricePerUnitColumnVisible) it.add(row.pricePerUnit ?: ZERO)
 
-                if (arePeriodColumnsVisible) it.addAll(row.periodAmounts.map { it.toStringList() })
-                it.add(row.total.toString())
-            }
+                if (arePeriodColumnsVisible) it.addAll(row.periodAmounts.map { it.periodAmount ?: ZERO })
+                it.add(row.total)
+            }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+                .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.DOTTED).borderBottom(BorderStyle.DOTTED) }
         }
 
-    private fun getTotalRow(rows: List<BudgetDetailsRow>): List<String> =
-        mutableListOf<String>().also {
+    private fun getTotalRow(rows: List<BudgetDetailsRow>): List<CellData> =
+        mutableListOf<Any>().also {
             it.add(getMessage("project.partner.budget.table.total", exportLanguage.toLocale(), messageSource))
 
             val numberOfHiddenColumns = listOf(
@@ -171,10 +179,11 @@ open class BudgetDetailsTableGenerator(
             if (arePeriodColumnsVisible) {
                 it.addAll(
                     rows.flatMap { it.periodAmounts }.groupBy({ it.periodNumber }, { it.periodAmount })
-                        .mapValues { it.value.sumOf { it ?: BigDecimal.ZERO } }.values.map { it.toString() })
+                        .mapValues { it.value.sumOf { it ?: ZERO } }.values)
             }
-            it.add(rows.sumOf { it.total }.toString())
-        }
+            it.add(rows.sumOf { it.total })
+        }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+            .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.THIN).borderBottom(BorderStyle.THIN) }
 
     private fun generateBudgetDetailsTableData(): List<BudgetDetailsRow> {
         return projectData.sectionB.partners.sortedBy { it.sortNumber }.flatMap { partner ->

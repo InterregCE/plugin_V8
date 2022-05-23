@@ -27,11 +27,11 @@ fun getTitle(projectData: ProjectData, version: String?, exportationDateTime: Zo
     }
 
 fun getFileName(projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime): String =
-    "${projectCustomIdentifier}_${projectAcronym}_Budget_${exportationDateTime.format(DateTimeFormatter.ofPattern("yyMd_Hmss"))}.csv"
+    "${projectCustomIdentifier}_${projectAcronym}_Budget_${exportationDateTime.format(DateTimeFormatter.ofPattern("yyMMdd_HHmmss"))}.xlsx"
 
 fun getPartnerHeaders(
     isNameInOriginalLanguageVisible: Boolean, isNameInEnglishVisible: Boolean, isCountryAndNutsVisible: Boolean,
-    messageSource: MessageSource, exportLocale: Locale
+    messageSource: MessageSource, exportLocale: Locale, leaveRegions: Boolean = false
 ) =
     mutableListOf<String>().also {
         it.addAll(
@@ -51,12 +51,18 @@ fun getPartnerHeaders(
             )
         if (isCountryAndNutsVisible)
             it.addAll(
-                getMessagesWithoutArgs(
-                    messageSource, exportLocale,
-                    "project.partner.main-address.country",
-                    "project.partner.main-address.region3",
-                    "project.partner.main-address.region2",
-                )
+                if (leaveRegions)
+                    getMessagesWithoutArgs(
+                        messageSource, exportLocale,
+                        "project.partner.main-address.country",
+                    )
+                else
+                    getMessagesWithoutArgs(
+                        messageSource, exportLocale,
+                        "project.partner.main-address.country",
+                        "project.partner.main-address.region3",
+                        "project.partner.main-address.region2",
+                    )
             )
     }
 
