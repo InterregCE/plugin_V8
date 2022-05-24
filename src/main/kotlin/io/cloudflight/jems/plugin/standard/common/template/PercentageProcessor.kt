@@ -26,7 +26,7 @@ class PercentageProcessor(defaultDialectPrefix: String) : AbstractAttributeTagPr
         if (context != null && attributeValue != null && structureHandler != null) {
             val currentClasses = tag?.getAttribute("class")?.value ?: ""
             val parsedPercentage = parseAttributeValue(attributeValue, context)?.let {
-                (it as BigDecimal).format(context.locale)
+                (it as BigDecimal).format()
             }
             structureHandler.setAttribute("class", currentClasses.plus(" percentage").trim())
             structureHandler.setBody(

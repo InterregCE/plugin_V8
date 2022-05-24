@@ -8,6 +8,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
+import java.util.regex.Pattern
 
 
 fun SystemLanguageData.toLocale() =
@@ -38,8 +39,8 @@ fun BigDecimal.percentageDown(percentage: BigDecimal): BigDecimal =
     multiply(percentage)
         .divide(BigDecimal(100), 2, RoundingMode.DOWN)
 
-fun BigDecimal.format(locale: Locale): String =
-    NumberFormat.getInstance(locale).apply {
+fun BigDecimal.format(): String =
+    NumberFormat.getInstance(Locale.ENGLISH).apply {
         maximumFractionDigits = 2
         minimumFractionDigits = 2
         isGroupingUsed = true

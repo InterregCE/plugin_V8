@@ -29,7 +29,7 @@ class NumberProcessor(defaultDialectPrefix: String) : AbstractAttributeTagProces
             structureHandler.setBody(
                 HtmlEscape.escapeHtml5(
                     parseAttributeValue(attributeValue, context)?.let {
-                        (it as BigDecimal).format(context.locale)
+                        (it as BigDecimal).format()
                     } ?: ""
                 ), false
             )
