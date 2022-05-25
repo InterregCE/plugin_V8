@@ -11,7 +11,7 @@ data class PartnerInfo(
     val partnerNuts2: String?
 ) {
     fun toStringList(
-        isNameInOriginalLanguageVisible: Boolean, isNameInEnglishVisible: Boolean, isCountryAndNutsVisible: Boolean
+        isNameInOriginalLanguageVisible: Boolean, isNameInEnglishVisible: Boolean, isCountryAndNutsVisible: Boolean, leaveRegions: Boolean = false
     ) =
         mutableListOf<String>().also {
             it.add(partnerNumber ?: "")
@@ -21,7 +21,11 @@ data class PartnerInfo(
                 it.add(partnerNameInOriginalLanguage ?: "")
             if (isNameInEnglishVisible)
                 it.add(partnerNameInEnglish ?: "")
-            if (isCountryAndNutsVisible)
-                it.addAll(listOf(partnerCountry ?: "", partnerNuts3 ?: "", partnerNuts2 ?: ""))
+            if (isCountryAndNutsVisible) {
+                if (leaveRegions)
+                    it.add(partnerCountry ?: "")
+                else
+                    it.addAll(listOf(partnerCountry ?: "", partnerNuts3 ?: "", partnerNuts2 ?: ""))
+            }
         }
 }

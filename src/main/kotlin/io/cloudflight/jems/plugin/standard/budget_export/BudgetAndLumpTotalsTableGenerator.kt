@@ -12,6 +12,9 @@ import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetAndLumpSum
 import io.cloudflight.jems.plugin.standard.budget_export.models.BudgetTotalCostInfo
 import io.cloudflight.jems.plugin.standard.budget_export.models.FundInfo
 import io.cloudflight.jems.plugin.standard.budget_export.models.GeneralBudgetTotalCostInfo
+import io.cloudflight.jems.plugin.standard.common.excel.model.BorderStyle
+import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
+import io.cloudflight.jems.plugin.standard.common.excel.model.Color
 import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getMessagesWithoutArgs
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
@@ -38,15 +41,31 @@ open class BudgetAndLumpTotalsTableGenerator(
     private val isCountryAndNutsVisible = shouldBeVisible(ApplicationFormFieldId.PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS)
     private val arePeriodsVisible = shouldBeVisible(ApplicationFormFieldId.PARTNER_BUDGET_PERIODS)
 
-    fun getData() =
-        mutableListOf<List<String?>>().also {
+    fun getDataFirst(): List<Array<CellData>> =
+        mutableListOf<List<CellData>>().also {
             val data = generateBudgetAndLumpSumTotalsTableData()
-            it.add(getHeaderRow())
-            it.addAll(getRows(data))
-            it.add(getTotalRow(data))
-        }
+            it.add(getHeaderRowFirst().also { it.last().borderRight(BorderStyle.THIN) })
+            it.addAll(getRowsFirst(data).also { it.forEach { it.last().borderRight(BorderStyle.THIN) } })
+            it.add(getTotalRowFirst(data).also { it.last().borderRight(BorderStyle.THIN) })
+        }.map { it.toTypedArray() }
 
-    private fun getHeaderRow(): List<String> =
+    fun getDataSecond(): List<Array<CellData>> =
+        mutableListOf<List<CellData>>().also {
+            val data = generateBudgetAndLumpSumTotalsTableData()
+            it.add(getHeaderRowSecond().also { it.last().borderRight(BorderStyle.THIN) })
+            it.addAll(getRowsSecond(data).also { it.forEach { it.last().borderRight(BorderStyle.THIN) } })
+            it.add(getTotalRowSecond(data).also { it.last().borderRight(BorderStyle.THIN) })
+        }.map { it.toTypedArray() }
+
+    fun getDataThird(): List<Array<CellData>> =
+        mutableListOf<List<CellData>>().also {
+            val data = generateBudgetAndLumpSumTotalsTableData()
+            it.add(getHeaderRowThird().also { it.last().borderRight(BorderStyle.THIN) })
+            it.addAll(getRowsThird(data).also { it.forEach { it.last().borderRight(BorderStyle.THIN) } })
+            it.add(getTotalRowThird(data).also { it.last().borderRight(BorderStyle.THIN) })
+        }.map { it.toTypedArray() }
+
+    private fun getHeaderRowFirst(): List<CellData> =
         mutableListOf<String>().also {
             it.addAll(
                 getPartnerHeaders(
@@ -77,6 +96,22 @@ open class BudgetAndLumpTotalsTableGenerator(
                     "project.partner.total.contribution",
                     "project.partner.total.eligible.budget",
                     "project.partner.percent.total.budget",
+                )
+            )
+        }.map { CellData(it).borderRight(BorderStyle.DOTTED).borderLeft(BorderStyle.DOTTED)
+            .borderTop(BorderStyle.THIN).backgroundColor(Color.GREY) }
+
+    private fun getHeaderRowSecond(): List<CellData> =
+        mutableListOf<String>().also {
+            it.addAll(
+                getPartnerHeaders(
+                    isNameInOriginalLanguageVisible, isNameInEnglishVisible,
+                    isCountryAndNutsVisible, messageSource, exportLocale, leaveRegions = true
+                )
+            )
+            it.addAll(
+                getMessagesWithoutArgs(
+                    messageSource, exportLocale,
                     "export.budget.totals.staff.costs.total",
                     "project.partner.budget.staff.costs.flat.rate.header",
                     "export.budget.totals.staff.costs.real.cost",
@@ -99,6 +134,18 @@ open class BudgetAndLumpTotalsTableGenerator(
                     "project.partner.budget.other",
                     "project.partner.budget.unitcosts",
                     "project.application.form.section.part.e.lump.sums.label",
+                    "project.partner.percent.total.budget",
+                )
+            )
+        }.map { CellData(it).borderRight(BorderStyle.DOTTED).borderLeft(BorderStyle.DOTTED)
+            .borderTop(BorderStyle.THIN).backgroundColor(Color.GREY) }
+
+    private fun getHeaderRowThird(): List<CellData> =
+        mutableListOf<String>().also {
+            it.addAll(
+                getPartnerHeaders(
+                    isNameInOriginalLanguageVisible, isNameInEnglishVisible,
+                    isCountryAndNutsVisible, messageSource, exportLocale, leaveRegions = true
                 )
             )
             if (arePeriodsVisible) {
@@ -120,11 +167,18 @@ open class BudgetAndLumpTotalsTableGenerator(
                     getMessage("project.application.form.section.part.e.period.closure", exportLocale, messageSource)
                 )
             }
-        }
+            it.addAll(
+                getMessagesWithoutArgs(
+                    messageSource, exportLocale,
+                    "project.partner.percent.total.budget", // end here
+                )
+            )
+        }.map { CellData(it).borderRight(BorderStyle.DOTTED).borderLeft(BorderStyle.DOTTED)
+            .borderTop(BorderStyle.THIN).backgroundColor(Color.GREY) }
 
-    private fun getRows(data: List<BudgetAndLumpSumTotalsRow>): List<List<String?>> =
+    private fun getRowsFirst(data: List<BudgetAndLumpSumTotalsRow>): List<List<CellData>> =
         data.map { row ->
-            mutableListOf<String>().also {
+            mutableListOf<Any>().also {
                 it.addAll(
                     row.partnerInfo.toStringList(
                         isNameInOriginalLanguageVisible, isNameInEnglishVisible, isCountryAndNutsVisible
@@ -133,31 +187,60 @@ open class BudgetAndLumpTotalsTableGenerator(
                 it.addAll(row.fundInfoList.flatMap { it.toStringList() })
                 it.addAll(
                     listOf(
-                        row.publicContribution.toString(),
-                        row.automaticPublicContribution.toString(),
-                        row.privateContribution.toString(),
-                        row.getTotalPartnerContribution().toString(),
-                        row.totalEligibleBudget.toString(),
-                        row.totalEligibleBudgetPercentage.toString()
+                        row.publicContribution,
+                        row.automaticPublicContribution,
+                        row.privateContribution,
+                        row.getTotalPartnerContribution(),
+                        row.totalEligibleBudget,
+                        row.totalEligibleBudgetPercentage
+                    )
+                )
+            }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+                .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.DOTTED).borderBottom(BorderStyle.DOTTED) }
+        }
+
+    private fun getRowsSecond(data: List<BudgetAndLumpSumTotalsRow>): List<List<CellData>> =
+        data.map { row ->
+            mutableListOf<Any>().also {
+                it.addAll(
+                    row.partnerInfo.toStringList(
+                        isNameInOriginalLanguageVisible, isNameInEnglishVisible, isCountryAndNutsVisible, leaveRegions = true
                     )
                 )
                 it.addAll(row.staffCostTotals.toStringList())
-                it.add(row.officeCostTotals.toString())
-                it.add(row.officeCostFlatRatesTotals.toString())
+                it.add(row.officeCostTotals)
+                it.add(row.officeCostFlatRatesTotals)
                 it.addAll(row.travelCostTotals.toStringList())
                 it.addAll(row.externalCostTotals.toStringList())
                 it.addAll(row.equipmentCostTotals.toStringList())
                 it.addAll(row.infrastructureCostTotals.toStringList())
-                it.add(row.otherCosts.toString())
-                it.add(row.unitCostsCoveringMultipleCostCategories.toString())
-                it.add(row.lumpSumsCoveringMultipleCostCategories.toString())
+                it.add(row.otherCosts)
+                it.add(row.unitCostsCoveringMultipleCostCategories)
+                it.add(row.lumpSumsCoveringMultipleCostCategories)
                 if (arePeriodsVisible)
-                    it.addAll(row.partnerBudgetPerPeriod.map { budgetPerPeriod -> budgetPerPeriod.totalBudgetPerPeriod.toString() })
-            }
+                    it.addAll(row.partnerBudgetPerPeriod.map { budgetPerPeriod -> budgetPerPeriod.totalBudgetPerPeriod })
+                it.add(row.totalEligibleBudget)
+            }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+                .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.DOTTED).borderBottom(BorderStyle.DOTTED) }
         }
 
-    private fun getTotalRow(rows: List<BudgetAndLumpSumTotalsRow>): List<String> =
-        mutableListOf<String>().also {
+    private fun getRowsThird(data: List<BudgetAndLumpSumTotalsRow>): List<List<CellData>> =
+        data.map { row ->
+            mutableListOf<Any>().also {
+                it.addAll(
+                    row.partnerInfo.toStringList(
+                        isNameInOriginalLanguageVisible, isNameInEnglishVisible, isCountryAndNutsVisible, leaveRegions = true
+                    )
+                )
+                if (arePeriodsVisible)
+                    it.addAll(row.partnerBudgetPerPeriod.map { budgetPerPeriod -> budgetPerPeriod.totalBudgetPerPeriod })
+                it.add(row.totalEligibleBudget)
+            }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+                .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.DOTTED).borderBottom(BorderStyle.DOTTED) }
+        }
+
+    private fun getTotalRowFirst(rows: List<BudgetAndLumpSumTotalsRow>): List<CellData> =
+        mutableListOf<Any>().also {
             it.add(getMessage("project.partner.budget.table.total", exportLocale, messageSource))
             val numberOfHiddenColumns = listOf(
                 isNameInOriginalLanguageVisible, isNameInEnglishVisible,
@@ -172,7 +255,22 @@ open class BudgetAndLumpTotalsTableGenerator(
                     rows.sumOf { it.privateContribution },
                     rows.sumOf { it.getTotalPartnerContribution() },
                     rows.sumOf { it.totalEligibleBudget },
-                    "100",
+                ).map { it }
+            )
+            it.add(BigDecimal.valueOf(100))
+        }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+            .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.THIN).borderBottom(BorderStyle.THIN) }
+
+    private fun getTotalRowSecond(rows: List<BudgetAndLumpSumTotalsRow>): List<CellData> =
+        mutableListOf<Any>().also {
+            it.add(getMessage("project.partner.budget.table.total", exportLocale, messageSource))
+            val numberOfHiddenColumns = listOf(
+                isNameInOriginalLanguageVisible, isNameInEnglishVisible,
+                isCountryAndNutsVisible, isCountryAndNutsVisible, isCountryAndNutsVisible
+            ).filter { visible -> !visible }.size + 2
+            it.addAll((2..(numberOfColumnsBeforeFunds - numberOfHiddenColumns)).map { "" })
+            it.addAll(
+                mutableListOf(
                     rows.sumOf { it.staffCostTotals.total },
                     rows.sumOf { it.staffCostTotals.flatRateTotal },
                     rows.sumOf { it.staffCostTotals.realCostTotal },
@@ -195,11 +293,25 @@ open class BudgetAndLumpTotalsTableGenerator(
                     rows.sumOf { it.otherCosts },
                     rows.sumOf { it.unitCostsCoveringMultipleCostCategories },
                     rows.sumOf { it.lumpSumsCoveringMultipleCostCategories },
-                ).map { it.toString() }
+                    rows.sumOf { it.totalEligibleBudget },
+                )
             )
+        }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+            .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.THIN).borderBottom(BorderStyle.THIN) }
+
+    private fun getTotalRowThird(rows: List<BudgetAndLumpSumTotalsRow>): List<CellData> =
+        mutableListOf<Any>().also {
+            it.add(getMessage("project.partner.budget.table.total", exportLocale, messageSource))
+            val numberOfHiddenColumns = listOf(
+                isNameInOriginalLanguageVisible, isNameInEnglishVisible,
+                isCountryAndNutsVisible, isCountryAndNutsVisible, isCountryAndNutsVisible
+            ).filter { visible -> !visible }.size + 2
+            it.addAll((2..(numberOfColumnsBeforeFunds - numberOfHiddenColumns)).map { "" })
             if (arePeriodsVisible)
-                it.addAll(projectData.sectionD.projectPartnerBudgetPerPeriodData.totals.dropLast(1).map { it.toString() })
-        }
+                it.addAll(projectData.sectionD.projectPartnerBudgetPerPeriodData.totals.dropLast(1))
+            it.add(rows.sumOf { it.totalEligibleBudget })
+        }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
+            .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.THIN).borderBottom(BorderStyle.THIN) }
 
     private fun generateBudgetAndLumpSumTotalsTableData(): List<BudgetAndLumpSumTotalsRow> =
         projectData.sectionB.partners.sortedBy { it.sortNumber }.map { partner ->
@@ -282,6 +394,6 @@ open class BudgetAndLumpTotalsTableGenerator(
             }
         }
 
-    private fun shouldBeVisible(fieldId: ApplicationFormFieldId) =
+    fun shouldBeVisible(fieldId: ApplicationFormFieldId) =
         isFieldVisible(fieldId, projectData.lifecycleData, callData)
 }
