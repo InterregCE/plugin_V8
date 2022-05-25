@@ -134,7 +134,7 @@ open class BudgetAndLumpTotalsTableGenerator(
                     "project.partner.budget.other",
                     "project.partner.budget.unitcosts",
                     "project.application.form.section.part.e.lump.sums.label",
-                    "project.partner.percent.total.budget",
+                    "project.partner.total.eligible.budget",
                 )
             )
         }.map { CellData(it).borderRight(BorderStyle.DOTTED).borderLeft(BorderStyle.DOTTED)
@@ -170,7 +170,7 @@ open class BudgetAndLumpTotalsTableGenerator(
             it.addAll(
                 getMessagesWithoutArgs(
                     messageSource, exportLocale,
-                    "project.partner.percent.total.budget", // end here
+                    "project.partner.total.eligible.budget",
                 )
             )
         }.map { CellData(it).borderRight(BorderStyle.DOTTED).borderLeft(BorderStyle.DOTTED)
@@ -217,8 +217,6 @@ open class BudgetAndLumpTotalsTableGenerator(
                 it.add(row.otherCosts)
                 it.add(row.unitCostsCoveringMultipleCostCategories)
                 it.add(row.lumpSumsCoveringMultipleCostCategories)
-                if (arePeriodsVisible)
-                    it.addAll(row.partnerBudgetPerPeriod.map { budgetPerPeriod -> budgetPerPeriod.totalBudgetPerPeriod })
                 it.add(row.totalEligibleBudget)
             }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
                 .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.DOTTED).borderBottom(BorderStyle.DOTTED) }

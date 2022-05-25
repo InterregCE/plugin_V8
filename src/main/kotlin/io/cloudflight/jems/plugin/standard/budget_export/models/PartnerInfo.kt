@@ -25,7 +25,7 @@ data class PartnerInfo(
                 if (leaveRegions)
                     it.add(partnerCountry ?: "")
                 else
-                    it.addAll(listOf(partnerCountry ?: "", partnerNuts3 ?: "", partnerNuts2 ?: ""))
+                    it.addAll(listOf(partnerCountry ?: "", partnerNuts2 ?: "", partnerNuts3 ?: ""))
             }
         }
 }

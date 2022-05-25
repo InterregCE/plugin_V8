@@ -21,7 +21,7 @@ fun getTitle(projectData: ProjectData, version: String?, exportationDateTime: Zo
         ?: 1.0).toString()).let { versionToShow ->
         "${projectData.sectionA?.customIdentifier} - ${projectData.sectionA?.acronym} - V$versionToShow - ${
             exportationDateTime.format(
-                DateTimeFormatter.ofPattern("y.M.d - H:m:ss")
+                DateTimeFormatter.ofPattern("yyyy/MM/dd - HH:mm:ss")
             )
         }"
     }
@@ -60,8 +60,8 @@ fun getPartnerHeaders(
                     getMessagesWithoutArgs(
                         messageSource, exportLocale,
                         "project.partner.main-address.country",
-                        "project.partner.main-address.region3",
                         "project.partner.main-address.region2",
+                        "project.partner.main-address.region3",
                     )
             )
     }
