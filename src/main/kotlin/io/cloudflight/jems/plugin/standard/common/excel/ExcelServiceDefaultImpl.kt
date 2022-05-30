@@ -105,6 +105,7 @@ class ExcelServiceDefaultImpl : ExcelService {
         when (cellData.value) {
             is LocalDateTime, is ZonedDateTime -> BuiltinFormats.getBuiltinFormat("m/d/yy h:mm").toShort()
             is LocalDate, is Date -> BuiltinFormats.getBuiltinFormat("m/d/yy").toShort()
+            is BigDecimal -> BuiltinFormats.getBuiltinFormat("#,##0.00").toShort()
             else -> BuiltinFormats.getBuiltinFormat("General").toShort()
         }
 }

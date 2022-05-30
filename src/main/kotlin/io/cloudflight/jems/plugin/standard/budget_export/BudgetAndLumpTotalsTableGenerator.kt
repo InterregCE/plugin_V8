@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.budget_export
 
 import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
+import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.ProjectData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetGeneralCostEntryData
@@ -22,6 +23,7 @@ import io.cloudflight.jems.plugin.standard.common.isFieldVisible
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
+import java.math.BigDecimal.ZERO
 import kotlin.collections.sumOf
 
 open class BudgetAndLumpTotalsTableGenerator(
@@ -132,8 +134,8 @@ open class BudgetAndLumpTotalsTableGenerator(
                     "export.budget.totals.infrastructure.real.cost",
                     "export.budget.totals.infrastructure.unit.cost",
                     "project.partner.budget.other",
-                    "project.partner.budget.unitcosts",
                     "project.application.form.section.part.e.lump.sums.label",
+                    "project.partner.budget.unitcosts",
                     "project.partner.total.eligible.budget",
                 )
             )
@@ -215,8 +217,8 @@ open class BudgetAndLumpTotalsTableGenerator(
                 it.addAll(row.equipmentCostTotals.toStringList())
                 it.addAll(row.infrastructureCostTotals.toStringList())
                 it.add(row.otherCosts)
-                it.add(row.unitCostsCoveringMultipleCostCategories)
                 it.add(row.lumpSumsCoveringMultipleCostCategories)
+                it.add(row.unitCostsCoveringMultipleCostCategories)
                 it.add(row.totalEligibleBudget)
             }.map { CellData(if (it is BigDecimal) it.setScale(2) else it).borderRight(BorderStyle.DOTTED)
                 .borderLeft(BorderStyle.DOTTED).borderTop(BorderStyle.DOTTED).borderBottom(BorderStyle.DOTTED) }
@@ -247,7 +249,9 @@ open class BudgetAndLumpTotalsTableGenerator(
             it.addAll((2..(numberOfColumnsBeforeFunds - numberOfHiddenColumns)).map { "" })
             it.addAll(
                 mutableListOf(
-                    *(1..callSelectedFunds.size).flatMap { listOf("", "", "") }.toTypedArray(),
+                    *callSelectedFunds.flatMapIndexed { index: Int, _: ProgrammeFundData ->
+                        listOf(rows.sumOf { it.fundInfoList.getOrNull(index)?.fundAmount ?: ZERO }, "", "")
+                    }.toTypedArray(),
                     rows.sumOf { it.publicContribution },
                     rows.sumOf { it.automaticPublicContribution },
                     rows.sumOf { it.privateContribution },
@@ -289,8 +293,8 @@ open class BudgetAndLumpTotalsTableGenerator(
                     rows.sumOf { it.infrastructureCostTotals.realCostTotal },
                     rows.sumOf { it.infrastructureCostTotals.unitCostTotal },
                     rows.sumOf { it.otherCosts },
-                    rows.sumOf { it.unitCostsCoveringMultipleCostCategories },
                     rows.sumOf { it.lumpSumsCoveringMultipleCostCategories },
+                    rows.sumOf { it.unitCostsCoveringMultipleCostCategories },
                     rows.sumOf { it.totalEligibleBudget },
                 )
             )
