@@ -167,6 +167,7 @@ tr, td, th, .table-header {
 
 .long-text {
     word-wrap: break-word;
+    word-break: break-all;
 }
 
 .default-table, .default-vertical-table {
