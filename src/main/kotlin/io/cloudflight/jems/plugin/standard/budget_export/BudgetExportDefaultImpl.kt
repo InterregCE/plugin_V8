@@ -33,7 +33,7 @@ open class BudgetExportDefaultImpl(
         val exportationTime = ZonedDateTime.now()
 
         val excelData = ExcelData()
-        val sheet = excelData.addSheet("${projectData.sectionA?.customIdentifier}_${projectData.sectionA?.acronym}_Project_budget")
+        val sheet = excelData.addSheet("Project_budget_${projectData.sectionA?.customIdentifier}_${projectData.sectionA?.acronym}")
 
         val data = BudgetAndLumpTotalsTableGenerator(projectData, callData, exportLanguage, messageSource)
 
@@ -52,7 +52,7 @@ open class BudgetExportDefaultImpl(
             sheet.addRows(data.getDataThird())
         }
 
-        val sheetPartner = excelData.addSheet("${projectData.sectionA?.customIdentifier}_${projectData.sectionA?.acronym}_Partner_budget")
+        val sheetPartner = excelData.addSheet("Partner_budget_${projectData.sectionA?.customIdentifier}_${projectData.sectionA?.acronym}")
 
         sheetPartner.addRow(CellData(getTitle(projectData, version, exportationTime)).removeBorders())
         sheetPartner.addRow(CellData(getMessage("project.partner.budget.overview.header", exportLocale, messageSource)))
@@ -82,5 +82,5 @@ open class BudgetExportDefaultImpl(
         "Standard budget export"
 
     override fun getVersion(): String =
-        "1.0.8"
+        "1.0.9"
 }
