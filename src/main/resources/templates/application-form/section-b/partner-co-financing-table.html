@@ -79,7 +79,7 @@
                 th:object="${partnerContribution}">
                 <td th:if="*{isPartner}" th:text="${partnerBudgetData.projectPartnerCoFinancing.partnerAbbreviation}">name</td>
                 <td class="break-long-word" th:unless="*{isPartner}" th:text="*{name}">name</td>
-                <td th:text="*{status}">private</td>
+                <td th:text="${#messages.msg('project.partner.coFinancing.contribution.legal.status.' + #strings.toLowerCase(partnerContribution.status))}">private</td>
                 <td clf:number="*{amount}">45900</td>
                 <td clf:percentage="${clfBudgetUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectBudgetCostsCalculationResult.totalCosts)}">
                     34.00
@@ -209,7 +209,7 @@
                 <tr th:each="partnerContribution, rowStat: ${partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions}"
                     th:object="${partnerContribution}">
                     <td class="break-long-word" th:text="*{name}">name</td>
-                    <td th:text="*{status}">private</td>
+                    <td th:text="${#messages.msg('project.partner.coFinancing.contribution.legal.status.' + #strings.toLowerCase(partnerContribution.status))}">private</td>
                     <td clf:number="*{amount}">45900</td>
                     <td clf:percentage="${clfBudgetUtils.percentageDownTo(partnerContribution?.amount, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         34.00

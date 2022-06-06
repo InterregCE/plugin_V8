@@ -209,7 +209,7 @@
                 <th th:text="#{project.partner.recoverVat.intro.text}">Vat
                     recovery
                 </th>
-                <td th:text="*{vatRecovery}"></td>
+                <td th:text="${#messages.msg('common.label.project.partner.recoverVat.' + #strings.toLowerCase(partner.vatRecovery))}"></td>
             </tr>
             <th:block clf:ifAnyFieldIsVisible="PARTNER_OTHER_IDENTIFIER_NUMBER_AND_DESCRIPTION">
                 <tr>
