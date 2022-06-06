@@ -82,7 +82,7 @@
                         </div>
                     </th:block>
                 </td>
-                <td clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING" class="text-right" th:text="*{budget.projectPartnerBudgetTotalCost}">
+                <td clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING" class="text-right" clf:number="*{budget.projectPartnerBudgetTotalCost}">
                 </td>
             </tr>
             </tbody>

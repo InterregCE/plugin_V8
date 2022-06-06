@@ -43,9 +43,14 @@ class BudgetUtils {
         val totalFundingAmountForCostCategories = managementCoFinancing.totalFundingAmount.add(spfCoFinancing.totalFundingAmount)
         val totalFundAndContributionForCostCategories = managementCoFinancing.totalFundAndContribution.add(spfCoFinancing.totalFundAndContribution)
 
-        return totalFundingAmountForCostCategories
-            .multiply(100.toBigDecimal())
-            .divide(totalFundAndContributionForCostCategories,2, RoundingMode.DOWN)
+        return if (totalFundAndContributionForCostCategories.equals(BigDecimal.ZERO)) {
+            BigDecimal.ZERO
+        } else {
+            totalFundingAmountForCostCategories
+                .multiply(100.toBigDecimal())
+                .divide(totalFundAndContributionForCostCategories, 2, RoundingMode.DOWN)
+        }
+
     }
 
     fun percentageDown(percentage: BigDecimal, total: BigDecimal) =
