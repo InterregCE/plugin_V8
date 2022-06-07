@@ -59,7 +59,7 @@ class PartnerUtils {
         partners.filter { activityPartnerIds.contains(it.id) }.toSet()
 
     fun getPartnerSpfBeneficiaryTypeTranslationKey(partnerType: ProjectTargetGroupData?): String {
-        val partnerTypeTranslationPrefix = "project.application.form.relevance.target.group."
+        val partnerTypeTranslationPrefix = "project.application.form.relevance.target.group"
         return when (partnerType) {
             ProjectTargetGroupData.Egtc -> "$partnerTypeTranslationPrefix.${ProjectTargetGroupData.Egtc.name}"
             ProjectTargetGroupData.CrossBorderLegalBody -> "$partnerTypeTranslationPrefix.${ProjectTargetGroupData.CrossBorderLegalBody.name}"
