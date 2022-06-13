@@ -1,10 +1,7 @@
 package io.cloudflight.jems.plugin.standard.common
 
 import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverviewData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectContributionData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerContributionStatusData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.*
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -35,6 +32,10 @@ class BudgetUtils {
             .map { percentageDown(it.percentage, total) }
 
         return total.minus(funds.sumUp())
+    }
+
+    fun getTotalPartnerBudget(budget: PartnerBudgetData): BigDecimal {
+        return budget.projectPartnerBudgetTotalCost.add(budget.projectPartnerSpfBudgetTotalCost)
     }
 
     fun getTotalCoFinancingRateForCostCategories(coFinancingOverview: ProjectCoFinancingOverviewData): BigDecimal {

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
 <!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="clfBudgetUtils" type="io.cloudflight.jems.plugin.standard.common.BudgetUtils"*/-->
 
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
@@ -82,7 +83,7 @@
                         </div>
                     </th:block>
                 </td>
-                <td clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING" class="text-right" clf:number="*{budget.projectPartnerBudgetTotalCost}">
+                <td clf:ifAnyFieldIsVisible="PARTNER_BUDGET_AND_CO_FINANCING" class="text-right" clf:number="${clfBudgetUtils.getTotalPartnerBudget(partner.budget)}">
                 </td>
             </tr>
             </tbody>
