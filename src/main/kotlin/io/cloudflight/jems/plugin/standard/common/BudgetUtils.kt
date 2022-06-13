@@ -35,7 +35,7 @@ class BudgetUtils {
     }
 
     fun getTotalPartnerBudget(budget: PartnerBudgetData): BigDecimal {
-        return budget.projectPartnerBudgetTotalCost.add(budget.projectPartnerSpfBudgetTotalCost)
+        return budget.projectBudgetCostsCalculationResult.totalCosts.add(budget.projectPartnerSpfBudgetTotalCost)
     }
 
     fun getTotalCoFinancingRateForCostCategories(coFinancingOverview: ProjectCoFinancingOverviewData): BigDecimal {
