@@ -44,7 +44,7 @@ class BudgetUtils {
         val totalFundingAmountForCostCategories = managementCoFinancing.totalFundingAmount.add(spfCoFinancing.totalFundingAmount)
         val totalFundAndContributionForCostCategories = managementCoFinancing.totalFundAndContribution.add(spfCoFinancing.totalFundAndContribution)
 
-        return if (totalFundAndContributionForCostCategories.equals(BigDecimal.ZERO)) {
+        return if (totalFundAndContributionForCostCategories.compareTo(BigDecimal.ZERO) == 0) {
             BigDecimal.ZERO
         } else {
             totalFundingAmountForCostCategories
