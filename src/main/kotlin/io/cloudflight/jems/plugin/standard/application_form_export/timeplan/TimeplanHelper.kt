@@ -30,6 +30,7 @@ fun getTimeplanData(
 ): TimeplanData? {
     if (periods.isEmpty() || (workPackages.isEmpty() && results.isEmpty()))
         return null
+    val lastPeriodNumber = periods.maxOf { it.number }
 
     val columnWidth = DATA_SPACE_WIDTH / periods.size.toFloat()
 
@@ -44,7 +45,7 @@ fun getTimeplanData(
     rowLines.addLineAt(currentTableHeight = 0f, lineHeight = LINE_HEIGHT + FIRST_PAGE_HEIGHT_COMPENSATOR)
 
     workPackages.forEachIndexed { wpIndex, wp ->
-        val allUsedPeriods = wp.activities.map { it.getAllUsedPeriods() }.flatten().toSet()
+        val allUsedPeriods = wp.activities.map { it.getAllUsedPeriods(lastPeriodNumber) }.flatten().toSet()
             .plus(wp.outputs.mapNotNull { it.periodNumber })
 
         // generate first work package line itself (wrapper for all activities)
@@ -142,7 +143,7 @@ fun getTimeplanData(
         currentTableHeight += LINE_HEIGHT
 
         resultsByIndicator.forEach { (resultTitle, resultsPerLine) ->
-            val resultsByPeriod = resultsPerLine.groupBy { it.periodNumber!! }
+            val resultsByPeriod = resultsPerLine.groupBy { it.periodNumber!!.orLast(lastPeriodNumber) }
             val resultsHeight = (resultsByPeriod.values.maxOfOrNull { it.size } ?: 0) * LINE_HEIGHT
 
             if (resultsHeight == 0f)
@@ -152,11 +153,11 @@ fun getTimeplanData(
             rowLines.addLineAt(currentTableHeight = currentTableHeight, lineHeight = resultsHeight)
             titles.addMinorTitle(y = currentTableHeight, title = resultTitle)
 
-            resultsByPeriod.forEach { (_, resultsWithinPeriod) ->
+            resultsByPeriod.forEach { (periodNumber, resultsWithinPeriod) ->
                 resultsWithinPeriod.forEachIndexed { index, it ->
                     rectanglesSmall.add(
                         getRectangle(
-                            startPeriod = it.periodNumber!!,
+                            startPeriod = periodNumber,
                             columnWidth = columnWidth,
                             isSmall = true,
                             currentTableHeight = currentTableHeight,
@@ -179,6 +180,7 @@ fun getTimeplanData(
         rowDividers = rowLines,
         width = TABLE_WIDTH,
         height = currentTableHeight,
+        lastPeriodNumber = lastPeriodNumber,
         firstRowHeight = LINE_HEIGHT + FIRST_PAGE_HEIGHT_COMPENSATOR,
         borderAround = generateBordersAroundAndSidenavDivider(currentTableHeight),
         viewBox = "0 -1 $TABLE_WIDTH ${(currentTableHeight + 2).toInt()}",
@@ -318,11 +320,19 @@ private fun String.truncateLong() =
     else
         this
 
-private fun WorkPackageActivityData.getAllUsedPeriods(): Set<Int> {
-    val allPeriods = this.deliverables.mapNotNull { it.period }.toMutableSet()
+private fun WorkPackageActivityData.getAllUsedPeriods(lastPeriodNumber: Int): Set<Int> {
+    val allPeriods = this.deliverables.mapNotNull { it.period?.orLast(lastPeriodNumber) }.toMutableSet()
     if (this.startPeriod != null)
-        allPeriods.add(this.startPeriod!!)
+        allPeriods.add(this.startPeriod!!.orLast(lastPeriodNumber))
     if (this.endPeriod != null)
-        allPeriods.add(this.endPeriod!!)
+        allPeriods.add(this.endPeriod!!.orLast(lastPeriodNumber))
     return allPeriods.toSet()
 }
+
+fun List<ProjectPeriodData>.addLastPeriod() =
+    if (this.isNotEmpty())
+        this.plus(ProjectPeriodData(this.size + 1, 0, 0))
+    else
+        this
+
+private fun Int.orLast(lastPeriodNumber: Int) = if (this == 255) lastPeriodNumber else this
