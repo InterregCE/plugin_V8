@@ -6,6 +6,7 @@ data class TimeplanData(
     val rowDividers: List<String>,
     val width: Int,
     val height: Float,
+    val lastPeriodNumber: Int,
     val firstRowHeight: Float,
     val borderAround: List<String>,
     val viewBox: String,

@@ -22,11 +22,14 @@
 
             <th:block th:each="period, rowStat: ${timeplanData.periodColumns}"
                       th:object="${period}">
-                <text th:if="${timeplanData.periodColumns.size <= 16}"
+                <text th:if="${timeplanData.periodColumns.size <= 16 && timeplanData.lastPeriodNumber != period.number}"
                       th:text="#{project.application.form.section.part.e.period.column.title} + ' ' + ${period.number}"
                       th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
-                <text th:if="${timeplanData.periodColumns.size > 16}"
+                <text th:if="${timeplanData.periodColumns.size > 16 && timeplanData.lastPeriodNumber != period.number}"
                       th:text="${period.number}"
+                      th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
+                <text th:if="${timeplanData.lastPeriodNumber == period.number}"
+                      th:text="#{export.c6.period.last}"
                       th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
             </th:block>
 

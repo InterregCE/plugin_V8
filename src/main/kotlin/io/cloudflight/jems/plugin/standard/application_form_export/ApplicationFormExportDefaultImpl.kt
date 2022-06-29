@@ -6,6 +6,7 @@ import io.cloudflight.jems.plugin.contract.export.ExportResult
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
+import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.addLastPeriod
 import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.getTimeplanData
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import io.cloudflight.jems.plugin.standard.common.CLF_BUDGET_UTILS
@@ -70,7 +71,7 @@ open class ApplicationFormExportDefaultImpl(
                         it.setVariable(CLF_BUDGET_UTILS, BudgetUtils())
                         it.setVariable(CLF_PROJECT_UTILS, ProjectUtils())
                         it.setVariable("timeplanData", getTimeplanData(
-                            periods = projectData.sectionA?.periods ?: emptyList(),
+                            periods = projectData.sectionA?.periods?.addLastPeriod() ?: emptyList(),
                             workPackages = projectData.sectionC.projectWorkPackages,
                             results = projectData.sectionC.projectResults,
                             language = dataLanguage,
@@ -98,5 +99,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.20"
+        "1.0.21"
 }
