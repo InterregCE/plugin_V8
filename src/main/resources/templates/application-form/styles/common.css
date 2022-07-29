@@ -141,6 +141,14 @@ html, body {
     margin-top: 3rem !important;
 }
 
+.mt-4rem {
+    margin-top: 4rem !important;
+}
+
+.mt-5rem {
+    margin-top: 5rem !important;
+}
+
 .default-table .row-bordered td,
 .default-table .row-bordered th,
 .default-vertical-table .table-body .row-bordered td,
@@ -242,4 +250,14 @@ tr, td, th, .table-header {
 }
 .multiline {
     white-space: pre-wrap;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    padding-top: 125px;
+    margin-bottom: 25px;
+    max-height: 450px;
 }
