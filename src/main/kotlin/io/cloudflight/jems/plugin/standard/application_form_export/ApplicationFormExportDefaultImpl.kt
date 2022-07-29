@@ -47,7 +47,7 @@ open class ApplicationFormExportDefaultImpl(
     }
 
     override fun export(
-        projectId: Long, exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, version: String?
+        projectId: Long, exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, version: String?, logo: String?
     ): ExportResult {
         val projectData = projectDataProvider.getProjectDataForProjectId(projectId, version)
 
@@ -76,6 +76,10 @@ open class ApplicationFormExportDefaultImpl(
                             results = projectData.sectionC.projectResults,
                             language = dataLanguage,
                         ))
+                        it.setVariable("downloadedDate", ZonedDateTime.now().format(
+                            DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm")))
+                        it.setVariable("version", version)
+                        it.setVariable("logo", logo)
                     }
                 ).getRidOfInvalidAsciiCharsFromXML()
             )

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="../styles/common.css"
+          th:href="@{../styles/common.css}"/>
+</head>
+<body>
+<th:block th:fragment="coverPage(projectDataSectionA, downloadedDate, version, dataLanguage, exportLanguage, logo)">
+    <img th:if="${logo == null}" th:src="@{application-form/images/InterregProgrammeLogo_96.png}"/>
+    <img th:if="${logo != null}" th:src="|data:image/png;base64,${logo}|"/>
+    <div class="sub-heading-2 text-center" th:text="${projectDataSectionA.customIdentifier}">
+        Project ID
+    </div>
+    <div class="headline text-center" th:text="${projectDataSectionA?.acronym}">
+        Project ID
+    </div>
+    <div class="sub-heading-2 text-center mt-5rem" th:text="#{export.cover.page.title.label}">
+        Application Form Export
+    </div>
+    <div class="sub-heading-2 text-center mt-1rem">
+        <span th:text="#{export.cover.page.download.label}">Downloaded On</span>
+        <span th:text="${downloadedDate}">Date</span>
+    </div>
+    <div class="sub-heading-2 text-center mt-3rem">
+        <span th:text="#{export.cover.page.version.label}">Version</span>
+        <span th:text="${version}">Version</span>
+    </div>
+    <div class="sub-heading-2 text-center mt-1rem">
+        <span th:text="#{export.cover.page.export.form.language.label}">Form language:</span>
+        <span th:text="${exportLanguage}">Language</span>
+    </div>
+    <div class="sub-heading-2 text-center mt-1rem">
+        <span th:text="#{export.cover.page.input.form.language.label}">Input language:</span>
+        <span th:text="${dataLanguage}">Language</span>
+    </div>
+    <div class="page-break-after"></div>
+</th:block>
+</body>
+</html>
