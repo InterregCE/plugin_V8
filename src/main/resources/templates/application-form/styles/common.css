@@ -30,7 +30,15 @@
         font-size: 14px;
         content: counter(page);
     }
+    @top-center {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        content: element(input);
+    }
+}
 
+@page :first {
+    @top-center { content: none; }
+    @bottom-right { content: none; }
 }
 
 @page landscape {
@@ -260,4 +268,22 @@ img {
     padding-top: 125px;
     margin-bottom: 25px;
     max-height: 450px;
+}
+
+.info-header-section {
+    position: running(input);
+    text-align: center;
+    border-bottom: 1px solid black;
+    font-size: 11px;
+}
+
+.info-header-item {
+    width: 200px;
+    display: inline-block;
+    padding:5px;
+    word-wrap:break-word;
+}
+
+.info-header-item.italic {
+    font-style: italic;
 }
