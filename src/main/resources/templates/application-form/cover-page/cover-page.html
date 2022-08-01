@@ -9,21 +9,21 @@
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="coverPage(projectDataSectionA, downloadedDate, version, dataLanguage, exportLanguage, logo)">
+<th:block th:fragment="coverPage(projectDataSectionA, downloadedDateTime, version, dataLanguage, exportLanguage, logo)">
     <img th:if="${logo == null}" th:src="@{application-form/images/InterregProgrammeLogo_96.png}"/>
     <img th:if="${logo != null}" th:src="|data:image/png;base64,${logo}|"/>
     <div class="sub-heading-2 text-center" th:text="${projectDataSectionA.customIdentifier}">
         Project ID
     </div>
     <div class="headline text-center" th:text="${projectDataSectionA?.acronym}">
-        Project ID
+        Project Acronym
     </div>
     <div class="sub-heading-2 text-center mt-5rem" th:text="#{export.cover.page.title.label}">
         Application Form Export
     </div>
     <div class="sub-heading-2 text-center mt-1rem">
         <span th:text="#{export.cover.page.download.label}">Downloaded On</span>
-        <span th:text="${downloadedDate}">Date</span>
+        <span th:text="${downloadedDateTime}">Date</span>
     </div>
     <div class="sub-heading-2 text-center mt-3rem">
         <span th:text="#{export.cover.page.version.label}">Version</span>

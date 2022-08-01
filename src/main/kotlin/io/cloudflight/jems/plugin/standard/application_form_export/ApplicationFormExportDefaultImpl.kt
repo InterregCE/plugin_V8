@@ -76,8 +76,11 @@ open class ApplicationFormExportDefaultImpl(
                             results = projectData.sectionC.projectResults,
                             language = dataLanguage,
                         ))
-                        it.setVariable("downloadedDate", ZonedDateTime.now().format(
+                        it.setVariable("programmeTitle", projectData.programmeTitle)
+                        it.setVariable("downloadedDateTime", ZonedDateTime.now().format(
                             DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm")))
+                        it.setVariable("downloadedDate", ZonedDateTime.now().format(
+                            DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         it.setVariable("version", version)
                         it.setVariable("logo", logo)
                     }

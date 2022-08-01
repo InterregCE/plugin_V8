@@ -13,7 +13,20 @@
 <body id="first-page"  th:with="isSPFCall=${callData.getType() == T(io.cloudflight.jems.plugin.contract.models.call.CallTypeData).SPF},
                                 lifecycleData=${projectData.getLifecycleData()},
                                 callData=${callData}">
-    <div th:insert="~{application-form/cover-page/cover-page.html :: coverPage(${projectData.sectionA}, ${downloadedDate}, ${version}, ${dataLanguage}, ${exportLanguage}, ${logo})}"></div>
+    <div class="info-header-section">
+        <span class="info-header-item" th:text="${programmeTitle}">Programme Title</span>
+        <div class="info-header-item">
+            <span th:text="|${projectData.sectionA?.customIdentifier} - |">Project Id</span>
+            <span th:text="${projectData.sectionA?.acronym}">Project acronym</span>
+        </div>
+        <div class="info-header-item italic">
+            <span th:text="#{export.cover.page.version.label}">Version</span>
+            <span th:text="|${version}, |">Version</span>
+            <span th:text="${downloadedDate}">downloadedDate</span>
+        </div>
+    </div>
+
+    <div th:insert="~{application-form/cover-page/cover-page.html :: coverPage(${projectData.sectionA}, ${downloadedDateTime}, ${version}, ${dataLanguage}, ${exportLanguage}, ${logo})}"></div>
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-a/section-a.html :: sectionA(${projectData.sectionA}, ${projectData.sectionB.partners})}"></div>
     <div class="page-break-after"></div>
