@@ -27,6 +27,7 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.thymeleaf.ITemplateEngine
 import org.thymeleaf.context.Context
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
@@ -47,7 +48,12 @@ open class ApplicationFormExportDefaultImpl(
     }
 
     override fun export(
-        projectId: Long, exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, version: String?, logo: String?
+        projectId: Long,
+        exportLanguage: SystemLanguageData,
+        dataLanguage: SystemLanguageData,
+        localDateTime: LocalDateTime,
+        version: String?,
+        logo: String?
     ): ExportResult {
         val projectData = projectDataProvider.getProjectDataForProjectId(projectId, version)
 
@@ -77,9 +83,9 @@ open class ApplicationFormExportDefaultImpl(
                             language = dataLanguage,
                         ))
                         it.setVariable("programmeTitle", projectData.programmeTitle)
-                        it.setVariable("downloadedDateTime", ZonedDateTime.now().format(
+                        it.setVariable("downloadedDateTime", localDateTime.format(
                             DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm")))
-                        it.setVariable("downloadedDate", ZonedDateTime.now().format(
+                        it.setVariable("downloadedDate", localDateTime.format(
                             DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                         it.setVariable("version", version)
                         it.setVariable("logo", logo)
