@@ -14,11 +14,13 @@
         SECTION C - Project description
     </div>
     <!-- C1 -->
-    <div th:insert="~{application-form/section-c/section-c-1.html :: projectObjective(${projectDataSectionC}, ${specificObjective})}"></div>
+    <th:block th:if="${clfUtils.isSectionC1Available(#vars.projectData.lifecycleData, #vars.callData)}">
+        <div th:insert="~{application-form/section-c/section-c-1.html :: projectObjective(${projectDataSectionC}, ${specificObjective})}"></div>
+        <div class="page-break-after"></div>
+    </th:block>
 
     <!-- C2 -->
     <th:block th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}">
-        <div class="page-break-before"></div>
         <div th:insert="~{application-form/section-c/project-relevance-and-context.html :: projectRelevanceAndContext(${projectDataSectionC})}"></div>
     </th:block>
 

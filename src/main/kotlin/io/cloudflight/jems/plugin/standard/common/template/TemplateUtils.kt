@@ -19,6 +19,8 @@ class TemplateUtils {
     fun getEnglishTranslation(translationData: Set<InputTranslationData>) =
         translationData.getTranslationFor(SystemLanguageData.EN)
 
+    fun isSectionC1Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
+        isProjectOverallObjectiveSectionVisible(lifecycleData, callData)
     fun isSectionC2Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectRelevanceSectionVisible(lifecycleData, callData)
 
