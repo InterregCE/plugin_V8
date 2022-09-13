@@ -251,7 +251,7 @@ open class BudgetDetailsTableGenerator(
         flatRate: Int?, staffCostTotal: BigDecimal
     ) =
         staffCostData.map { budget ->
-            val unitCost = callData.unitCosts.firstOrNull { it.id == budget.unitCostId }
+            val unitCost = (callData.unitCosts.plus(projectData.sectionE.projectDefinedUnitCosts)).firstOrNull { it.id == budget.unitCostId }
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
@@ -312,7 +312,7 @@ open class BudgetDetailsTableGenerator(
         budgetPerPeriod: ProjectPartnerBudgetPerPeriodData?,
         flatRate: Int?, travelCostTotal: BigDecimal
     ) = travelCostsData.map { budget ->
-        val unitCost = callData.unitCosts.firstOrNull { it.id == budget.unitCostId }
+        val unitCost = (callData.unitCosts.plus(projectData.sectionE.projectDefinedUnitCosts)).firstOrNull { it.id == budget.unitCostId }
         BudgetDetailsRow(
             partnerInfo = partnerInfo,
             costCategory = getMessage(
@@ -371,7 +371,10 @@ open class BudgetDetailsTableGenerator(
     ): Array<BudgetDetailsRow> =
         generalCostData.map { budget ->
             val unitCost =
-                if (budget.unitCostId != null) callData.unitCosts.firstOrNull { it.id == budget.unitCostId } else null
+                if (budget.unitCostId != null)
+                        (callData.unitCosts.plus(projectData.sectionE.projectDefinedUnitCosts)).firstOrNull { it.id == budget.unitCostId }
+                else
+                    null
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(typeTranslationKey, exportLocale, messageSource),
@@ -450,7 +453,7 @@ open class BudgetDetailsTableGenerator(
 
     private fun getMultiCategoryUnitCostData(partnerInfo: PartnerInfo, unitCostsData: List<BudgetUnitCostEntryData>) =
         unitCostsData.map { budget ->
-            val callUnitCost = callData.unitCosts.firstOrNull { it.id == budget.unitCostId }
+            val callUnitCost = (callData.unitCosts.plus(projectData.sectionE.projectDefinedUnitCosts)).firstOrNull { it.id == budget.unitCostId }
             BudgetDetailsRow(
                 partnerInfo = partnerInfo,
                 costCategory = getMessage(
