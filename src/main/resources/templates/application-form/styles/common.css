@@ -74,6 +74,11 @@ html, body {
     page-break-before: always;
 }
 
+.prevent-first-page-break .page-break-before:first-child{
+    page-break-before: avoid !important;
+}
+
+
 .keep-together {
     page-break-inside: avoid;
 }
@@ -176,7 +181,7 @@ html, body {
     text-align: right;
 }
 
-tr, td, th, .table-header {
+tr, td, th:not(:block), .table-header {
     page-break-inside: avoid;
 }
 

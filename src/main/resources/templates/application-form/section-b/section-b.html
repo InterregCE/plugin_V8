@@ -11,14 +11,10 @@
 <th:block th:fragment="sectionB(projectDataSectionB)">
     <div th:insert="~{application-form/section-b/partners-overview-table.html :: partnersOverviewTable(${projectDataSectionB})}"></div>
 
-    <div class="page-break-after"></div>
-
-    <div th:insert="~{application-form/section-b/partner-detail-table.html :: partnerDetailTable(${projectDataSectionB})}"></div>
-
-    <div class="page-break-after"></div>
-
-    <div th:insert="~{application-form/section-b/partner-associated-organizations-table.html :: partnerAssociatedOrganizationTable(${projectDataSectionB.associatedOrganisations})}"></div>
-
+    <th:block th:if="${projectDataSectionB.partners?.size() > 0}">
+        <div th:insert="~{application-form/section-b/partner-detail-table.html :: partnerDetailTable(${projectDataSectionB})}"></div>
+    </th:block>
+        <div th:insert="~{application-form/section-b/partner-associated-organizations-table.html :: partnerAssociatedOrganizationTable(${projectDataSectionB.associatedOrganisations})}"></div>
 </th:block>
 </body>
 </html>

@@ -31,7 +31,9 @@
     <div th:insert="~{application-form/section-a/section-a.html :: sectionA(${projectData.sectionA}, ${projectData.sectionB.partners})}"></div>
     <div class="page-break-after"></div>
     <div th:insert="~{application-form/section-b/section-b.html :: sectionB(${projectData.sectionB})}"></div>
-    <div class="page-break-after"></div>
-    <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionB}, ${projectData.sectionA}, ${projectData.sectionA.specificObjective}, ${timeplanData})}"></div>
+    <th th:if="${clfUtils.isSectionCAvailable(#vars.lifecycleData,#vars.callData)}">
+        <div class="page-break-after"></div>
+        <div th:insert="~{application-form/section-c/section-c.html :: sectionC(${projectData.sectionC}, ${projectData.sectionB}, ${projectData.sectionA}, ${projectData.sectionA.specificObjective}, ${timeplanData})}"></div>
+    </th>
 </body>
 </html>

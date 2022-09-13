@@ -14,7 +14,12 @@
             results
         </div>
         <span th:text="#{project.results.intro}">intro text</span>
-
+        <th:block th:if="${projectDataSectionC.projectResults?.size() == 0}">
+            <br/>
+            <br/>
+            <span th:text="#{project.results.list.empty}">No
+                results</span>
+        </th:block>
         <th:block th:each="result, rowStat: ${projectDataSectionC.projectResults}"
                   th:object="${result}">
 
