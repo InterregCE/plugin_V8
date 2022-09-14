@@ -9,6 +9,7 @@
 </head>
 <body>
 <th:block th:fragment="partnerDetailTable(projectDataSectionB)">
+    <div class="page-break-before"></div>
     <th:block th:each="partner, rowStat: ${clfPartnerUtils.sortPartnersBySortNumber(projectDataSectionB.partners)}"
               th:object="${partner}">
         <table class="default-vertical-table">

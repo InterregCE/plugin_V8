@@ -10,42 +10,49 @@
 <body>
 <th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)"
           clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+    <div class="page-break-before"></div>
     <div class="title" id="associated-organizations"
          th:text="#{project.application.form.section.part.b.associatedOrganizations}">Associated
         organizations
     </div>
+    <span th:if="${associatedOrganizations?.size() == 0}"
+          th:text="#{project.application.form.associatedOrganization.list.empty}">No
+        associated organizations
+    </span>
 
-    <table class="default-table" clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
-        <thead class="table-header">
-        <tr>
-            <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
+    <th:block th:if="${projectDataSectionB.associatedOrganisations?.size() > 0}">
+        <table class="default-table" clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
 
-            <th th:text="#{project.application.form.associatedOrganization.table.status}">Status</th>
+                <th th:text="#{project.application.form.associatedOrganization.table.status}">Status</th>
 
-            <th th:text="#{project.organization.original.name.label}">
-                Partner name in Original language
-            </th>
+                <th th:text="#{project.organization.original.name.label}">
+                    Partner name in Original language
+                </th>
 
-            <th th:text="#{project.application.form.associatedOrganization.table.partner}">
-                Name of the responsible project partner
-            </th>
+                <th th:text="#{project.application.form.associatedOrganization.table.partner}">
+                    Name of the responsible project partner
+                </th>
 
-        </tr>
-        </thead>
-        <tbody class="table-body">
-        <tr th:if="${projectDataSectionB.associatedOrganisations.size() == 0}">
-            <td colspan="4"></td>
-        </tr>
-        <tr th:each="organization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(projectDataSectionB.associatedOrganisations)}"
-            th:object="${organization}">
-            <td th:text="*{sortNumber}"></td>
-            <td th:text="${organization.active}  ? #{project.application.form.associatedOrganization.table.status.active} : #{project.application.form.associatedOrganization.table.status.inactive}"></td>
-            <td th:text="*{nameInOriginalLanguage}"></td>
-            <td th:text="${organization.partner.abbreviation}">
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr th:if="${projectDataSectionB.associatedOrganisations.size() == 0}">
+                <td colspan="4"></td>
+            </tr>
+            <tr th:each="organization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(projectDataSectionB.associatedOrganisations)}"
+                th:object="${organization}">
+                <td th:text="*{sortNumber}"></td>
+                <td th:text="${organization.active}  ? #{project.application.form.associatedOrganization.table.status.active} : #{project.application.form.associatedOrganization.table.status.inactive}"></td>
+                <td th:text="*{nameInOriginalLanguage}"></td>
+                <td th:text="${organization.partner.abbreviation}">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
 
     <th:block th:each="associatedOrganization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(associatedOrganizations)}"
               th:object="${associatedOrganization}">

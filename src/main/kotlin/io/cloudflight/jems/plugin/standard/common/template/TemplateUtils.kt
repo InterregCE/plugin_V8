@@ -11,6 +11,7 @@ import org.thymeleaf.standard.expression.IStandardExpression
 import org.thymeleaf.standard.expression.IStandardExpressionParser
 import org.thymeleaf.standard.expression.StandardExpressions
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
+import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.TimeplanData
 
 const val CLF_UTILS = "clfUtils"
 
@@ -19,6 +20,15 @@ class TemplateUtils {
     fun getEnglishTranslation(translationData: Set<InputTranslationData>) =
         translationData.getTranslationFor(SystemLanguageData.EN)
 
+    fun isSectionCAvailable(lifecycleData: ProjectLifecycleData, callData: CallDetailData): Boolean{
+        return  isSectionC1Available(lifecycleData, callData) ||
+                isSectionC2Available(lifecycleData, callData) ||
+                isFieldAvailable("PROJECT_PARTNERSHIP", lifecycleData, callData) ||
+                isSectionC4Available(lifecycleData, callData) ||
+                isProjectResultsSectionAvailable(lifecycleData, callData) ||
+                isSectionC7Available(lifecycleData, callData) ||
+                isLongTermPlansSectionAvailable(lifecycleData, callData)
+    }
     fun isSectionC1Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isProjectOverallObjectiveSectionVisible(lifecycleData, callData)
     fun isSectionC2Available(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =

@@ -17,11 +17,10 @@
     </div>
 
     <div th:insert="~{application-form/section-c/project-work-packages-overview.html :: projectWorkPackagesOverview(${projectDataSectionC})}"></div>
-    <div class="page-break-after"></div>
 
     <th:block th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
               th:object="${workPackage}">
-
+        <div class="page-break-before"></div>
         <div class="sub-heading-2"
              th:text="#{project.application.form.workpackage.form.header} + ' ' + ${workPackage.workPackageNumber}"
              th:id="'wp-'+*{workPackageNumber}">
@@ -65,7 +64,6 @@
         </div>
         <div th:insert="~{application-form/section-c/project-wp-investment.html :: sectionC4Investment(${workPackage}, ${periods})}"></div>
 
-        <div class="page-break-after"></div>
     </th:block>
 </th:block>
 </body>

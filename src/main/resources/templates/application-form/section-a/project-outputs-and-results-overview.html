@@ -11,6 +11,10 @@
 <th:block th:fragment="projectOutputsAndResultsOverviewTable(projectDataSectionA)">
     <div id="section-a-4" class="landscape long-text" clf:ifAnyFieldIsVisible="PROJECT_A4">
         <div class="title" th:text="#{project.application.form.section.part.a.subsection.four}"></div>
+        <span th:if="${#lists.size(projectDataSectionA.resultIndicatorOverview.indicatorLines) == 0}"
+              th:text="#{project.application.form.a4.table.not.available.export}">No
+            outputs and results created
+        </span>
         <table class="remove-zebra default-table" th:if="${#lists.size(projectDataSectionA.resultIndicatorOverview.indicatorLines) > 0}">
             <thead class="table-header">
             <tr>

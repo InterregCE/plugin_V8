@@ -9,27 +9,32 @@
 </head>
 <body>
 <th:block th:fragment="projectWorkPackagesOverview(projectDataSectionC)">
+    <span th:if="${projectDataSectionC.projectWorkPackages?.size() == 0}"
+          th:text="#{project.application.form.workpackage.list.empty}">No
+        work packages
+    </span>
+    <th:block th:if="${projectDataSectionC.projectWorkPackages?.size() > 0}">
+        <table class="default-table">
+            <thead class="table-header">
+            <tr>
+                <th th:text="#{project.application.form.workpackage.number}">
+                    Number
+                </th>
 
-    <table class="default-table">
-        <thead class="table-header">
-        <tr>
-            <th th:text="#{project.application.form.workpackage.number}">
-                Number
-            </th>
-
-            <th clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" th:text="#{project.application.form.workpackage.name}">
-                Work package name
-            </th>
-        </tr>
-        </thead>
-        <tbody class="table-body">
-        <tr th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
-            th:object="${workPackage}">
-            <td th:text="*{workPackageNumber}">Number</td>
-            <td clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" clf:textTranslationByDataLanguage="*{name}">Name</td>
-        </tr>
-        </tbody>
-    </table>
+                <th clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" th:text="#{project.application.form.workpackage.name}">
+                    Work package name
+                </th>
+            </tr>
+            </thead>
+            <tbody class="table-body">
+            <tr th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
+                th:object="${workPackage}">
+                <td th:text="*{workPackageNumber}">Number</td>
+                <td clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" clf:textTranslationByDataLanguage="*{name}">Name</td>
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
 </th:block>
 </body>
 </html>
