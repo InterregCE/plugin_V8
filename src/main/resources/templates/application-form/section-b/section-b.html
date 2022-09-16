@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionB" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.ProjectDataSectionB"*/-->
 <!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
@@ -14,7 +14,10 @@
     <th:block th:if="${projectDataSectionB.partners?.size() > 0}">
         <div th:insert="~{application-form/section-b/partner-detail-table.html :: partnerDetailTable(${projectDataSectionB})}"></div>
     </th:block>
+
+    <th:block clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
         <div th:insert="~{application-form/section-b/partner-associated-organizations-table.html :: partnerAssociatedOrganizationTable(${projectDataSectionB.associatedOrganisations})}"></div>
+    </th:block>
 </th:block>
 </body>
 </html>

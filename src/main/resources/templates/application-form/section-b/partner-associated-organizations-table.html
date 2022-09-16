@@ -8,8 +8,7 @@
           th:href="@{../styles/common.css}"/>
 </head>
 <body>
-<th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)"
-          clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
+<th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)">
     <div class="page-break-before"></div>
     <div class="title" id="associated-organizations"
          th:text="#{project.application.form.section.part.b.associatedOrganizations}">Associated
