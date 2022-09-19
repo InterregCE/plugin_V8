@@ -49,7 +49,8 @@
                 </bookmark>
             </bookmark>
         </th:block>
-            <bookmark th:name="#{project.application.form.section.part.c}" href="#section-c">
+            <bookmark th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
+                    th:name="#{project.application.form.section.part.c}" href="#section-c">
                 <bookmark th:if="${clfUtils.isSectionC1Available(#vars.projectData.lifecycleData, #vars.callData)}"
                           th:name="#{project.application.form.section.part.c.subsection.one}" href="#section-c-1"></bookmark>
                 <bookmark th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
