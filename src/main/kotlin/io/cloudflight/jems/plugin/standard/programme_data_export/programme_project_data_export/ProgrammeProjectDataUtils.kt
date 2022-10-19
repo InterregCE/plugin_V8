@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.programme_data_export.programme_proj
 
 import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundData
 import io.cloudflight.jems.plugin.contract.models.project.ProjectData
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.tableA3.ProjectCoFinancingOverviewData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerRoleData
@@ -107,6 +108,11 @@ internal fun getGeneralBudgetCostTotalsFor(budgetCosts: List<BudgetGeneralCostEn
         unitCostTotal = budgetCosts.filter { it.unitCostId != null }
             .sumOf { it.rowSum ?: BigDecimal.ZERO }
     )
+
+internal fun getProjectTotalBudget(coFinancing: ProjectCoFinancingOverviewData?): BigDecimal {
+    return coFinancing?.projectManagementCoFinancing?.totalFundAndContribution
+        ?.add(coFinancing.projectSpfCoFinancing.totalFundAndContribution) ?: BigDecimal.ZERO
+}
 
 internal fun Any?.toCallCellData() =
     CellData(this).backgroundColor(Color.LIGHT_GREEN)

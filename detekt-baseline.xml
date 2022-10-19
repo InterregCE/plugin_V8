@@ -81,6 +81,8 @@
     <ID>PackageNaming:ProgrammeProjectDataUtils.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_project_data_export</ID>
     <ID>PackageNaming:ProjectAndCallAndPartnerData.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
     <ID>PackageNaming:ProjectAndCallData.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:ProjectCodeOfInterventionBudgetShare.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
+    <ID>PackageNaming:ProjectCodesOfInterventionRow.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model</ID>
     <ID>PackageNaming:Rectangle.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
     <ID>PackageNaming:RectangleText.kt$package io.cloudflight.jems.plugin.standard.application_form_export.timeplan</ID>
     <ID>PackageNaming:SectionAChecks.kt$package io.cloudflight.jems.plugin.standard.pre_condition_check</ID>
