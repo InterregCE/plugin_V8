@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.programme_data_export.programme_proj
 
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundData
+import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammeObjectiveDimension
 import io.cloudflight.jems.plugin.standard.budget_export.CLOSURE_PERIOD
 import io.cloudflight.jems.plugin.standard.budget_export.PREPARATION_PERIOD
 import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
@@ -21,6 +22,42 @@ internal fun getHeaderRow(
         *getCallDataHeaders(exportLocale, messageSource),
         *getProjectDataHeaders(maximalPeriodNumbers, programmeFunds, exportLocale, exportLanguage, messageSource),
         *getProjectAssessmentDataHeaders(exportLocale, messageSource)
+    ).toTypedArray()
+}
+
+internal fun getProjectCodeOfInterventionHeaderRow(exportLanguage: SystemLanguageData, messageSource: MessageSource) : Array<CellData> {
+    val exportLocale = exportLanguage.toLocale()
+    return listOf(
+        *getMessagesWithoutArgs(
+            messageSource, exportLocale,
+            "project.application.form.field.project.id",
+            "project.application.form.field.project.acronym",
+            "export.budget.project.total"
+        ).map { it.toProjectCellData() }.toTypedArray(),
+
+        *ProgrammeObjectiveDimension.values().flatMap {  dimension ->
+            val key = "programme.objective.dimension.".plus(dimension.name.lowercase())
+            listOf(
+                ("D".plus(dimension.dimension).plus(" - ")
+                    .plus(getMessage(key, exportLocale, messageSource))).toProjectCellData(),
+                ("D".plus(dimension.dimension).plus(" ")
+                    .plus(
+                        getMessage(
+                            "project.application.contract.monitoring.project.dimension.budget.share.amount",
+                            exportLocale,
+                            messageSource
+                        )
+                    )).toProjectCellData(),
+                ("D".plus(dimension.dimension).plus(" ").plus(
+                        getMessage(
+                            "project.application.contract.monitoring.project.dimension.budget.share.percent",
+                            exportLocale,
+                            messageSource
+                        )
+                    )).toProjectCellData(),
+
+            )
+        }.toTypedArray()
     ).toTypedArray()
 }
 

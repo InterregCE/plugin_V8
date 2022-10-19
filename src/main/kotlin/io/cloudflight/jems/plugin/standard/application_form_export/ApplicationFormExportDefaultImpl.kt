@@ -51,9 +51,9 @@ open class ApplicationFormExportDefaultImpl(
         projectId: Long,
         exportLanguage: SystemLanguageData,
         dataLanguage: SystemLanguageData,
-        localDateTime: LocalDateTime,
         version: String?,
-        logo: String?
+        logo: String?,
+        localDateTime: LocalDateTime?
     ): ExportResult {
         val projectData = projectDataProvider.getProjectDataForProjectId(projectId, version)
 
@@ -76,17 +76,25 @@ open class ApplicationFormExportDefaultImpl(
                         it.setVariable(CLF_PARTNER_UTILS, PartnerUtils())
                         it.setVariable(CLF_BUDGET_UTILS, BudgetUtils())
                         it.setVariable(CLF_PROJECT_UTILS, ProjectUtils())
-                        it.setVariable("timeplanData", getTimeplanData(
-                            periods = projectData.sectionA?.periods?.addLastPeriod() ?: emptyList(),
-                            workPackages = projectData.sectionC.projectWorkPackages,
-                            results = projectData.sectionC.projectResults,
-                            language = dataLanguage,
-                        ))
+                        it.setVariable(
+                            "timeplanData", getTimeplanData(
+                                periods = projectData.sectionA?.periods?.addLastPeriod() ?: emptyList(),
+                                workPackages = projectData.sectionC.projectWorkPackages,
+                                results = projectData.sectionC.projectResults,
+                                language = dataLanguage,
+                            )
+                        )
                         it.setVariable("programmeTitle", projectData.programmeTitle)
-                        it.setVariable("downloadedDateTime", localDateTime.format(
-                            DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm")))
-                        it.setVariable("downloadedDate", localDateTime.format(
-                            DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        it.setVariable(
+                            "downloadedDateTime", localDateTime?.format(
+                                DateTimeFormatter.ofPattern("dd.MM.yyy, HH:mm")
+                            )
+                        )
+                        it.setVariable(
+                            "downloadedDate", localDateTime?.format(
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            )
+                        )
                         it.setVariable("version", version)
                         it.setVariable("logo", logo)
                     }
@@ -112,5 +120,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.23"
+        "1.0.24"
 }

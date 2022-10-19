@@ -2,6 +2,7 @@ package io.cloudflight.jems.plugin.standard.programme_data_export.programme_proj
 
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.models.programme.ProgrammeInfoData
+import io.cloudflight.jems.plugin.contract.models.programme.priority.ProgrammeObjectiveDimension
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ApplicationStatusData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectAssessmentEligibilityResultData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectAssessmentQualityResultData
@@ -12,9 +13,12 @@ import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
 import io.cloudflight.jems.plugin.standard.common.excel.model.ExcelData
 import io.cloudflight.jems.plugin.standard.common.getMessage
 import io.cloudflight.jems.plugin.standard.common.getTranslationFor
+import io.cloudflight.jems.plugin.standard.common.percentageTo
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProgrammeProjectDataExportRow
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProjectAndCallData
+import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProjectCodeOfInterventionBudgetShare
+import io.cloudflight.jems.plugin.standard.programme_data_export.model.ProjectCodesOfInterventionRow
 import org.springframework.context.MessageSource
 import java.math.BigDecimal
 import java.time.ZonedDateTime
@@ -45,6 +49,12 @@ open class ProgrammeProjectDataGenerator(
                 sheet.addRow(*getHeaderRow(maximalPeriods, programmeInfoData.funds, exportLanguage, messageSource))
                     .borderTop()
                 sheet.addRows(getRows(generateProgrammeProjectDataExportRows()))
+                sheet.data.lastOrNull()?.borderBottom()
+            }
+            it.addSheet("Project Codes of Dimension").also { sheet ->
+                sheet.addRow(CellData(getFileTitle(programmeInfoData.title, exportationDateTime)))
+                sheet.addRow(*getProjectCodeOfInterventionHeaderRow(exportLanguage, messageSource)).borderTop()
+                sheet.addRows(getProjectInterventionCodesRows(generateProjectCodesOfInterventionData()))
                 sheet.data.lastOrNull()?.borderBottom()
             }
             if (failedProjectIds.isNotEmpty())
@@ -150,6 +160,24 @@ open class ProgrammeProjectDataGenerator(
             }.toTypedArray()
         }
 
+
+    private fun getProjectInterventionCodesRows(data: List<ProjectCodesOfInterventionRow>): List<Array<CellData>> =
+        data.map { row ->
+            mutableListOf<CellData>().also { it ->
+                it.add(row.projectId.toProjectCellData())
+                it.add(row.projectAcronym.toProjectCellData())
+                it.add(row.projectTotalBudget.toProjectCellData())
+                it.addAll(row.dimensionCodesBudgetShare.flatMap {
+                    listOf(
+                        it.dimensionCode.toProjectCellData(),
+                        it.projectBudgetAmountShare.toProjectCellData(),
+                        it.projectBudgetPercentShare.toProjectCellData()
+                    )
+                })
+            }.toTypedArray()
+        }
+
+
     private fun generateProgrammeProjectDataExportRows(): List<ProgrammeProjectDataExportRow> =
         projectAndCallDataList
             .sortedWith(compareBy({ it.callDetailData.id }, { it.projectData.sectionA?.customIdentifier }))
@@ -228,9 +256,45 @@ open class ProgrammeProjectDataGenerator(
                     eligibilityAssessmentResult = projectData.lifecycleData.assessmentStep2?.assessmentEligibility?.result,
                     eligibilityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentEligibility?.note,
                     qualityAssessmentResult = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.result,
-                    qualityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.note,
+                    qualityAssessmentNotes = projectData.lifecycleData.assessmentStep2?.assessmentQuality?.note
                 )
             }
+
+
+    private fun generateProjectCodesOfInterventionData(): List<ProjectCodesOfInterventionRow> {
+        val rows = mutableListOf<ProjectCodesOfInterventionRow>()
+        projectAndCallDataList
+            .sortedWith(compareBy { it.projectData.sectionA?.customIdentifier })
+            .map { entry ->
+                val projectData = entry.projectData
+                val projectBudget = getProjectTotalBudget(projectData.sectionA?.coFinancingOverview)
+                val dimensionsByCode = projectData.dimensionCodes.groupBy { it.dimensionCode }
+
+                dimensionsByCode.keys.map { dimensionCode ->
+                    val dimensionDataList = mutableListOf<ProjectCodeOfInterventionBudgetShare>()
+                    ProgrammeObjectiveDimension.values().map { dimension ->
+                        val data = dimensionsByCode[dimensionCode]?.firstOrNull { it.programmeObjectiveDimension == dimension }
+                        dimensionDataList.add(
+                            ProjectCodeOfInterventionBudgetShare(
+                                dimensionCode = data?.dimensionCode ?: "",
+                                projectBudgetAmountShare = data?.projectBudgetAmountShare ?: BigDecimal.ZERO,
+                                projectBudgetPercentShare = data?.projectBudgetAmountShare?.percentageTo(projectBudget)
+                                    ?: BigDecimal.ZERO
+                            )
+                        )
+                    }
+                    rows.add(
+                        ProjectCodesOfInterventionRow(
+                            projectId = projectData.sectionA?.customIdentifier!!,
+                            projectAcronym = projectData.sectionA?.acronym,
+                            projectTotalBudget = projectBudget,
+                            dimensionCodesBudgetShare = dimensionDataList
+                        )
+                    )
+                }
+            }
+        return rows
+    }
 
     private fun ProjectAssessmentEligibilityResultData?.toMessage() =
         if (this == null) null else
