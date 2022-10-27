@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.1.37'
+version '1.1.38'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -28,6 +28,12 @@ jar {
     enabled = true
     from { (configurations.compileClasspath - configurations.provided).collect { it.isDirectory() ? it : zipTree(it) } }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        freeCompilerArgs += "-Xjvm-default=all"
+    }
 }
 
 if (isKotlinProject(project)) {
@@ -52,7 +58,7 @@ if (isKotlinProject(project)) {
 }
 dependencies {
     // load for local development (if projects are cloned in same root as jems)
-    // implementation files('../jems-plugin-interface/build/libs/jems-plugin-contract-1.1.15-SNAPSHOT.jar')
+    // implementation files('../jems-plugin-interface/build/libs/jems-plugin-contract-1.1.18-SNAPSHOT.jar')
     provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract')
     provided('org.springframework.boot:spring-boot-starter-web')
     provided('org.springframework.boot:spring-boot-starter-thymeleaf')
