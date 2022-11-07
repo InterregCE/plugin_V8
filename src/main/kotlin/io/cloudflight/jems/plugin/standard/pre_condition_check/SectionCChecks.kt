@@ -63,7 +63,9 @@ fun checkSectionC(sectionCData: ProjectDataSectionC?): PreConditionCheckMessage 
 
             checkIfSpecificationIsProvidedForAllStrategies(sectionCData?.projectRelevance?.projectStrategies),
 
-            checkIfSynergiesAreNotEmpty(sectionCData?.projectRelevance?.projectSynergies),
+            checkIfAtLeastOneSynergyIsAdded(sectionCData?.projectRelevance?.projectSynergies),
+
+            checkIfSpecificationIsProvidedForAllSynergies(sectionCData?.projectRelevance?.projectSynergies),
 
             checkIfAvailableKnowledgeAreNotEmpty(sectionCData?.projectRelevance?.availableKnowledge)
         ),
@@ -213,7 +215,14 @@ private fun checkIfSpecificationIsProvidedForAllStrategies(projectStrategies: Li
         else -> null
     }
 
-private fun checkIfSynergiesAreNotEmpty(relevanceSynergies: List<ProjectRelevanceSynergyData>?) =
+private fun checkIfAtLeastOneSynergyIsAdded(relevanceSynergies: List<ProjectRelevanceSynergyData>?) =
+    when {
+        !isFieldVisible(ApplicationFormFieldId.PROJECT_SYNERGIES) -> null
+        relevanceSynergies.isNullOrEmpty() -> buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.synergy.should.be.added")
+        else -> null
+    }
+
+private fun checkIfSpecificationIsProvidedForAllSynergies(relevanceSynergies: List<ProjectRelevanceSynergyData>?) =
     when {
         !isFieldVisible(ApplicationFormFieldId.PROJECT_SYNERGIES) -> null
         relevanceSynergies.isNullOrEmpty() -> null
