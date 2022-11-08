@@ -23,28 +23,19 @@ open class PreConditionCheckDefaultImpl(
             val callData = callDataProvider.getCallDataByProjectId(projectId)
             CallDataContainer.set(callData)
             LifecycleDataContainer.set(projectData.lifecycleData)
-
-            if(projectData.lifecycleData.status.isInStepOne()) {
-                // TODO: Develop your rules for 1step here
-                PreConditionCheckResult(
-                    messages = mutableListOf(),
-                    isSubmissionAllowed =  false
-                )
+            val messages = mutableListOf<PreConditionCheckMessage>()
+            if (projectData.lifecycleData.status.isInStepOne()) {
+                messages.add(checkAcronymForStepOne(projectData.sectionA?.acronym))
             } else {
-                mutableListOf<PreConditionCheckMessage>().plus(
-                    arrayOf(
-                        checkSectionA(projectData.sectionA),
-                        checkSectionB(projectData.sectionB),
-                        checkSectionC(projectData.sectionC),
-                        checkSectionE(projectData.sectionE)
-                    )
-                ).let { messages ->
-                    PreConditionCheckResult(
-                        messages = messages,
-                        isSubmissionAllowed = messages.none { it.messageType == MessageType.ERROR }
-                    )
-                }
+                messages.add(checkSectionA(projectData.sectionA))
+                messages.add(checkSectionB(projectData.sectionB))
+                messages.add(checkSectionC(projectData.sectionC))
+                messages.add(checkSectionE(projectData.sectionE))
             }
+            return PreConditionCheckResult(
+                messages = messages,
+                isSubmissionAllowed = messages.none { it.messageType == MessageType.ERROR }
+            )
         }
 
     override fun getDescription(): String =
@@ -57,5 +48,5 @@ open class PreConditionCheckDefaultImpl(
         "Standard pre condition check"
 
     override fun getVersion(): String =
-        "1.0.22"
+        "1.0.23"
 }
