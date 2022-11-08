@@ -32,6 +32,14 @@ fun checkSectionA(sectionAData: ProjectDataSectionA?): PreConditionCheckMessage 
     )
 }
 
+fun checkAcronymForStepOne(acronym: String?): PreConditionCheckMessage {
+    return buildPreConditionCheckMessage(
+        messageKey = "project.application.form.section.part.a", messageArgs = emptyMap(),
+
+        checkIfAcronymIsProvided(acronym),
+    )
+}
+
 private fun checkIfTitleIsProvided(title: Set<InputTranslationData>?) =
     when {
         isFieldVisible(ApplicationFormFieldId.PROJECT_TITLE) && title.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
