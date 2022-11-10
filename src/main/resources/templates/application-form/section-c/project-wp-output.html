@@ -41,7 +41,7 @@
 
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_TARGET_VALUE">
                 <th th:text="#{project.application.form.work.package.output.target.value}"></th>
-                <td clf:number="*{targetValue}"></td>
+                <td clf:leftAlignedNumber="*{targetValue}"></td>
             </tr>
 
             <tr clf:ifAnyFieldIsVisible="PROJECT_OUTPUT_DELIVERY_PERIOD">
