@@ -16,6 +16,7 @@ class ClfDialect : AbstractProcessorDialect(
             it.add(TextTranslationByDataLanguageProcessor(dialectPrefix))
             it.add(TextTranslationByExportLanguageProcessor(dialectPrefix))
             it.add(NumberProcessor(dialectPrefix))
+            it.add(LeftAlignedNumberProcessor(dialectPrefix))
             it.add(PercentageProcessor(dialectPrefix))
             it.add(TextBasedOnCallTypeProcessor(dialectPrefix))
         }

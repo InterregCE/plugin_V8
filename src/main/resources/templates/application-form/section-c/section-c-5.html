@@ -46,11 +46,11 @@
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_BASELINE">
                     <th th:text="#{project.results.result.baseline}">bsln</th>
-                    <td clf:number="*{baseline}">12345</td>
+                    <td clf:leftAlignedNumber="*{baseline}">12345</td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_TARGET_VALUE">
                     <th th:text="#{project.results.result.target.value}">trgt</th>
-                    <td clf:number="*{targetValue}">12345</td>
+                    <td clf:leftAlignedNumber="*{targetValue}">12345</td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_DELIVERY_PERIOD">
                     <th th:text="#{project.results.result.delivery.period}">period</th>
