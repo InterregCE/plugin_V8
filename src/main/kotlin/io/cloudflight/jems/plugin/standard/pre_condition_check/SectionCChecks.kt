@@ -310,7 +310,7 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
 
 private fun checkIfAtLeastOneWorkPackageIsAdded(workPackages: List<ProjectWorkPackageData>?) =
     when {
-        workPackages.isNullOrEmpty() || (isSpf() && workPackages.size > 1) ->
+        workPackages.isNullOrEmpty() ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.should.be.added".suffixSpf())
         else ->
             null
@@ -374,7 +374,7 @@ private fun checkIfAtLeastOneResultIsAdded(results: List<ProjectResultData>?) =
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_TARGET_VALUE) &&
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DELIVERY_PERIOD) &&
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DESCRIPTION) -> null
-        results.isNullOrEmpty() || (isSpf() && results.size > 1) ->
+        results.isNullOrEmpty() ->
             buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.result.should.be.added".suffixSpf())
         else ->
             null
