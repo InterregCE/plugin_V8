@@ -311,7 +311,7 @@ private fun checkIfWorkPackageContentIsProvided(workPackages: List<ProjectWorkPa
 private fun checkIfAtLeastOneWorkPackageIsAdded(workPackages: List<ProjectWorkPackageData>?) =
     when {
         workPackages.isNullOrEmpty() ->
-            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.should.be.added".suffixSpf())
+            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.work.package.should.be.added")
         else ->
             null
     }
@@ -375,7 +375,7 @@ private fun checkIfAtLeastOneResultIsAdded(results: List<ProjectResultData>?) =
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DELIVERY_PERIOD) &&
                 !isFieldVisible(ApplicationFormFieldId.PROJECT_RESULTS_DESCRIPTION) -> null
         results.isNullOrEmpty() ->
-            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.result.should.be.added".suffixSpf())
+            buildErrorPreConditionCheckMessage("$SECTION_C_ERROR_MESSAGES_PREFIX.at.least.one.result.should.be.added")
         else ->
             null
     }
@@ -907,5 +907,3 @@ private fun checkIfProjectHasAtLeastOneWorkPackageOutput(workPackages: List<Proj
     }
 
 private fun isSpf() = CallDataContainer.get().type == CallTypeData.SPF
-
-private fun String.suffixSpf() = if (isSpf()) "$this.spf" else this
