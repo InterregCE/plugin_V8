@@ -1,8 +1,3 @@
-.break-long-word {
-    max-width: 800px;
-    word-wrap: break-word;
-}
-
 .page-break-after {
     display: block;
     clear: both;
@@ -14,11 +9,6 @@
     clear: both;
     page-break-before: always;
 }
-
-.prevent-first-page-break .page-break-before:first-child{
-    page-break-before: avoid !important;
-}
-
 
 .keep-together {
     page-break-inside: avoid;
@@ -36,28 +26,6 @@
     margin-bottom: 12px;
 }
 
-.sub-heading-2 {
-    font-size: 16px;
-    margin-top: 16px;
-    margin-bottom: 8px;
-}
-
-.sub-heading-1 {
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 12px;
-    margin-bottom: 8px;
-
-}
-
-.xs-column {
-    width: 30px;
-}
-
-.m-column {
-    min-width: 150px;
-}
-
 .text-center {
     text-align: center;
     vertical-align: middle !important;
@@ -69,38 +37,6 @@
 
 .text-left{
     text-align: left;
-}
-
-.right-border {
-    border-right: 1px solid #d2dade !important;
-}
-
-.bottom-border {
-    border-bottom: 1px solid #d2dade !important;
-}
-
-.mt-1 {
-    margin-top: 8px !important;
-}
-
-.mt-1rem{
-    margin-top: 1rem !important;
-}
-
-.mt-2rem {
-    margin-top: 2rem !important;
-}
-
-.mt-3rem {
-    margin-top: 3rem !important;
-}
-
-.mt-4rem {
-    margin-top: 4rem !important;
-}
-
-.mt-5rem {
-    margin-top: 5rem !important;
 }
 
 .default-table .row-bordered td,
@@ -122,10 +58,9 @@
     text-align: right;
 }
 
-tr, td, th:not(:block), .table-header {
+tr, td, th, .table-header {
     page-break-inside: avoid;
 }
-
 
 .long-text {
     word-wrap: break-word;
@@ -139,14 +74,6 @@ tr, td, th:not(:block), .table-header {
     border-collapse: collapse;
     overflow: hidden;
     -fs-table-paginate: paginate;
-}
-
-.default-table-no-pagination {
-    width: 100%;
-    border: 1px solid #d2dade;
-    text-align: left;
-    border-collapse: collapse;
-    overflow: hidden;
 }
 
 .default-table th,
@@ -187,10 +114,6 @@ tr, td, th:not(:block), .table-header {
     border-top: 1px solid #d2dade;
 }
 
-.remove-zebra.default-table .table-body tr:nth-child(odd), .remove-zebra.default-vertical-table .table-body tr:nth-child(odd) {
-    background-color: #ffffff;
-}
-
 .default-table td[rowspan="0"],
 .default-vertical-table td[rowspan="0"],
 .default-table-no-pagination td[rowspan="0"] {
@@ -204,32 +127,4 @@ tr, td, th:not(:block), .table-header {
 }
 .multiline {
     white-space: pre-wrap;
-}
-
-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-    padding-top: 125px;
-    margin-bottom: 25px;
-    max-height: 450px;
-}
-
-.info-header-section {
-    position: running(input);
-    text-align: center;
-    border-bottom: 1px solid black;
-    font-size: 11px;
-}
-
-.info-header-item {
-    width: 200px;
-    display: inline-block;
-    padding:5px;
-    word-wrap:break-word;
-}
-
-.info-header-item.italic {
-    font-style: italic;
 }

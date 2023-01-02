@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
+<!--/*@thymesVar id="leadPartner" type="io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData"*/-->
+
+<!--/*@thymesVar id="checklistDetail" type="io.cloudflight.jems.plugin.standard.programme_data_export.checklist_export.common.Checklist"*/-->
+<!--/*@thymesVar id="maxWeightedScore" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="totalWeightedScore" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="scoreQuestions" type="java.util.List<io.cloudflight.jems.plugin.standard.programme_data_export.checklist_export.common.Question>"*/-->
+
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="common/fonts-and-page.css"/>
+    <link rel="stylesheet" type="text/css" media="all" href="checklist/styles/common.css"/>
+</head>
+
+<body id="first-page">
+    <div class="headline">Project identification</div>
+
+    <table class="default-vertical-table">
+        <tbody class="table-body">
+        <tr>
+            <th>Project id (automatically created)</th>
+            <td th:text="${projectDataSectionA.customIdentifier}"></td>
+        </tr>
+        <tr>
+            <th>Name of the lead partner organisation</th>
+            <td th:text="${leadPartner.nameInOriginalLanguage}"></td>
+        </tr>
+        <tr>
+            <th>Name of the lead partner organisation in English</th>
+            <td th:text="${leadPartner.nameInEnglish}"></td>
+        </tr>
+        <tr>
+            <th>Project title</th>
+            <td class="multiline" th:text="${clfUtils.getEnglishTranslation(projectDataSectionA.title)}"></td>
+        </tr>
+        <tr>
+            <th>Project acronym</th>
+            <td th:text="${projectDataSectionA?.acronym}"></td>
+        </tr>
+        <tr>
+            <th>Programme priority</th>
+            <td clf:textTranslationByExportLanguage="${projectDataSectionA.programmePriority?.title}"></td>
+        </tr>
+        <tr>
+            <th>Specific objective</th>
+            <td>
+                <span th:if="${projectDataSectionA.specificObjective?.programmeObjectivePolicy != null}"
+                      th:text="${projectDataSectionA.specificObjective?.code + ': ' + #messages.msg('programme.policy.' + projectDataSectionA.specificObjective?.programmeObjectivePolicy)}">
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="page-break-after"></div>
+
+    <div class="headline" th:text="${checklistDetail.name}"></div>
+
+    <th:block th:if="${maxWeightedScore > 0}">
+        <div class="title">Score table</div>
+        <table class="default-vertical-table">
+            <tbody class="table-body">
+                <tr>
+                    <th colspan="2">Question text</th>
+                    <th>Score</th>
+                    <th>Weight</th>
+                    <th>Weighted score</th>
+                </tr>
+                <tr th:each="question : ${scoreQuestions}">
+                    <td colspan="2" th:text="${question.scoreMetadata?.question}"></td>
+                    <td th:text="${question.answerMetadata?.score}" class="text-right"></td>
+                    <td th:text="${question.scoreMetadata?.weight}" class="text-right"></td>
+                    <td th:text="${question.answerMetadata?.weightedScore}" class="text-right"></td>
+                </tr>
+                <tr>
+                    <td colspan="4">Total</td>
+                    <td><div th:text="${totalWeightedScore}"></div><div>(of <span th:text="${maxWeightedScore}"></span>)</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <th:block th:each="question : ${checklistDetail.questions}">
+        <th:block th:if="${question.headlineMetadata != null}">
+            <div class="title" th:text="${question.headlineMetadata?.value}"></div>
+        </th:block>
+
+        <table class="default-vertical-table" th:if="${question.headlineMetadata == null}">
+            <tbody class="table-body">
+                <tr>
+                    <td>
+                        <th:block th:if="${question.optionsToggleMetadata != null}">
+                            <div class="input-data multiline bg-grey" th:text="${question.optionsToggleMetadata?.question}"></div>
+                        </th:block>
+
+                        <th:block th:if="${question.textInputMetadata != null}">
+                            <div class="input-data multiline bg-grey" th:text="${question.textInputMetadata?.question}"></div>
+                        </th:block>
+
+                        <th:block th:if="${question.scoreMetadata != null}">
+                            <div class="input-data multiline bg-grey" th:text="${question.scoreMetadata?.question}"></div>
+                        </th:block>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <th:block th:if="${question.answerMetadata != null}">
+                            <div class="input-data multiline bg-light-grey" th:text="${question.answerMetadata?.score}" th:if="${question.answerMetadata?.score != null}"></div>
+                            <div class="input-data multiline bg-light-grey" th:text="${question.answerMetadata?.answer}" th:if="${question.answerMetadata?.answer != null}"></div>
+                            <div class="input-data multiline bg-light-grey" th:text="${question.answerMetadata?.explanation}" th:if="${question.answerMetadata?.explanation != null}"></div>
+                            <div class="input-data multiline bg-light-grey" th:text="${question.answerMetadata?.justification}" th:if="${question.answerMetadata?.justification != null}"></div>
+                        </th:block>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+    </th:block>
+</body>
+</html>

@@ -53,6 +53,7 @@ if (isKotlinProject(project)) {
             implementation("com.openhtmltopdf:openhtmltopdf-svg-support:1.0.10")
             implementation("org.apache.poi:poi:5.2.0")
             implementation("org.apache.poi:poi-ooxml:5.2.0")
+            implementation('com.google.code.gson:gson:2.8.9')
         }
     }
 }
@@ -74,5 +75,6 @@ dependencies {
 
     implementation('org.apache.poi:poi')
     implementation('org.apache.poi:poi-ooxml')
+    implementation('com.google.code.gson:gson:2.8.9')
 }
 

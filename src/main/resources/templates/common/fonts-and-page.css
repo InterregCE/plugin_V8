@@ -1,0 +1,59 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-Regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-Bold.ttf);
+    font-weight: bold;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-Italic.ttf);
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Roboto';
+    src: url(fonts/Roboto-BoldItalic.ttf);
+    font-weight: bold;
+    font-style: italic;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 20mm 15mm;
+    @bottom-right {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-size: 14px;
+        content: counter(page);
+    }
+    @top-center {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        content: element(input);
+    }
+}
+
+@page :first {
+    @top-center { content: none; }
+    @bottom-right { content: none; }
+}
+
+@page landscape {
+    margin: 20mm 15mm;
+    size: A4 landscape;
+}
+
+html, body {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+}
+
+.landscape {
+    /*we need to set this because openPdfToHtml uses A4 width as the width of body*/
+    /* this is 297mm (A4 landscape width) - 30mm(margins) - 2mm (to make borders visible)*/
+    width: 265mm;
+    page: landscape
+}
