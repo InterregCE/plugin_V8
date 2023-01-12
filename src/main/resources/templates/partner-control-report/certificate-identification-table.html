@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="partnerReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportIdentificationData"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<th:block
+        th:fragment="certificateIdentificationTable(partnerReportData, partnerReportIdentification, projectIdentification, projectPartnerSummary)">
+    <table class="default-vertical-table">
+        <tbody class="table-body">
+        <tr>
+            <th th:text="#{project.application.form.field.project.title}">Project title</th>
+            <td class="multiline" clf:textTranslationByDataLanguage="${projectIdentification.title}"></td>
+        </tr>
+        <tr>
+            <th th:text="#{project.application.form.field.project.acronym}">Project acronym</th>
+            <td th:text="${partnerReportData?.projectAcronym}"></td>
+        </tr>
+        <tr>
+            <th th:text="#{project.application.form.field.project.id}">ID (automatically created)</th>
+            <td th:text="${partnerReportData?.projectIdentifier}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.project.implementation.period}">Project
+                implementation period
+            </th>
+            <td th:text="${#temporals.format(projectIdentification.projectStartDate, 'dd.MM.yyyy') + ' - ' + #temporals.format(projectIdentification.projectEndDate, 'dd.MM.yyyy')}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.report.reporting.period}">Reporting period</th>
+            <td th:text="${#temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy')+ ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy')}"></td>
+        </tr>
+
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.report.number}">Partner Report Number</th>
+            <td th:text="${'R' + partnerReportData.reportNumber}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.report.partner.name.in.english}">
+                Name of partner organisation in English
+            </th>
+            <td th:text="${partnerReportData?.nameInEnglish}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.partner.vat}">
+                Partner Report Project partner VAT number (or
+                other identifier)
+            </th>
+            <td th:text="${projectPartnerSummary.vat}"></td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+</body>
+</html>

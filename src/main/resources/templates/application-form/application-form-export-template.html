@@ -4,8 +4,8 @@
 <!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <head>
-    <link rel="stylesheet" type="text/css" media="all" href="application-form/styles/common.css"
-          th:href="@{application-form/styles/common.css}"/>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
     <th:block
             th:insert="~{application-form/application-form-index.html :: applicationFormIndex(${projectData}, ${callData}, ${timeplanData})}"></th:block>
 </head>
