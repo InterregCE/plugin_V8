@@ -10,7 +10,14 @@ import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import io.cloudflight.jems.plugin.contract.services.report.PartnerControlReportDataProvider
 import io.cloudflight.jems.plugin.contract.services.report.ReportPartnerDataProvider
-import io.cloudflight.jems.plugin.standard.common.*
+import io.cloudflight.jems.plugin.standard.common.CALL_DATA
+import io.cloudflight.jems.plugin.standard.common.DATA_LANGUAGE
+import io.cloudflight.jems.plugin.standard.common.CLF_PARTNER_UTILS
+import io.cloudflight.jems.plugin.standard.common.CLF_BUDGET_UTILS
+import io.cloudflight.jems.plugin.standard.common.CLF_PROJECT_UTILS
+import io.cloudflight.jems.plugin.standard.common.PartnerUtils
+import io.cloudflight.jems.plugin.standard.common.BudgetUtils
+import io.cloudflight.jems.plugin.standard.common.ProjectUtils
 import io.cloudflight.jems.plugin.standard.common.pdf.PdfService
 import io.cloudflight.jems.plugin.standard.common.template.CLF_UTILS
 import io.cloudflight.jems.plugin.standard.common.template.TemplateUtils
