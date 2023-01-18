@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="partnerReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportIdentificationData"*/-->
+<!--/*@thymesVar id="projectIdentification" type="io.cloudflight.jems.plugin.contract.models.project.ProjectIdentificationData"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+    <div class="logo-s">
+        <img  th:if="${logo == null}" th:src="@{application-form/images/InterregProgrammeLogo_96.png}"/>
+        <img  th:if="${logo != null}" th:src="|data:image/png;base64,${logo}|"/>
+    </div>
+
+    <div class="headline" th:text="#{export.partner.control.report.certificate.title}">
+        Control Certificate
+    </div>
+    <h3 th:text="#{export.partner.control.report.certificate.status( (${partnerReportData.status.name()} == 'Certified') ? 'Finalised' : 'Draft') }">
+        Control Status
+    </h3>
+
+    <div th:insert="~{partner-control-report/certificate-identification-table.html :: certificateIdentificationTable(${partnerReportData}, ${partnerReportIdentification}, ${projectIdentification}, ${projectPartnerSummary})}"></div>
+
+
+    <table class="default-vertical-table mt-2rem ">
+        <tbody class="table-body">
+        <tr>
+            <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.eligible.after.control.euro}">
+                Total eligible after control (in Euro)
+            </th>
+            <td class="text-left" clf:leftAlignedNumber="${partnerControlWorkOverview.eligibleAfterControl}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <div class="mt-1rem">
+        <p>Based on the documents provided and my verification and professional judgement as a controller,
+            regarding the eligible amount indicated in this Control Certificate, <u>I confirm that</u>:
+        </p>
+        <ol class="lower-alphabet">
+            <li>expenditure is in line with European, programme and national eligibility rules and complies
+                with conditions for support of the project and payment as outlined in the subsidy contract;
+            </li>
+            <li>expenditure was actually paid except for costs related to depreciation and simplified cost
+                options;
+            </li>
+            <li>expenditure was incurred and paid (with the exceptions above under "b") within the eligible
+                time period of the project and was not previously reported;
+            </li>
+            <li>expenditure based on simplified cost options (if any) is correctly calculated and the calculation
+                method is correctly applied;
+            </li>
+            <li>expenditure reimbursed based on eligible costs actually incurred is either recorded accurately
+                in a separate accounting system or has an adequate accounting code allocated. The necessary
+                audit trail exists, and all was available for inspection;
+            </li>
+            <li>relevant EU/ national/ institutional and programme procurement rules were observed;</li>
+            <li>EU and programme publicity rules were followed;</li>
+            <li>co-financed products, services and works were actually delivered;</li>
+            <li>expenditure is related to activities in line with the Application form and the Subsidy contract.</li>
+        </ol>
+    </div>
+
+    <div class="page-break-after"></div>
+
+    <ol class="upper-roman">
+        <li>Based on the documents provided, my verification and my professional judgement as a controller, I have NOT found any evidence of:
+            <ul class="mt-1">
+                <li>infringements of rules concerning sustainable development including environment protection,
+                    equal opportunities and non-discrimination, equality between men and women and state aid;
+                </li>
+                <li>
+                    double-financing of expenditure through other financial source(s);
+                </li>
+            </ul>
+        </li>
+        <li>
+            <p>I  hereby  confirm  that  the  verification  of  the  project  financial  report  was  done  precisely  and
+                objectively.
+            </p>
+
+            <p>The  control  methodology  and  scope,  control  work  actually  done,  and  eligible  and  ineligible
+                expenditure  per  cost  category  are  documented  in  the  Control  report  and  Checklist  (based  on  the
+                programme template). Risk-based sampling was applied according to the applicable methodology.
+            </p>
+            <p>
+                In case of suspicion of fraud, it is reported using the specific programme template.
+                I and the institution/department I represent are independent from the project's activities and financial
+                management and authorised to carry out the control.
+            </p>
+        </li>
+    </ol>
+
+    <div th:insert="~{partner-control-report/designated-controller-table.html :: designatedControllerTable(${reportDesignatedController}, ${currentUser}, ${certificateGenerationDate})}"></div>
+
+
+</body>
+</html>

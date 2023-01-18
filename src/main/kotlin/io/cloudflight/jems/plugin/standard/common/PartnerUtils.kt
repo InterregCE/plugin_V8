@@ -8,6 +8,7 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.Proj
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectContactTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.PartnerSubTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.NaceGroupLevelData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerRoleData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectTargetGroupData
 
 const val CLF_PARTNER_UTILS = "clfPartnerUtils"
@@ -67,4 +68,6 @@ class PartnerUtils {
         }
     }
 
+    fun getPartnerNumber(partnerRole: ProjectPartnerRoleData, partnerSortNumber: Int): String =
+        if (partnerRole.isLead) "LP${partnerSortNumber}" else "PP${partnerSortNumber}"
 }

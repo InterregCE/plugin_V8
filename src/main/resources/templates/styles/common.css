@@ -117,6 +117,14 @@ html, body {
     min-width: 150px;
 }
 
+.m-row {
+    height: 100px;
+}
+
+.l-row {
+    height: 150px;
+}
+
 .text-center {
     text-align: center;
     vertical-align: middle !important;
@@ -160,6 +168,13 @@ html, body {
 
 .mt-5rem {
     margin-top: 5rem !important;
+}
+
+.logo-s img{
+    width: 300px;
+    height: auto;
+    padding-top: 0;
+    margin-left: 0;
 }
 
 .default-table .row-bordered td,
@@ -250,6 +265,10 @@ tr, td, th:not(:block), .table-header {
     background-color: #ffffff;
 }
 
+tr.remove-zebra th, tr.remove-zebra td {
+    background-color: #ffffff !important;
+}
+
 .default-table td[rowspan="0"],
 .default-vertical-table td[rowspan="0"],
 .default-table-no-pagination td[rowspan="0"] {
@@ -291,4 +310,14 @@ img {
 
 .info-header-item.italic {
     font-style: italic;
+}
+
+ol.lower-alphabet {
+    list-style-type: lower-alpha;
+    line-height: 1.7;
+}
+
+ol.upper-roman {
+    list-style-type: upper-roman;
+    line-height: 1.6;
 }
