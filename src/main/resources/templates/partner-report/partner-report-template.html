@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<head>
+  <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+        th:href="@{styles/common.css}"/>
+</head>
+<body>
+<div class="logo-s">
+  <img  th:if="${logo == null}" th:src="@{application-form/images/InterregProgrammeLogo_96.png}"/>
+  <img  th:if="${logo != null}" th:src="|data:image/png;base64,${logo}|"/>
+</div>
+
+<div class="headline"
+     th:text="${partnerReportData.projectIdentifier + ' ' + partnerReportData.partnerAbbreviation + ' R.' + partnerReportData.reportNumber}">
+  Partner Report
+</div>
+</body>
+</html>
+
