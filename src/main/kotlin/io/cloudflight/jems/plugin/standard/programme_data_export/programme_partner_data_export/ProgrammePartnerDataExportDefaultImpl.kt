@@ -15,6 +15,9 @@ import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Collections
+import java.util.stream.Collectors
+import java.util.stream.Stream
 import java.util.Locale
 
 @Service
@@ -33,30 +36,28 @@ class ProgrammePartnerDataExportDefaultImpl(
     override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData): ExportResult {
         val programmeData = programmeDataProvider.getProgrammeData()
         val exportationDateTime = ZonedDateTime.now()
-        val failedProjectIds = mutableSetOf<Long>()
-        val partnersToExport = mutableListOf<ProjectAndCallAndPartnerData>()
+        val failedProjectIds = Collections.synchronizedSet(HashSet<Long>())
 
-        getProjectVersionsToExport(projectDataProvider.getAllProjectVersions()).parallelStream()
-            .forEach { projectVersion ->
+        val partnersToExport = getProjectVersionsToExport(projectDataProvider.getAllProjectVersions()).parallelStream()
+            .flatMap { projectVersion ->
                 runCatching {
                     val projectData =
                         projectDataProvider.getProjectDataForProjectId(projectVersion.projectId, projectVersion.version)
                     val callData = callDataProvider.getCallDataByProjectId(projectVersion.projectId)
-                    projectData.sectionB.partners.forEach { partner ->
-                        partnersToExport.add(
-                            ProjectAndCallAndPartnerData(
-                                projectVersion,
-                                projectData,
-                                callData,
-                                partner
-                            )
+                    return@flatMap projectData.sectionB.partners.stream().map { partner ->
+                        ProjectAndCallAndPartnerData(
+                            projectVersion,
+                            projectData,
+                            callData,
+                            partner
                         )
                     }
                 }.onFailure {
                     logger.warn("Failed to fetch data for project with id=${projectVersion.projectId}", it)
                     failedProjectIds.add(projectVersion.projectId)
+                    return@flatMap Stream.empty()
                 }.getOrNull()
-            }
+            }.collect(Collectors.toList())
 
         return ExportResult(
             contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -107,5 +108,5 @@ class ProgrammePartnerDataExportDefaultImpl(
         "Standard programme partner data export"
 
     override fun getVersion(): String =
-        "1.0.3"
+        "1.0.4"
 }

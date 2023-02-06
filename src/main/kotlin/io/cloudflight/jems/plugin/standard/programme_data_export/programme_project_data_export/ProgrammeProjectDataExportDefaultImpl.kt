@@ -15,6 +15,8 @@ import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Collections
+import java.util.stream.Collectors
 
 
 @Service
@@ -33,26 +35,24 @@ open class ProgrammeProjectDataExportDefaultImpl(
     override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData): ExportResult {
         val programmeData = programmeDataProvider.getProgrammeData()
         val exportationDateTime = ZonedDateTime.now()
-        val failedProjectIds = mutableSetOf<Long>()
+        val failedProjectIds = Collections.synchronizedSet(HashSet<Long>())
 
-        val projectAndCallDataList = mutableListOf<ProjectAndCallData>()
-        getProjectsToExport(projectDataProvider.getAllProjectVersions()).parallelStream().forEach { projectVersion ->
+        val projectAndCallDataList = getProjectsToExport(projectDataProvider.getAllProjectVersions()).parallelStream().map { projectVersion ->
             runCatching {
-                projectAndCallDataList.add(
-                    ProjectAndCallData(
-                        projectDataProvider.getProjectDataForProjectId(
-                            projectVersion.projectId,
-                            projectVersion.version
-                        ),
-                        callDataProvider.getCallDataByProjectId(projectVersion.projectId),
-                        projectVersion
-                    )
+                return@map ProjectAndCallData(
+                    projectDataProvider.getProjectDataForProjectId(
+                        projectVersion.projectId,
+                        projectVersion.version
+                    ),
+                    callDataProvider.getCallDataByProjectId(projectVersion.projectId),
+                    projectVersion
                 )
             }.onFailure {
                 logger.warn("Failed to fetch data for project with id=${projectVersion.projectId}", it)
                 failedProjectIds.add(projectVersion.projectId)
+                return@map null
             }.getOrNull()
-        }
+        }.filter { it != null }.map { it!! }.collect(Collectors.toList())
 
         return ExportResult(
             contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -103,5 +103,5 @@ open class ProgrammeProjectDataExportDefaultImpl(
         "Standard programme project data export"
 
     override fun getVersion(): String =
-        "1.0.6"
+        "1.0.7"
 }
