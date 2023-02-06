@@ -11,7 +11,7 @@ import org.thymeleaf.standard.expression.IStandardExpression
 import org.thymeleaf.standard.expression.IStandardExpressionParser
 import org.thymeleaf.standard.expression.StandardExpressions
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
-import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.TimeplanData
+import java.math.BigDecimal
 
 const val CLF_UTILS = "clfUtils"
 
@@ -63,6 +63,14 @@ class TemplateUtils {
 
     fun isFieldAvailable(fieldId: String,lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         isFieldVisible(ApplicationFormFieldId.valueOf(fieldId), lifecycleData, callData)
+
+    fun intToBigDecimal(value: Int?): BigDecimal? {
+        return if(value is Int) {
+            BigDecimal(value)
+        } else {
+            null
+        }
+    }
 }
 
 @Suppress("UNCHECKED_CAST")

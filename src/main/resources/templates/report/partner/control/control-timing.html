@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="partnerReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportIdentificationData"*/-->
+<head>
+  <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+        th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<th:block
+        th:fragment="controlTiming(reportControlOverview)">
+  <table class="default-vertical-table">
+    <thead class="table-header">
+    <tr class="sub-heading-2">
+      <td colspan="4"
+          th:text="'4.1 ' + #{project.application.partner.report.control.tab.overviewAndFinalize.control.timing}">
+      </td>
+    </tr>
+    </thead>
+    <tbody class="table-body">
+    <tr>
+      <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.control.timing.start.date}"></th>
+      <td th:text="${#temporals.format(reportControlOverview.startDate, 'dd.MM.yyyy')}"></td>
+    </tr>
+    <tr>
+      <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.control.timing.clarification.requests.dates}"></th>
+      <td th:text="${reportControlOverview.requestsForClarifications}"></td>
+    </tr>
+
+    <tr>
+      <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.control.timing.satisfactory.answers.dates}"></th>
+      <td th:text="${reportControlOverview.receiptOfSatisfactoryAnswers}"></td>
+    </tr>
+
+    <tr>
+      <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.control.timing.end.date}"></th>
+      <td th:text="${#temporals.format(reportControlOverview.endDate, 'dd.MM.yyyy')}"></td>
+    </tr>
+
+    </tbody>
+  </table>
+</th:block>
+
+</body>
+</html>

@@ -117,6 +117,10 @@ html, body {
     min-width: 150px;
 }
 
+.l-column {
+    min-width: 200px;
+}
+
 .m-row {
     height: 100px;
 }
@@ -301,6 +305,10 @@ img {
     font-size: 11px;
 }
 
+.info-description-section {
+    font-size: small;
+}
+
 .info-header-item {
     width: 200px;
     display: inline-block;
@@ -310,6 +318,10 @@ img {
 
 .info-header-item.italic {
     font-style: italic;
+}
+
+.text-normal-weight {
+    font-weight: normal;
 }
 
 ol.lower-alphabet {

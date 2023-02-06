@@ -33,18 +33,17 @@
             <th th:text="#{project.application.partner.control.report.project.implementation.period}">Project
                 implementation period
             </th>
-            <td th:text="${#temporals.format(projectIdentification.projectStartDate, 'dd.MM.yyyy') + ' - ' + #temporals.format(projectIdentification.projectEndDate, 'dd.MM.yyyy')}"></td>
+            <td th:text="${(#temporals.format(projectIdentification.projectStartDate, 'dd.MM.yyyy') ?: '') + ' - ' + (#temporals.format(projectIdentification.projectEndDate, 'dd.MM.yyyy') ?: '') }"></td>
         </tr>
 
         <tr>
             <th th:text="#{project.application.partner.report.reporting.period}">Reporting period</th>
-            <td th:text="${#temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy')+ ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy')}"></td>
+            <td th:text="${ partnerReportIdentification.spendingProfile.periodDetail.number + ': ' + #temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy')+ ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy')}"></td>
         </tr>
-
 
         <tr>
             <th th:text="#{project.application.partner.control.report.report.number}">Partner Report Number</th>
-            <td th:text="${'R' + partnerReportData.reportNumber}"></td>
+            <td th:text="${'R.' + partnerReportData.reportNumber}"></td>
         </tr>
 
         <tr>

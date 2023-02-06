@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+<th:block
+        th:fragment="designatedControllerSignature(reportDesignatedController, exportDate)">
+    <table class="default-vertical-table mt-2rem">
+        <thead class="table-header">
+        <tr class="sub-heading-2">
+            <td colspan="4"
+                th:text="#{project.application.partner.control.report.controller.signature}">
+            </td>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr>
+            <th th:text="#{partner.control.report.export.generation.date}">
+                Generation Date
+            </th>
+            <td th:text="${#temporals.format(exportDate , 'dd.MM.yyyy')}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.controller.name}">
+                Controller name
+            </th>
+            <td th:text="${(reportDesignatedController.controllerUser?.name != null && reportDesignatedController.controllerUser?.surname != null)  ?
+            (reportDesignatedController.controllerUser?.name + ' ' + reportDesignatedController.controllerUser?.surname) : ' '}"></td>
+        </tr>
+        <tr class="row-bordered m-row">
+            <th th:text="#{project.application.partner.control.report.controller.signature}">
+                Signature
+            </th>
+            <td></td>
+        </tr>
+        <tr class="row-bordered l-row remove-zebra">
+            <th th:text="#{project.application.partner.control.report.controller.institution.stamp}">
+                Stamp
+            </th>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+</body>
+</html>
