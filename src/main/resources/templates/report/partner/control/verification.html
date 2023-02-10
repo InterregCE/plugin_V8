@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="partnerReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportIdentificationData"*/-->
+<!--/*@thymesVar id="reportVerification" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.ReportVerificationData"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<th:block
+        th:fragment="verification(reportVerification)">
+    <table class="default-vertical-table">
+        <thead class="table-header">
+        <tr class="sub-heading-2">
+            <td colspan="4"
+                th:text="#{project.application.partner.control.report.section.four}">
+            </td>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+            <tr>
+                <th class="right-border">
+                    <p th:text="#{project.application.partner.control.report.general.methodology}"></p>
+                </th>
+                <td colspan="2">
+                    <th:block th:each="metodology : ${reportVerification.generalMethodologies}">
+                        <p th:text="'- '+ #{'partner.control.report.export.verification.methodology.' + ${metodology.name()}}"></p>
+                    </th:block>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="default-vertical-table"
+           th:if="${not #lists.isEmpty(reportVerification.verificationInstances)}">
+        <thead class="table-header">
+            <tr>
+                <th class="right-border text-normal-weight"
+                    th:text="#{partner.control.report.export.verification.OnTheSpotVerification.date}"></th>
+                <th class="right-border text-normal-weight"
+                    th:text="#{partner.control.report.export.verification.OnTheSpotVerification.location}"></th>
+                <th class="right-border text-normal-weight"
+                    th:text="#{partner.control.report.export.verification.OnTheSpotVerification.focus}"></th>
+            </tr>
+        </thead>
+        <tbody class="table-body">
+            <tr th:each="verification : ${reportVerification.verificationInstances}">
+                <td class="m-column right-border">
+                    <p th:text="${ #messages.msg('project.application.partner.control.report.administrative.on.spot.verification.table.date.from.label') + ' ' + #temporals.format(verification.verificationFrom, 'dd.MM.yyyy')}"></p>
+                    <p th:text="${ #messages.msg('project.application.partner.control.report.administrative.on.spot.verification.table.date.to.label') + ' ' + #temporals.format(verification.verificationTo, 'dd.MM.yyyy')}"></p>
+                </td>
+                <td class="right-border l-column">
+                    <th:block th:each="location : ${verification.verificationLocations}">
+                        <p th:text="'- '+ #{'partner.control.report.export.verification.OnTheSpotVerification.location.' + ${location.name()}}"></p>
+                    </th:block>
+                </td>
+                <td>
+                    <p th:text="${verification.verificationFocus}"></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="default-vertical-table">
+        <tbody class="table-body">
+            <tr>
+                <th th:text="#{project.application.partner.control.report.risk.verification.applied}"></th>
+                <td th:text="${reportVerification.riskBasedVerificationApplied == true ? 'Yes' : 'No'}"></td>
+            </tr>
+            <tr th:if="${reportVerification.riskBasedVerificationApplied == true}">
+                <th th:text="#{project.application.partner.control.report.risk.verification.applied.info}"></th>
+                <td th:text="${reportVerification.riskBasedVerificationDescription}"></td>
+            </tr>
+        </tbody>
+    </table>
+</th:block>
+
+</body>
+</html>

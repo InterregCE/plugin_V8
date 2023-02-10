@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+<th:block
+        th:fragment="descriptionConclusionFollowup(reportControlOverview)">
+    <table class="default-table">
+        <tbody class="table-body">
+        <div class="keep-together">
+            <tr class="remove-zebra">
+                <th th:text="'5.a ' + #{project.application.partner.report.control.tab.overviewAndFinalize.findings.observations.limitations.title}"></th>
+            </tr>
+            <tr>
+                <td class="info-description-section"
+                    th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.findings.observations.limitations.info}"></td>
+            </tr>
+            <tr>
+                <td class="bottom-border"
+                    th:text="${reportControlOverview.findingDescription}"></td>
+            </tr>
+        </div>
+
+        <div class="keep-together">
+            <tr class="remove-zebra">
+                <th th:text="'5.b ' + #{project.application.partner.report.control.tab.overviewAndFinalize.followup.measures.title}"></th>
+            </tr>
+            <tr>
+                <td class="info-description-section"
+                    th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.followup.measures.info}">
+                </td>
+            </tr>
+            <tr>
+                <td class="bottom-border"
+                    th:text="${reportControlOverview.followUpMeasuresFromLastReport}"></td>
+            </tr>
+        </div>
+
+
+        <div class="keep-together">
+            <tr class="remove-zebra">
+                <th th:text="'5.c ' + #{project.application.partner.report.control.tab.overviewAndFinalize.conclusions.and.recommendations.title}"></th>
+            </tr>
+            <tr>
+                <td class="info-description-section"
+                    th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.conclusions.and.recommendations.info}"></td>
+            </tr>
+            <tr>
+                <td class="bottom-border"
+                    th:text="${reportControlOverview.conclusion}"></td>
+            </tr>
+        </div>
+
+        <div class="keep-together">
+            <tr class="remove-zebra">
+                <th th:text="'5.d ' + #{project.application.partner.report.control.tab.overviewAndFinalize.followup.partner.report.measures.title}"></th>
+            </tr>
+            <tr>
+                <td class="info-description-section"
+                    th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.followup.partner.report.measures.info}"></td>
+            </tr>
+            <tr>
+                <td th:text="${reportControlOverview.followUpMeasuresForNextReport}"></td>
+            </tr>
+        </div>
+
+        </tbody>
+    </table>
+</th:block>
+</body>
+</html>

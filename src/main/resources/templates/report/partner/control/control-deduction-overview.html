@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="controlDeductionOverview" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.overview.ControlDeductionOverviewData"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<head>
+  <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+        th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<th:block th:fragment="decuctionOverview(controlDeductionOverview, partnerBudgetOptions)">
+  <div class="landscape">
+    <table class="default-vertical-table">
+      <thead class="table-header">
+      <tr class="sub-heading-2">
+        <td colspan="11"
+            th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.deductions.by.type.of.errors}">
+        </td>
+      </tr>
+      </thead>
+      <tbody class="table-body">
+      <tr>
+          <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.deductions.by.type.table.type.header}"
+              class="xs-column"></th>
+          <th th:text="#{project.application.partner.report.expenditures.cost.category.StaffCosts}"></th>
+          <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.deductions.by.type.table.office.administrative.header}"></th>
+          <th th:text="#{project.application.partner.report.expenditures.cost.category.TravelAndAccommodationCosts}"></th>
+          <th th:text="#{project.application.partner.report.expenditures.cost.category.ExternalCosts}"></th>
+          <th th:text="#{project.application.partner.report.expenditures.cost.category.EquipmentCosts}"></th>
+          <th th:text="#{project.application.partner.report.expenditures.cost.category.InfrastructureCosts}"></th>
+          <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.deductions.by.type.table.lump.sums.header}"></th>
+          <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.deductions.by.type.table.unit.costs.header}"></th>
+          <th th:text="#{project.partner.budget.other}"></th>
+          <th th:text="#{project.partner.budget.table.total}"></th>
+      </tr>
+      <tr>
+          <td class="right-border"
+                  th:text="#{partner.control.report.export.af.flat.rate}"></td>
+          <td class="right-border"
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.staffCostsFlatRate)}"></td>
+          <td class="right-border"
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.officeAndAdministrationOnStaffCostsFlatRate)}"></td>
+          <td class="right-border"
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.travelAndAccommodationOnStaffCostsFlatRate)}"></td>
+          <td class="right-border"></td>
+          <td class="right-border"></td>
+          <td class="right-border"></td>
+          <td class="right-border"></td>
+          <td class="right-border"></td>
+          <td class="right-border"
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.otherCostsOnStaffCostsFlatRate)}"></td>
+          <td></td>
+      </tr>
+      <tr th:each="decuctionRow, iterStat:  ${controlDeductionOverview.deductionRows}" th:object="${decuctionRow}">
+          <td th:text="*{typologyOfErrorName == null} ? #{project.application.partner.report.control.tab.overviewAndFinalize.deductions.by.type.table.flat.rate.row} : *{typologyOfErrorName}"
+          class="right-border"></td>
+          <td clf:number="*{staffCost}" class="right-border"></td>
+          <td clf:number="*{officeAndAdministration}" class="right-border"></td>
+          <td clf:number="*{travelAndAccommodation}" class="right-border"></td>
+          <td clf:number="*{externalExpertise}" class="right-border"></td>
+          <td clf:number="*{equipment}" class="right-border"></td>
+          <td clf:number="*{infrastructureAndWorks}" class="right-border"></td>
+          <td clf:number="*{lumpSums}" class="right-border"></td>
+          <td clf:number="*{unitCosts}" class="right-border"></td>
+          <td clf:number="*{otherCosts}" class="right-border"></td>
+          <td clf:number="*{total}"></td>
+      </tr>
+      <tr th:with="total=${controlDeductionOverview.total}">
+          <td class="right-border"
+                  th:text="#{project.partner.budget.table.total}"></td>
+          <td clf:number="*{total.staffCost}" class="right-border"></td>
+          <td clf:number="*{total.officeAndAdministration}" class="right-border"></td>
+          <td clf:number="*{total.travelAndAccommodation}" class="right-border"></td>
+          <td clf:number="*{total.externalExpertise}" class="right-border"></td>
+          <td clf:number="*{total.equipment}" class="right-border"></td>
+          <td clf:number="*{total.infrastructureAndWorks}" class="right-border"></td>
+          <td clf:number="*{total.lumpSums}" class="right-border"></td>
+          <td clf:number="*{total.unitCosts}" class="right-border"></td>
+          <td clf:number="*{total.otherCosts}" class="right-border"></td>
+          <td clf:number="*{total.total}"></td>
+      </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+</th:block>
+
+</body>
+</html>

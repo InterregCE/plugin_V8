@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+<th:block
+        th:fragment="partnerIdentification(partnerReportData)">
+    <table class="default-vertical-table">
+        <thead class="table-header">
+        <tr class="sub-heading-2">
+            <td colspan="4"
+                th:text="#{project.application.partner.control.report.section.two}">
+            </td>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr>
+            <th th:text="#{project.application.partner.control.report.report.partner.name.in.english}">
+                Name of partner organisation in English
+            </th>
+            <td th:text="${partnerReportData?.nameInEnglish}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.report.partner.name.in.original}">
+                Name of partner organisation in original language
+            </th>
+            <td th:text="${partnerReportData?.nameInOriginalLanguage}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.partner.number}">
+                Partner number
+            </th>
+            <td th:text="${partnerReportData?.partnerNumber}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.partner.role}">
+                Partner role in project
+            </th>
+            <td th:text="${partnerReportData?.partnerRole.name() == 'LEAD_PARTNER'? 'Lead Partner' : 'Partner' }"></td>
+        </tr>
+
+        </tbody>
+    </table>
+</th:block>
+</body>
+</html>

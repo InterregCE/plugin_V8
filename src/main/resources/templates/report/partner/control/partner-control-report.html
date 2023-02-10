@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="partnerReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportIdentificationData"*/-->
+<!--/*@thymesVar id="reportDesignatedController" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.ReportDesignatedControllerData"*/-->
+<!--/*@thymesVar id="reportVerification" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.ReportVerificationData"*/-->
+<!--/*@thymesVar id="reportControlOverview" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.overview.ControlOverviewData"*/-->
+
+<head>
+  <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+        th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<div class="logo-s">
+  <img  th:if="${logo == null}" th:src="@{application-form/images/InterregProgrammeLogo_96.png}"/>
+  <img  th:if="${logo != null}" th:src="|data:image/png;base64,${logo}|"/>
+</div>
+
+<div class="headline" th:text="#{project.application.partner.control.report.breadcrumb.title}">
+  Control Report
+</div>
+<h3 th:text="#{export.partner.control.report.certificate.status( (${partnerReportData.status.name()} == 'Certified') ? 'Finalised' : 'Draft') }">
+  Control Status
+</h3>
+
+<div th:insert="~{report/partner/control/report-identification.html :: controlReportIdentification(${partnerReportData}, ${partnerReportIdentification}, ${projectIdentification}, ${projectPartnerSummary})}"></div>
+
+<div class="mt-2rem" th:insert="~{report/partner/control/supporting-documents.html :: supportingDocuments(${partnerReportIdentification})}"></div>
+<div class="page-break-after"></div>
+
+<div class="mt-2rem" th:insert="~{report/partner/control/partner-identification.html :: partnerIdentification(${partnerReportData})}"></div>
+
+<div class="mt-2rem" th:insert="~{report/partner/control/designated-controller-identification.html :: designatedControllerIdentification(${reportDesignatedController})}"></div>
+<div class="page-break-after"></div>
+
+<div class="mt-2rem" th:insert="~{report/partner/control/verification.html :: verification(${reportVerification})}"></div>
+
+<div th:insert="~{report/partner/control/control-work-overview.html :: controlWorkOverview(${reportControlWorkOverview})}"></div>
+
+<div th:insert="~{report/partner/control/control-deduction-overview.html :: decuctionOverview(${controlDeductionOverview}, ${partnerBudgetOptions})}"></div>
+
+<div class="page-break-after"></div>
+<div th:insert="~{report/partner/control/description-conclusion-followup.html :: descriptionConclusionFollowup(${reportControlOverview})}"></div>
+
+<div class="page-break-after"></div>
+<div th:insert="~{report/partner/control/controller-signature.html :: designatedControllerSignature(${reportDesignatedController}, ${exportDate})}"></div>
+
+</body>
+</html>

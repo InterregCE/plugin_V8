@@ -20,10 +20,10 @@
         Control Status
     </h3>
 
-    <div th:insert="~{partner-control-report/certificate-identification-table.html :: certificateIdentificationTable(${partnerReportData}, ${partnerReportIdentification}, ${projectIdentification}, ${projectPartnerSummary})}"></div>
+    <div th:insert="~{report/partner/control/certificate/certificate-identification-table.html :: certificateIdentificationTable(${partnerReportData}, ${partnerReportIdentification}, ${projectIdentification}, ${projectPartnerSummary})}"></div>
 
 
-    <table class="default-vertical-table mt-2rem ">
+    <table class="default-vertical-table mt-2rem">
         <tbody class="table-body">
         <tr>
             <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.eligible.after.control.euro}">
@@ -93,7 +93,7 @@
         </li>
     </ol>
 
-    <div th:insert="~{partner-control-report/designated-controller-table.html :: designatedControllerTable(${reportDesignatedController}, ${currentUser}, ${certificateGenerationDate})}"></div>
+    <div th:insert="~{report/partner/control/certificate/designated-controller-table.html :: designatedControllerTable(${reportDesignatedController}, ${currentUser}, ${certificateGenerationDate})}"></div>
 
 
 </body>

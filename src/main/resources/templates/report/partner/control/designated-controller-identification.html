@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="reportDesignatedController" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.ReportDesignatedControllerData"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<th:block
+        th:fragment="designatedControllerIdentification(reportDesignatedController)">
+    <table class="default-vertical-table">
+        <thead class="table-header">
+        <tr class="sub-heading-2">
+            <td colspan="4"
+                th:text="#{project.application.partner.control.report.section.three}">
+            </td>
+        </tr>
+        </thead>
+        <tbody class="table-body">
+        <tr>
+            <th th:text="#{project.application.partner.control.report.controller.institution.name}">
+                Control institution/body/intermediate body responsible for the verification (filled automatically)
+            </th>
+            <td th:text="${reportDesignatedController.controlInstitution}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.controller.name}">
+                Controller name
+            </th>
+            <td th:text="${(reportDesignatedController.controllerUser?.name != null && reportDesignatedController.controllerUser?.surname != null)  ?
+            (reportDesignatedController.controllerUser?.name + ' ' + reportDesignatedController.controllerUser?.surname) : ' '}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.job.title}">
+                Job title
+            </th>
+            <td th:text="${reportDesignatedController.jobTitle}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.division}">
+                Division/Unit/Department
+            </th>
+            <td th:text="${reportDesignatedController.divisionUnit}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.address}">
+                Address
+            </th>
+            <td th:text="${reportDesignatedController.address}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.country}">
+                Country
+            </th>
+            <td th:text="${reportDesignatedController.country}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.phone.number}">
+                Telephone number
+            </th>
+            <td th:text="${reportDesignatedController.telephone}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.partner.contact.email}">
+                Email
+            </th>
+            <td th:text="${reportDesignatedController.controllerUser?.email}"></td>
+        </tr>
+
+        <tr>
+            <th th:text="#{project.application.partner.control.report.controller.reviewer.name}">
+                Controller reviewer name (if applicable)
+            </th>
+            <td th:text="${(reportDesignatedController.controllerReviewer?.name != null && reportDesignatedController.controllerReviewer?.surname != null) ?
+             (reportDesignatedController.controllerReviewer.name + ' ' + reportDesignatedController.controllerReviewer.surname) : ' '}">
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</th:block>
+
+</body>
+</html>

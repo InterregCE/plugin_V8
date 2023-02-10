@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+<!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
+<!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
+<!--/*@thymesVar id="partnerReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportIdentificationData"*/-->
+<head>
+  <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+        th:href="@{styles/common.css}"/>
+</head>
+<body>
+
+<th:block
+        th:fragment="controlWorkOverview(reportControlWorkOverview)">
+  <div class="landscape">
+
+    <div th:insert="~{report/partner/control/control-timing.html :: controlTiming(${reportControlOverview})}"></div>
+
+    <table class="default-vertical-table keep-together mt-3rem">
+      <thead class="table-header">
+      <tr class="sub-heading-2">
+        <td colspan="7"
+            th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.title}">
+        </td>
+      </tr>
+      </thead>
+      <tbody class="table-body">
+      <tr>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.declared.partner}"></th>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.included.control.sample}"></th>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.included.control.sample.percentage}"></th>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.parked.current.report}"></th>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.deducted.by.control}"></th>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.eligible.after.control}"></th>
+        <th th:text="#{project.application.partner.report.control.tab.overviewAndFinalize.total.percentage}"></th>
+      </tr>
+      <tr>
+        <td class="right-border" clf:number="${reportControlWorkOverview.declaredByPartner}"></td>
+        <td class="right-border" clf:number="${reportControlWorkOverview.inControlSample}"></td>
+        <td class="right-border" clf:number="${reportControlWorkOverview.inControlSamplePercentage}"></td>
+        <td class="right-border" clf:number="${reportControlWorkOverview.parked}"></td>
+        <td class="right-border" clf:number="${reportControlWorkOverview.deductedByControl}"></td>
+        <td class="right-border" clf:number="${reportControlWorkOverview.eligibleAfterControl}"></td>
+        <td th:text="${reportControlWorkOverview.eligibleAfterControlPercentage}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</th:block>
+
+</body>
+</html>
