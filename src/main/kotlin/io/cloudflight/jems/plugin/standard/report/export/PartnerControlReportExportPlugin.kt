@@ -70,7 +70,7 @@ class PartnerControlReportExportPlugin(
         val reportVerification = reportControlPartnerDataProvider.getControlReportVerification(partnerId, reportId)
         val reportControlOverview  = reportControlPartnerDataProvider.getControlOverview(partnerId, reportId)
         val reportControlWorkOverview = reportControlPartnerDataProvider.getControlWorkOverview(partnerId, reportId)
-        val controlDeductionOverview = reportControlPartnerDataProvider.getReportControlDeductionOverview(partnerId, reportId, partnerReportData.version)
+        val controlDeductionOverview = reportControlPartnerDataProvider.getReportControlDeductionOverview(partnerId, reportId)
         val partnerBudgetOptions = projectDataProvider.getProjectPartnerBudgetOptions(partnerId, version = partnerReportData.version)
 
         return ExportResult(
