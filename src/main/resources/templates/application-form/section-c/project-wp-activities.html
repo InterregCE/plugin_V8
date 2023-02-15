@@ -18,8 +18,9 @@
     <table class="default-vertical-table mt-3rem" clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE,PROJECT_ACTIVITIES_START_PERIOD,PROJECT_ACTIVITIES_END_PERIOD,PROJECT_ACTIVITIES_DESCRIPTION,PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
         <thead class="table-header">
         <tr>
-            <td class="sub-heading-1" colspan="2"
-                th:text="#{project.work.package.tab.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber}">Activity x.x
+            <td class="sub-heading-1" colspan="2">
+                <span th:if="${activity.deactivated == true}" th:text="#{project.work.package.tab.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + ' ' + #{export.work.plan.deactivated}">Activity x.x (Deactivated)</span>
+                <span th:if="${activity.deactivated == null or activity.deactivated == false}" th:text="#{project.work.package.tab.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber}">Activity x.x</span>
             </td>
         </tr>
         </thead>
@@ -94,7 +95,10 @@
         <tbody class="table-body long-text">
         <tr th:each="deliverable, rowStat: ${clfProjectUtils.sortDeliverablesByDeliverableNumber(activity.deliverables)}"
             th:object="${deliverable}">
-            <td th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber}">D.x.x</td>
+            <td>
+                <span th:if="${deliverable.deactivated == true}" th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber} + ' ' + #{export.work.plan.deactivated}">D.x.x (Deactivated)</span>
+                <span th:if="${deliverable.deactivated == null or deliverable.deactivated == false}" th:text="'D.' +  ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + '.' + ${deliverable.deliverableNumber}">D.x.x</span>
+            </td>
             <td class="multiline" clf:textTranslationByDataLanguage="${deliverable.title}">value</td>
             <td class="multiline" clf:textTranslationByDataLanguage="${deliverable.description}">value</td>
             <td>
