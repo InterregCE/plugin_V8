@@ -43,11 +43,10 @@
 <div th:insert="~{report/partner/control/control-work-overview.html :: controlWorkOverview(${reportControlWorkOverview})}"></div>
 
 <div th:insert="~{report/partner/control/control-deduction-overview.html :: decuctionOverview(${controlDeductionOverview}, ${partnerBudgetOptions})}"></div>
-
 <div class="page-break-after"></div>
+
 <div th:insert="~{report/partner/control/description-conclusion-followup.html :: descriptionConclusionFollowup(${reportControlOverview})}"></div>
 
-<div class="page-break-after"></div>
 <div th:insert="~{report/partner/control/controller-signature.html :: designatedControllerSignature(${reportDesignatedController}, ${exportDate})}"></div>
 
 </body>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 
-<!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
 <!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
 <!--/*@thymesVar id="clfPartnerUtils" type="io.cloudflight.jems.plugin.standard.common.PartnerUtils"*/-->
 <!--/*@thymesVar id="partnerReportData" type="io.cloudflight.jems.plugin.contract.models.report.partner.control.PartnerReportControlData"*/-->
@@ -38,7 +37,8 @@
 
         <tr>
             <th th:text="#{project.application.partner.report.reporting.period}">Reporting period</th>
-            <td th:text="${ partnerReportIdentification.spendingProfile.periodDetail.number + ': ' + #temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy')+ ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy')}"></td>
+            <td th:text="${ (partnerReportIdentification.startDate != null && partnerReportIdentification.endDate != null ) ?
+            partnerReportIdentification.spendingProfile.periodDetail?.number + ': ' + #temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy')+ ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy') : ''}"></td>
         </tr>
 
         <tr>
