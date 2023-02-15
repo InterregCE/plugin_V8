@@ -7,7 +7,7 @@
 <body>
 <th:block
         th:fragment="designatedControllerSignature(reportDesignatedController, exportDate)">
-    <table class="default-vertical-table mt-2rem">
+    <table class="default-vertical-table mt-2rem keep-together remove-zebra">
         <thead class="table-header">
         <tr class="sub-heading-2">
             <td colspan="4"
@@ -16,14 +16,14 @@
         </tr>
         </thead>
         <tbody class="table-body">
-        <tr>
+        <tr class="row-bordered">
             <th th:text="#{partner.control.report.export.generation.date}">
                 Generation Date
             </th>
             <td th:text="${#temporals.format(exportDate , 'dd.MM.yyyy')}"></td>
         </tr>
 
-        <tr>
+        <tr class="row-bordered">
             <th th:text="#{project.application.partner.control.report.controller.name}">
                 Controller name
             </th>
@@ -36,7 +36,7 @@
             </th>
             <td></td>
         </tr>
-        <tr class="row-bordered l-row remove-zebra">
+        <tr class="row-bordered l-row">
             <th th:text="#{project.application.partner.control.report.controller.institution.stamp}">
                 Stamp
             </th>

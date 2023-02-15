@@ -62,7 +62,7 @@
     <tr>
       <th th:text="#{project.application.partner.report.reporting.period}">Reporting period</th>
       <td th:text="${(partnerReportIdentification.startDate != null && partnerReportIdentification.endDate != null ) ?
-      (partnerReportIdentification.spendingProfile.periodDetail.number + ': ' + #temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy') + ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy')) : ''}">
+      (partnerReportIdentification.spendingProfile.periodDetail?.number + ': ' + #temporals.format(partnerReportIdentification.startDate , 'dd.MM.yyyy') + ' - ' + #temporals.format(partnerReportIdentification.endDate, 'dd.MM.yyyy')) : ''}">
       </td>
     </tr>
 
