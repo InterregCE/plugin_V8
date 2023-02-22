@@ -12,8 +12,9 @@
 <th:block th:fragment="sectionC4Investment(workPackage, periods)" th:each="investment, rowStat: ${workPackage.investments}"
           th:object="${investment}">
 
-    <div class="sub-heading-2" th:text="#{project.application.form.workpackage.investment.form.title} + ' ' + ${workPackage.workPackageNumber} + '.' + ${investment?.investmentNumber}">
-        investment x.x
+    <div class="sub-heading-2">
+        <span th:if="${investment?.deactivated == true}" th:text="#{project.application.form.workpackage.investment.form.title} + ' ' + ${workPackage.workPackageNumber} + '.' + ${investment?.investmentNumber} + ' ' + #{export.work.plan.deactivated}">Investment x.x (Deactivated)</span>
+        <span th:if="${investment?.deactivated == null or investment?.deactivated == false}" th:text="#{project.application.form.workpackage.investment.form.title} + ' ' + ${workPackage.workPackageNumber} + '.' + ${investment?.investmentNumber}">Investment x.x</span>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_TITLE">

@@ -29,7 +29,10 @@
             <tbody class="table-body">
             <tr th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
                 th:object="${workPackage}">
-                <td th:text="*{workPackageNumber}">Number</td>
+                <td>
+                    <span th:if="${workPackage.deactivated == true}" th:text="${workPackage.workPackageNumber} + ' ' + #{export.work.plan.deactivated}">Number (Deactivated)</span>
+                    <span th:if="${workPackage.deactivated == null or workPackage.deactivated == false}" th:text="${workPackage.workPackageNumber}">Number</span>
+                </td>
                 <td clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" clf:textTranslationByDataLanguage="*{name}">Name</td>
             </tr>
             </tbody>
