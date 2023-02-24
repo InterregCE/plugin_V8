@@ -27,8 +27,8 @@
                 <thead class="table-header">
                 <tr class="sub-heading-2">
                     <td colspan="2">
-                        <span th:text="#{project.results.result.title}">rslt</span>
-                        <span th:text=" *{resultNumber}">x</span>
+                        <span th:if="${result.deactivated == true}" th:text="#{project.results.result.title} + ' ' +  ${result.resultNumber} + ' ' + #{export.work.plan.deactivated}">Result x(Deactivated)</span>
+                        <span th:if="${result.deactivated == null or result.deactivated == false}" th:text="#{project.results.result.title} + ' ' + ${result.resultNumber}">Result x</span>
                     </td>
                 </tr>
                 </thead>
