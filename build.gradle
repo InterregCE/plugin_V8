@@ -6,7 +6,7 @@ plugins {
 
 description "Jems standard plugins"
 group 'io.cloudflight.jems.plugin.standard'
-version '1.2.9'
+version '1.2.10'
 
 cloudflight {
     visibility = RepositoryVisibility.PUBLIC
@@ -44,7 +44,7 @@ if (isKotlinProject(project)) {
         kapt platform("io.cloudflight.platform:platform-bom:$cloudflightPlatformVersion")
 
         constraints {
-            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.2.7')
+            provided('io.cloudflight.jems.plugin.contract:jems-plugin-contract:1.2.8')
             implementation('com.opencsv:opencsv:5.7.1')
             implementation("com.openhtmltopdf:openhtmltopdf-core:1.0.10")
             implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10")
