@@ -852,12 +852,13 @@ private fun isActivitiesContentMissing(activities: List<WorkPackageActivityData>
                     activities.any
                     { activity ->
                         activity.title.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
-                                activity.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
-                                activity.startPeriod ?: 0 <= 0 ||
-                                activity.endPeriod ?: 0 <= 0 ||
-                                activity.deliverables.isEmpty()
+                        activity.description.isNotFullyTranslated(CallDataContainer.get().inputLanguages) ||
+                        activity.startPeriod ?: 0 <= 0 ||
+                        activity.endPeriod ?: 0 <= 0 ||
+                        (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_DELIVERABLES) && activity.deliverables.isEmpty()) ||
+                        (isFieldVisible(ApplicationFormFieldId.PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED) && activity.partnerIds.isEmpty())
                     }
-                    )
+                )
 
 private fun isOutputsContentMissing(outputs: List<WorkPackageOutputData>) =
     outputs.isEmpty() ||
