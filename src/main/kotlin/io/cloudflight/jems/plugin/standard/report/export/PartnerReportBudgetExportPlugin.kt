@@ -10,6 +10,7 @@ import io.cloudflight.jems.plugin.standard.common.excel.ExcelService
 import io.cloudflight.jems.plugin.standard.common.excel.model.CellData
 import io.cloudflight.jems.plugin.standard.common.excel.model.ExcelData
 import io.cloudflight.jems.plugin.standard.common.getMessage
+import io.cloudflight.jems.plugin.standard.common.getTranslationFor
 import io.cloudflight.jems.plugin.standard.common.toLocale
 import io.cloudflight.jems.plugin.standard.programme_data_export.programme_partner_data_export.toProjectCellData
 import org.springframework.context.MessageSource
@@ -54,11 +55,15 @@ class PartnerReportBudgetExportPlugin(
             )
         )
 
+
         sheet.addRow(
             CellData(getMessage("project.application.partner.report.expenditures.tab.cost.ID", exportLocale, messageSource)),
             CellData(getMessage("project.application.partner.report.expenditures.tab.cost.category", exportLocale, messageSource)),
             CellData(getMessage("project.application.partner.report.expenditures.tab.internal.reference.number", exportLocale, messageSource)),
-            CellData(getMessage("project.application.partner.report.expenditures.tab.total.value.invoice", exportLocale, messageSource))
+            CellData(getMessage("project.application.partner.report.expenditures.tab.total.value.invoice", exportLocale, messageSource)),
+            CellData(getMessage("project.application.partner.report.expenditures.tab.description", exportLocale, messageSource)),
+            CellData(getMessage("project.application.partner.report.expenditures.tab.comment", exportLocale, messageSource)),
+            CellData(getMessage("project.application.partner.report.attachments", exportLocale, messageSource))
         )
         sheet.addRows(reportExpenditures.map { row ->
             mutableListOf<CellData>().also {
@@ -72,6 +77,9 @@ class PartnerReportBudgetExportPlugin(
                 )
                 it.add(row.internalReferenceNumber.toProjectCellData())
                 it.add(row.totalValueInvoice.toProjectCellData())
+                it.add(row.description.getTranslationFor(dataLanguage).toProjectCellData())
+                it.add(row.comment.getTranslationFor(dataLanguage).toProjectCellData())
+                it.add(row.attachment?.name.toProjectCellData())
             }.toTypedArray()
         })
 
@@ -92,7 +100,7 @@ class PartnerReportBudgetExportPlugin(
     override fun getDescription() = "Standard partner report (example) budget export plugin"
     override fun getName() = "Partner Report budget (Example) export"
     override fun getKey() = "standard-partner-report-export-budget-plugin"
-    override fun getVersion() = "1.0.0"
+    override fun getVersion() = "1.0.1"
 
     private fun getTitle(
         projectIdentifier: String?,
