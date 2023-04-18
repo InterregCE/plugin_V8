@@ -11,10 +11,10 @@
 <th:block th:fragment="projectObjective(projectDataSectionC, specificObjective)">
     <div class="keep-together">
         <div id="section-c-1" class="title"
-             th:text="#{project.application.form.section.part.c.subsection.one}">
+             clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.one">
         </div>
 
-        <div th:text="#{project.application.form.overall.objective.field.row.one}">
+        <div clf:textApplicationFormTranslation="project.application.form.overall.objective.field.row.one">
             Programme priority specific objective your project will contribute to (chosen in section A.1.)
         </div>
 
@@ -25,13 +25,13 @@
     </div>
 
     <div clf:ifAnyFieldIsVisible="PROJECT_OVERALL_OBJECTIVE" class="keep-together">
-        <div class="sub-heading-2" th:text="#{project.application.form.overall.objective.field.projectOverallObjective}">overall objective</div>
-        <div th:text="#{project.application.form.overall.objective.field.row.two}">two</div>
-        <div th:text="#{project.application.form.overall.objective.field.row.three}">Abbreviation</div>
+        <div class="sub-heading-2" clf:textApplicationFormTranslation="project.application.form.overall.objective.field.projectOverallObjective">overall objective</div>
+        <div clf:textApplicationFormTranslation="project.application.form.overall.objective.field.row.two">two</div>
+        <div clf:textApplicationFormTranslation="project.application.form.overall.objective.field.row.three">Abbreviation</div>
         <ul>
-            <li th:text="#{project.application.form.overall.objective.field.row.four}">four</li>
-            <li th:text="#{project.application.form.overall.objective.field.row.five}">five</li>
-            <li th:text="#{project.application.form.overall.objective.field.row.six}">six</li>
+            <li clf:textApplicationFormTranslation="project.application.form.overall.objective.field.row.four">four</li>
+            <li clf:textApplicationFormTranslation="project.application.form.overall.objective.field.row.five">five</li>
+            <li clf:textApplicationFormTranslation="project.application.form.overall.objective.field.row.six">six</li>
         </ul>
         <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC.projectOverallObjective.overallObjective}"></div>

@@ -7,27 +7,29 @@
 <body>
 <th:block th:fragment="applicationFormIndex(projectData, callData, timeplanData)">
     <bookmarks>
+        <!-- not call-specific -->
         <bookmark
                 th:name="#{export.application.form.title(${projectData.sectionA?.customIdentifier},${projectData.sectionA?.acronym})}"
                 href="#first-page"
         >
-        <bookmark th:name="#{project.application.form.section.part.a}" href="#section-a">
-            <bookmark th:name="#{project.application.form.section.part.a.subsection.one}" href="#section-a-1"></bookmark>
+        <bookmark clf:textApplicationFormTranslation="project.application.form.section.part.a" href="#section-a">
+            <bookmark clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.one" href="#section-a-1"></bookmark>
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_SUMMARY"
-                    th:name="#{project.application.form.section.part.a.subsection.two}" href="#section-a-2"></bookmark>
+                    clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.two" href="#section-a-2"></bookmark>
             <bookmark
                     clf:ifAnyFieldIsVisible="PROJECT_A3"
                     th:if="${callData.isAdditionalFundAllowed == false}"
-                    th:name="#{project.application.form.section.part.a.subsection.three}" href="#section-a-3"></bookmark>
+                    clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.three" href="#section-a-3"></bookmark>
             <bookmark clf:ifAnyFieldIsVisible="PROJECT_A4"
-                      th:name="#{project.application.form.section.part.a.subsection.four}" href="#section-a-4"></bookmark>
+                      clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.four" href="#section-a-4"></bookmark>
         </bookmark>
 
         <th:block th:object="${projectData}">
-            <bookmark th:name="#{project.application.form.section.part.b}" href="#section-b">
-                <bookmark th:name="#{project.application.form.section.part.b.partners}"
+            <bookmark clf:textApplicationFormTranslation="project.application.form.section.part.b" href="#section-b">
+                <bookmark clf:textApplicationFormTranslation="project.application.form.section.part.b.partners"
                           href="#partners-overview">
+                    <!-- not call-specific -->
                     <bookmark
                             th:each="partner, rowStat: ${clfPartnerUtils.sortPartnersBySortNumber(projectData.sectionB.partners)}"
                             th:object="${partner}"
@@ -38,7 +40,7 @@
                 </bookmark>
                 <bookmark clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS"
                           href="#associated-organizations"
-                          th:name="#{project.application.form.section.part.b.associatedOrganizations}">
+                          clf:textApplicationFormTranslation="project.application.form.section.part.b.associatedOrganizations">
                     <bookmark
                             th:each="associatedOrganization, rowStat: ${clfPartnerUtils.sortAssociatedOrganizationsBySortNumber(projectData.sectionB.associatedOrganisations)}"
                             th:object="${associatedOrganization}"
@@ -50,33 +52,34 @@
             </bookmark>
         </th:block>
             <bookmark th:if="${clfUtils.isSectionCAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-                    th:name="#{project.application.form.section.part.c}" href="#section-c">
+                    clf:textApplicationFormTranslation="project.application.form.section.part.c" href="#section-c">
                 <bookmark th:if="${clfUtils.isSectionC1Available(#vars.projectData.lifecycleData, #vars.callData)}"
-                          th:name="#{project.application.form.section.part.c.subsection.one}" href="#section-c-1"></bookmark>
+                          clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.one" href="#section-c-1"></bookmark>
                 <bookmark th:if="${clfUtils.isSectionC2Available(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{project.application.form.section.part.c.subsection.two}" href="#section-c-2"></bookmark>
+                        clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.two" href="#section-c-2"></bookmark>
                 <bookmark clf:ifAnyFieldIsVisible="PROJECT_PARTNERSHIP"
-                        th:name="#{project.application.form.section.part.c.subsection.three}" href="#section-c-3"></bookmark>
+                        clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.three" href="#section-c-3"></bookmark>
                 <bookmark th:if="${clfUtils.isSectionC4Available(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{project.application.form.section.part.c.subsection.four}" href="#section-c-4">
+                        clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.four" href="#section-c-4">
+                    <!-- not call-specific -->
                     <bookmark
                             th:each="wp, rowStat: ${projectData.sectionC?.projectWorkPackages}"
                             th:object="${wp}"
-                            th:name="#{export.workpackage.wp}+*{workPackageNumber}"
+                            clf:textApplicationFormTranslation="#{export.workpackage.wp}+*{workPackageNumber}"
                             th:href="'#wp-'+*{workPackageNumber}">
                     </bookmark>
                 </bookmark>
                 <bookmark
                         th:if="${clfUtils.isProjectResultsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{project.application.form.section.part.c.subsection.five}" href="#section-c-5"></bookmark>
+                        clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.five" href="#section-c-5"></bookmark>
                 <bookmark th:if="${timeplanData != null}"
-                          th:name="#{project.application.form.section.part.c.subsection.six}" href="#section-c-6"></bookmark>
+                          clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.six" href="#section-c-6"></bookmark>
                 <bookmark
                         th:if="${clfUtils.isSectionC7Available(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{project.application.form.section.part.c.subsection.seven}" href="#section-c-7"></bookmark>
+                        clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.seven" href="#section-c-7"></bookmark>
                 <bookmark
                         th:if="${clfUtils.isLongTermPlansSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-                        th:name="#{project.application.form.section.part.c.subsection.eight}" href="#section-c-8"></bookmark>
+                        clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.eight" href="#section-c-8"></bookmark>
             </bookmark>
         </bookmark>
     </bookmarks>

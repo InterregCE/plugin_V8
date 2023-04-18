@@ -12,7 +12,7 @@
 <th:block th:fragment="sectionC6(timeplanData)">
     <div class="landscape">
 
-        <div class="title" id="section-c-6" th:text="#{project.application.form.section.part.c.subsection.six}">
+        <div class="title" id="section-c-6" clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.six">
             timeplan
         </div>
 
@@ -22,6 +22,7 @@
 
             <th:block th:each="period, rowStat: ${timeplanData.periodColumns}"
                       th:object="${period}">
+                <!-- not call-specific -->
                 <text th:if="${timeplanData.periodColumns.size <= 16 && timeplanData.lastPeriodNumber != period.number}"
                       th:text="#{project.application.form.section.part.e.period.column.title} + ' ' + ${period.number}"
                       th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
@@ -29,7 +30,7 @@
                       th:text="${period.number}"
                       th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
                 <text th:if="${timeplanData.lastPeriodNumber == period.number}"
-                      th:text="#{export.c6.period.last}"
+                      clf:textApplicationFormTranslation="export.c6.period.last"
                       th:x="${period.xTextMiddle}" y="24" font-size="9" fill="#444444" dominant-baseline="middle" text-anchor="middle"></text>
             </th:block>
 
@@ -69,7 +70,7 @@
             </th:block>
 
             <!-- result title -->
-            <text th:if="${timeplanData.resultTitleYCoordinate != null}" th:text="#{result.indicator.title}"
+            <text th:if="${timeplanData.resultTitleYCoordinate != null}" clf:textApplicationFormTranslation="result.indicator.title"
                   th:x="5" th:y="${timeplanData.resultTitleYCoordinate}" font-size="9" fill="#000000" dominant-baseline="middle" text-anchor="start" font-weight="700">results</text>
 
         </svg>

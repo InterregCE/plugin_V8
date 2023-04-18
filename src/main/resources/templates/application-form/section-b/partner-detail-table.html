@@ -16,9 +16,10 @@
             <thead class="table-header">
             <tr class="sub-heading-2">
                 <td colspan="2" th:if="${isSPFCall == true}"
-                    th:text="#{spf.common.label.project.partner.role.LEAD_PARTNER}"
+                    clf:textApplicationFormTranslation="spf.common.label.project.partner.role.LEAD_PARTNER"
                     th:id="*{sortNumber}"
                 ></td>
+                <!-- not call-specific -->
                 <td colspan="2"
                     th:if="${isSPFCall == false}"
                     th:with="partnerTitle=*{role?.isLead()} ? #{export.partner.detail.lead.partner.title} : #{export.partner.detail.project.partner.title(*{sortNumber})}"
@@ -31,31 +32,31 @@
             </thead>
             <tbody class="table-body">
             <tr>
-                <th th:text="#{project.application.form.partner.table.number}">Number</th>
+                <th clf:textApplicationFormTranslation="project.application.form.partner.table.number">Number</th>
                 <td th:text="*{sortNumber}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_ROLE">
-                <th th:text="#{project.application.form.partner.table.role}">Role</th>
+                <th clf:textApplicationFormTranslation="project.application.form.partner.table.role">Role</th>
                 <td th:text="*{role?.isLead()}? 'LP' : 'PP'"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_ORIGINAL_NAME_OF_ORGANISATION">
-                <th th:text="#{project.organization.original.name.label}">
+                <th clf:textApplicationFormTranslation="project.organization.original.name.label">
                     Partner name in original language
                 </th>
                 <td th:text="*{nameInOriginalLanguage}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION">
-                <th th:text="#{project.organization.english.name.label}">
+                <th clf:textApplicationFormTranslation="project.organization.english.name.label">
                     Partner name in english
                 </th>
                 <td th:text="*{nameInEnglish}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME">
-                <th th:text="#{project.application.form.partner.table.name}">Abbreviation</th>
+                <th clf:textApplicationFormTranslation="project.application.form.partner.table.name">Abbreviation</th>
                 <td th:text="*{abbreviation}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_DEPARTMENT_UNIT_DIVISION">
-                <th th:text="#{project.organization.department.label}">
+                <th clf:textApplicationFormTranslation="project.organization.department.label">
                     Department/unit/division
                 </th>
                 <td class="multiline" clf:textTranslationByDataLanguage="*{department}"></td>
@@ -67,25 +68,26 @@
                th:with="mainAddress=${clfPartnerUtils.getMainAddress(partner.addresses)}">
             <thead class="table-header">
             <tr class="sub-heading-1">
-                <td colspan="2" th:text="#{project.partner.main-address.header}">Main
+                <td colspan="2" clf:textApplicationFormTranslation="project.partner.main-address.header">Main
                     address
                 </td>
             </tr>
             </thead>
             <tbody class="table-body">
             <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS">
-                <th th:text="#{project.partner.main-address.country}">Country</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.country">Country</th>
                 <td th:text="${mainAddress?.country}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS">
-                <th th:text="#{project.partner.main-address.region2}">Region</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.region2">Region</th>
                 <td th:text="${mainAddress?.nutsRegion2}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS">
-                <th th:text="#{project.partner.main-address.region3}">Sub region</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.region3">Sub region</th>
                 <td th:text="${mainAddress?.nutsRegion3}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_STREET,PARTNER_MAIN_ADDRESS_HOUSE_NUMBER,PARTNER_MAIN_ADDRESS_POSTAL_CODE,PARTNER_MAIN_ADDRESS_CITY">
+                <!-- not call-specific -->
                 <th th:text="#{project.partner.main-address.street} + ', ' + #{project.partner.main-address.housenumber} + ', ' + #{project.partner.main-address.postalcode} + ', ' + #{project.partner.main-address.city}">Address details
                 </th>
                 <td>
@@ -104,7 +106,7 @@
                 </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_HOMEPAGE">
-                <th th:text="#{project.partner.main-address.homepage}">Homepage</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.homepage">Homepage</th>
                 <td th:text="${mainAddress?.homepage}"></td>
             </tr>
             </tbody>
@@ -115,25 +117,26 @@
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2"
-                    th:text="#{project.partner.department-address.header}">
+                    clf:textApplicationFormTranslation="project.partner.department-address.header">
                     Department Address
                 </td>
             </tr>
             </thead>
             <tbody class="table-body">
             <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS">
-                <th th:text="#{project.partner.main-address.country}">Country</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.country">Country</th>
                 <td th:text="${departmentAddress?.country}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS">
-                <th th:text="#{project.partner.main-address.region2}">Region</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.region2">Region</th>
                 <td th:text="${departmentAddress?.nutsRegion2}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_COUNTRY_AND_NUTS">
-                <th th:text="#{project.partner.main-address.region3}">Sub region</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.region3">Sub region</th>
                 <td th:text="${departmentAddress?.nutsRegion3}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_SECONDARY_ADDRESS_STREET,PARTNER_SECONDARY_ADDRESS_HOUSE_NUMBER,PARTNER_SECONDARY_ADDRESS_POSTAL_CODE,PARTNER_SECONDARY_ADDRESS_CITY">
+                <!-- not call-specific -->
                 <th th:text="#{project.partner.main-address.street} + ', ' + #{project.partner.main-address.housenumber} + ', ' + #{project.partner.main-address.postalcode} + ', ' + #{project.partner.main-address.city}">Address details
                 </th>
                 <td>
@@ -158,44 +161,44 @@
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2"
-                    th:text="#{project.partner.detail.title.legal.financial}">
+                    clf:textApplicationFormTranslation="project.partner.detail.title.legal.financial">
                     Legal and financial information
                 </td>
             </tr>
             </thead>
             <tbody class="table-body">
             <tr clf:ifAnyFieldIsVisible="PARTNER_TYPE">
-                <th th:text="#{project.partner.type}">Partner type</th>
+                <th clf:textApplicationFormTranslation="project.partner.type">Partner type</th>
                 <td>
                     <span th:if="${partner.partnerType != null}"
-                          th:text="#{${clfPartnerUtils.getPartnerTypeTranslationString(partner.partnerType)}}">
+                          clf:textApplicationFormTranslation="${clfPartnerUtils.getPartnerTypeTranslationString(partner.partnerType)}">
                     </span>
                 </td>
             </tr>
             <th:block th:if="${isSPFCall == true}">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_TYPE">
-                    <th th:text="#{spf.beneficiary.type}">Type of SPF beneficiary</th>
+                    <th clf:textApplicationFormTranslation="spf.beneficiary.type">Type of SPF beneficiary</th>
                     <td>
                     <span th:if="${partner.partnerType != null}"
-                          th:text="#{${clfPartnerUtils.getPartnerSpfBeneficiaryTypeTranslationKey(partner.partnerType)}}">
+                          clf:textApplicationFormTranslation="${clfPartnerUtils.getPartnerSpfBeneficiaryTypeTranslationKey(partner.partnerType)}">
                     </span>
                     </td>
                 </tr>
             </th:block>
             <tr clf:ifAnyFieldIsVisible="PARTNER_SUB_TYPE">
-                <th th:text="#{project.partner.subType}">Partner sub type</th>
+                <th clf:textApplicationFormTranslation="project.partner.subType">Partner sub type</th>
                 <td>
                     <span th:if="${partner.partnerSubType != null}"
-                          th:text="#{${clfPartnerUtils.getPartnerSubTypeTranslationString(partner.partnerSubType)}}">
+                          clf:textApplicationFormTranslation="${clfPartnerUtils.getPartnerSubTypeTranslationString(partner.partnerSubType)}">
                     </span>
                 </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_STATUS">
-                <th th:text="#{project.partner.legal.status}">Legal status</th>
+                <th clf:textApplicationFormTranslation="project.partner.legal.status">Legal status</th>
                 <td clf:texttranslationbyexportlanguage="*{legalStatusDescription}">legal status description</td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_NACE_GROUP_LEVEL">
-                <th th:text="#{project.partner.nace}">NACE</th>
+                <th clf:textApplicationFormTranslation="project.partner.nace">NACE</th>
                 <td>
                     <span th:if="${partner.nace != null}"
                           th:text="${clfPartnerUtils.getPartnerNaceTranslationString(partner.nace)}">
@@ -203,24 +206,24 @@
                 </td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_IDENTIFIER">
-                <th th:text="#{export.partner.detail.vat}">Vat number</th>
+                <th clf:textApplicationFormTranslation="export.partner.detail.vat">Vat number</th>
                 <td th:text="*{vat}"></td>
             </tr>
             <tr clf:ifAnyFieldIsVisible="PARTNER_VAT_RECOVERY">
-                <th th:text="#{project.partner.recoverVat.intro.text}">Vat
+                <th clf:textApplicationFormTranslation="project.partner.recoverVat.intro.text">Vat
                     recovery
                 </th>
                 <td th:text="*{vatRecovery} ? *{#messages.msg('common.label.project.partner.recoverVat.' + #strings.toLowerCase(vatRecovery))} : ''"></td>
             </tr>
             <th:block clf:ifAnyFieldIsVisible="PARTNER_OTHER_IDENTIFIER_NUMBER_AND_DESCRIPTION">
                 <tr>
-                    <th th:text="#{project.partner.other.identifier.number}">Other
+                    <th clf:textApplicationFormTranslation="project.partner.other.identifier.number">Other
                         identifier number
                     </th>
                     <td th:text="*{otherIdentifierNumber}"></td>
                 </tr>
                 <tr>
-                    <th th:text="#{project.partner.other.identifier.description}">
+                    <th clf:textApplicationFormTranslation="project.partner.other.identifier.description">
                         Other
                         identifier description
                     </th>
@@ -228,7 +231,7 @@
                 </tr>
             </th:block>
             <tr clf:ifAnyFieldIsVisible="PARTNER_PIC">
-                <th th:text="#{project.partner.pic}">PIC</th>
+                <th clf:textApplicationFormTranslation="project.partner.pic">PIC</th>
                 <td th:text="*{pic}"></td>
             </tr>
             </tbody>
@@ -238,7 +241,7 @@
             <thead class="table-header">
             <tr class="sub-heading-1">
                 <td colspan="2"
-                    th:text="#{partner.tab.contact}">
+                    clf:textApplicationFormTranslation="partner.tab.contact">
                     Contact
                 </td>
             </tr>
@@ -246,7 +249,7 @@
             <tbody class="table-body">
             <th:block th:with="legalRepresentative=${clfPartnerUtils.getLegalRepresentative(partner.contacts)}">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_LEGAL_REPRESENTATIVE_TITLE,PARTNER_LEGAL_REPRESENTATIVE_FIRST_NAME,PARTNER_LEGAL_REPRESENTATIVE_LAST_NAME">
-                    <th th:text="#{project.partner.representative.header.detail}">Legal
+                    <th clf:textApplicationFormTranslation="project.partner.representative.header.detail">Legal
                         representative
                     </th>
                     <td>
@@ -262,7 +265,7 @@
             </th:block>
             <th:block th:with="contactPerson=${clfPartnerUtils.getContactPerson(partner.contacts)}">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TITLE,PARTNER_CONTACT_PERSON_FIRST_NAME,PARTNER_CONTACT_PERSON_LAST_NAME">
-                    <th th:text="#{project.partner.contact.header.detail}">Contact person
+                    <th clf:textApplicationFormTranslation="project.partner.contact.header.detail">Contact person
                     </th>
                     <td>
                         <span clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TITLE"
@@ -275,11 +278,11 @@
                     </td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_EMAIL">
-                    <th th:text="#{authentication.email.label}">Email</th>
+                    <th clf:textApplicationFormTranslation="authentication.email.label">Email</th>
                     <td th:text="${contactPerson?.email}"></td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PARTNER_CONTACT_PERSON_TELEPHONE">
-                    <th th:text="#{project.partner.contact.telephone}">Phone</th>
+                    <th clf:textApplicationFormTranslation="project.partner.contact.telephone">Phone</th>
                     <td th:text="${contactPerson?.telephone}"></td>
                 </tr>
             </th:block>
@@ -289,14 +292,14 @@
                clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_COMPETENCES,PARTNER_MOTIVATION_ROLE,PARTNER_ROLE_EXPERIENCE">
             <thead>
                 <tr>
-                    <td class="sub-heading-1" th:text="#{partner.tab.motivation}">
+                    <td class="sub-heading-1" clf:textApplicationFormTranslation="partner.tab.motivation">
                         Motivation
                     </td>
                 </tr>
             </thead>
             <tbody class="table-body">
                 <tr clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_COMPETENCES">
-                    <th th:text="#{project.partner.motivation.organization.relevance}">
+                    <th clf:textApplicationFormTranslation="project.partner.motivation.organization.relevance">
                         Which of the organization's thematic competences and experiences are relevant for the project?
                     </th>
                 </tr>
@@ -305,7 +308,7 @@
                 </tr>
 
                 <tr clf:ifAnyFieldIsVisible="PARTNER_MOTIVATION_ROLE">
-                    <th th:text="#{project.partner.motivation.organization.role}">Organization
+                    <th clf:textApplicationFormTranslation="project.partner.motivation.organization.role">Organization
                         role
                     </th>
                 </tr>

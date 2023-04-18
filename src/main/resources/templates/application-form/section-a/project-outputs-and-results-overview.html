@@ -10,51 +10,51 @@
 <body>
 <th:block th:fragment="projectOutputsAndResultsOverviewTable(projectDataSectionA)">
     <div id="section-a-4" class="landscape long-text" clf:ifAnyFieldIsVisible="PROJECT_A4">
-        <div class="title" th:text="#{project.application.form.section.part.a.subsection.four}"></div>
+        <div class="title" clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.four"></div>
         <span th:if="${#lists.size(projectDataSectionA.resultIndicatorOverview.indicatorLines) == 0}"
-              th:text="#{project.application.form.a4.table.not.available.export}">No
+              clf:textApplicationFormTranslation="project.application.form.a4.table.not.available.export">No
             outputs and results created
         </span>
         <table class="remove-zebra default-table" th:if="${#lists.size(projectDataSectionA.resultIndicatorOverview.indicatorLines) > 0}">
             <thead class="table-header">
             <tr>
-                <th th:text="#{project.application.form.work.package.output.programme.output.indicator}">
+                <th clf:textApplicationFormTranslation="project.application.form.work.package.output.programme.output.indicator">
                     Programme Output Indicator
                 </th>
 
-                <th class="text-right" th:text="#{project.application.form.a4.table.aggregated.value}">
+                <th class="text-right" clf:textApplicationFormTranslation="project.application.form.a4.table.aggregated.value">
                     Aggregated value per Programme output indicator
                 </th>
 
-                <th th:text="#{project.application.form.work.package.output.measurement.unit}">
+                <th clf:textApplicationFormTranslation="project.application.form.work.package.output.measurement.unit">
                     Measurement Unit
                 </th>
 
-                <th th:text="#{project.application.form.work.package.output}">
+                <th clf:textApplicationFormTranslation="project.application.form.work.package.output">
                     Output
                 </th>
 
-                <th th:text="#{project.application.form.work.package.output.title}">
+                <th clf:textApplicationFormTranslation="project.application.form.work.package.output.title">
                     Output Title
                 </th>
 
-                <th class="text-right" th:text="#{project.application.form.a4.table.output.target.value}">
+                <th class="text-right" clf:textApplicationFormTranslation="project.application.form.a4.table.output.target.value">
                     Output target value
                 </th>
 
-                <th th:text="#{project.results.result.indicator}">
+                <th clf:textApplicationFormTranslation="project.results.result.indicator">
                     Programme result indicator
                 </th>
 
-                <th th:text="#{project.results.result.baseline}">
+                <th clf:textApplicationFormTranslation="project.results.result.baseline">
                     Baseline
                 </th>
 
-                <th class="text-right" th:text="#{project.application.form.a4.table.result.indicator.value}">
+                <th class="text-right" clf:textApplicationFormTranslation="project.application.form.a4.table.result.indicator.value">
                     Result indicator target value
                 </th>
 
-                <th th:text="#{project.results.result.measurement.unit}">
+                <th clf:textApplicationFormTranslation="project.results.result.measurement.unit">
                     Measurement Unit
                 </th>
             </tr>
@@ -71,6 +71,7 @@
                                 <td class="bottom-border" clf:number="*{outputIndicatorTargetValueSumUp}" th:rowspan="${outputIndicatorSpan[rowStat.index]}"></td>
                                 <td class="bottom-border right-border" clf:textTranslationByDataLanguage="*{outputIndicatorMeasurementUnit}" th:rowspan="${outputIndicatorSpan[rowStat.index]}"></td>
                                 <td class="bottom-border">
+                                    <!-- not call-specific -->
                                     <span th:if="${indicatorLine.projectOutputNumber != null}"
                                           th:text="#{export.work.package.output(${indicatorLine.projectOutputNumber})}">
                                     </span>

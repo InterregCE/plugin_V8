@@ -12,7 +12,7 @@
 <body>
 <th:block th:fragment="sectionC4(projectDataSectionC, projectDataSectionB, periods)">
 
-    <div class="title" id="section-c-4" th:text="#{project.application.form.section.part.c.subsection.four}">
+    <div class="title" id="section-c-4" clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.four">
         work plan
     </div>
 
@@ -21,6 +21,7 @@
     <th:block th:each="workPackage, rowStat: ${projectDataSectionC.projectWorkPackages}"
               th:object="${workPackage}">
         <div class="page-break-before"></div>
+        <!-- not call-specific -->
         <div class="sub-heading-2"
              th:text="#{project.application.form.workpackage.form.header} + ' ' + ${workPackage.workPackageNumber}"
              th:id="'wp-'+*{workPackageNumber}">
@@ -28,39 +29,39 @@
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE">
-            <div class="sub-heading-1" th:text="#{project.application.form.workpackage.field.title}">title</div>
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.workpackage.field.title">title</div>
             <div class="input-data" clf:textTranslationByDataLanguage="*{name}">name value</div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_SPECIFIC_OBJECTIVE">
-            <div class="sub-heading-1" th:text="#{project.application.form.workpackage.form.objectives}">Objectives</div>
-            <div th:text="#{project.application.form.workpackage.form.objectives.intro.line.three}">objs should be</div>
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives">Objectives</div>
+            <div clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives.intro.line.three">objs should be</div>
             <ul>
-                <li th:text="#{project.application.form.workpackage.form.objectives.intro.line.four}">a</li>
-                <li th:text="#{project.application.form.workpackage.form.objectives.intro.line.five}">b</li>
-                <li th:text="#{project.application.form.workpackage.form.objectives.intro.line.six}">c</li>
+                <li clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives.intro.line.four">a</li>
+                <li clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives.intro.line.five">b</li>
+                <li clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives.intro.line.six">c</li>
             </ul>
-            <div th:text="#{project.application.form.workpackage.form.objectives.intro.line.one}">Define one project</div>
+            <div clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives.intro.line.one">Define one project</div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="*{specificObjective}">value</div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COMMUNICATION_OBJECTIVES_AND_TARGET_AUDIENCE">
-            <div th:text="#{project.application.form.workpackage.form.objectives.intro.line.two}">question 2</div>
+            <div clf:textApplicationFormTranslation="project.application.form.workpackage.form.objectives.intro.line.two">question 2</div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="*{objectiveAndAudience}">answer 2</div>
         </div>
 
         <div class="sub-heading-1" id="activities" th:if="${clfUtils.isActivitiesSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.activities.size() > 0}"
-             th:text="#{workpackage.tab.activities}">Activities
+             clf:textApplicationFormTranslation="workpackage.tab.activities">Activities
         </div>
         <div th:insert="~{application-form/section-c/project-wp-activities.html :: sectionC4Activities(${workPackage}, ${periods}, ${projectDataSectionB})}"></div>
 
         <div class="sub-heading-1" id="outputs" th:if="${clfUtils.isOutputsSectionAvailable(#vars.projectData.lifecycleData, #vars.callData) && workPackage.outputs.size() > 0}"
-             th:text="#{workpackage.tab.outputs}">Outputs
+             clf:textApplicationFormTranslation="workpackage.tab.outputs">Outputs
         </div>
         <div th:insert="~{application-form/section-c/project-wp-output.html :: sectionC4Output(${workPackage})}"></div>
 
         <div class="sub-heading-1" id="investments" th:if="${clfUtils.isInvestmentSectionAvailable(#vars.projectData.lifecycleData, #vars.callData)}"
-             th:text="#{workpackage.tab.investments}">Investments
+             clf:textApplicationFormTranslation="workpackage.tab.investments">Investments
         </div>
         <div th:insert="~{application-form/section-c/project-wp-investment.html :: sectionC4Investment(${workPackage}, ${periods})}"></div>
 

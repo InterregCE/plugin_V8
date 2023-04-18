@@ -13,20 +13,21 @@
           th:object="${investment}">
 
     <div class="sub-heading-2">
+        <!-- not call-specific -->
         <span th:if="${investment?.deactivated == true}" th:text="#{project.application.form.workpackage.investment.form.title} + ' ' + ${workPackage.workPackageNumber} + '.' + ${investment?.investmentNumber} + ' ' + #{export.work.plan.deactivated}">Investment x.x (Deactivated)</span>
         <span th:if="${investment?.deactivated == null or investment?.deactivated == false}" th:text="#{project.application.form.workpackage.investment.form.title} + ' ' + ${workPackage.workPackageNumber} + '.' + ${investment?.investmentNumber}">Investment x.x</span>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_TITLE">
-        <div class="sub-heading-1" th:text="#{export.common.label.title}">title</div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="export.common.label.title">title</div>
         <div class="input-data" clf:textTranslationByDataLanguage="*{title}">title value</div>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_PERIOD" th:if="${investment?.expectedDeliveryPeriod} != null">
-        <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.expected.delivery.period}">period</div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.workpackage.investment.expected.delivery.period">period</div>
         <th:block th:with="period = ${clfProjectUtils.getPeriod(investment?.expectedDeliveryPeriod, periods)}">
             <span th:unless="${period == null}">
-                            <span th:text="#{project.partner.budget.table.period}">Per</span>
+                            <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per</span>
                             <span th:text="${period.number}">x</span><span>, </span>
                             <span th:text="${period.start}">x</span>
                             <span> - </span>
@@ -35,7 +36,7 @@
         </th:block>
     </div>
 
-    <div class="sub-heading-1" th:if="${clfUtils.isInvestmentJustificationAvailable(#vars.projectData.lifecycleData, #vars.callData)}" th:text="#{project.application.form.workpackage.investment.justification}">
+    <div class="sub-heading-1" th:if="${clfUtils.isInvestmentJustificationAvailable(#vars.projectData.lifecycleData, #vars.callData)}" clf:textApplicationFormTranslation="project.application.form.workpackage.investment.justification">
         justification
     </div>
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHY_IS_INVESTMENT_NEEDED">
@@ -44,17 +45,17 @@
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT">
-        <div th:text="#{project.application.form.workpackage.investment.justification.transactional.relevance}">relevance</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.justification.transactional.relevance">relevance</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.justificationTransactionalRelevance}">value</div>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_IS_BENEFITING">
-        <div th:text="#{project.application.form.workpackage.investment.justification.benefits}"></div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.justification.benefits"></div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.justificationBenefits}"></div>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_PILOT_CLARIFICATION">
-        <div th:text="#{project.application.form.workpackage.investment.justification.pilot}">pilot</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.justification.pilot">pilot</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.justificationPilot}">value</div>
     </div>
 
@@ -63,7 +64,7 @@
         <thead class="table-header">
         <tr class="sub-heading-1">
             <td colspan="2"
-                th:text="#{project.application.form.workpackage.investment.location}">
+                clf:textApplicationFormTranslation="project.application.form.workpackage.investment.location">
                 physical loc
             </td>
         </tr>
@@ -72,26 +73,26 @@
         <tbody class="table-body">
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{project.partner.main-address.country}">country</th>
+            <th clf:textApplicationFormTranslation="project.partner.main-address.country">country</th>
             <td th:text="${investment?.address?.country}">SK</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{project.partner.main-address.region2}">region</th>
+            <th clf:textApplicationFormTranslation="project.partner.main-address.region2">region</th>
             <td th:text="${investment?.address?.nutsRegion2}">x</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_COUNTRY">
-            <th th:text="#{project.partner.main-address.region3}">subregion</th>
+            <th clf:textApplicationFormTranslation="project.partner.main-address.region3">subregion</th>
             <td th:text="${investment?.address?.nutsRegion3}"></td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_STREET,PROJECT_INVESTMENT_HOUSE_NUMBER,PROJECT_INVESTMENT_POSTAL_CODE,PROJECT_INVESTMENT_CITY">
             <th>
-                <span th:text="#{project.partner.main-address.street}"></span>
-                <span th:text="#{project.partner.main-address.housenumber}"></span><span>,</span>
-                <span th:text="#{project.partner.main-address.postalcode}"></span><span>,</span>
-                <span th:text="#{project.partner.main-address.city}"></span>
+                <span clf:textApplicationFormTranslation="project.partner.main-address.street"></span>
+                <span clf:textApplicationFormTranslation="project.partner.main-address.housenumber"></span><span>,</span>
+                <span clf:textApplicationFormTranslation="project.partner.main-address.postalcode"></span><span>,</span>
+                <span clf:textApplicationFormTranslation="project.partner.main-address.city"></span>
             </th>
             <td>
                 <span th:text="${investment?.address?.street}">str</span>
@@ -104,44 +105,44 @@
         </tbody>
     </table>
 
-    <div class="sub-heading-1" th:text="#{project.application.form.workpackage.investment.risk}" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_RISK">
+    <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.workpackage.investment.risk" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_RISK">
         risk
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_RISK">
-        <div th:text="#{project.application.form.workpackage.investment.risk.description}">risk</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.risk.description">risk</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.risk}">value</div>
     </div>
 
-    <div class="sub-heading-1" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION,PROJECT_INVESTMENT_DOCUMENTATION_EXPECTED_IMPACTS" th:text="#{project.application.form.workpackage.investment.documentation}">
+    <div class="sub-heading-1" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION,PROJECT_INVESTMENT_DOCUMENTATION_EXPECTED_IMPACTS" clf:textApplicationFormTranslation="project.application.form.workpackage.investment.documentation">
         investment
     </div>
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION">
-        <div th:text="#{project.application.form.workpackage.investment.documentation.description.line.1}">descr</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.documentation.description.line.1">descr</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.documentation}">value</div>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_DOCUMENTATION_EXPECTED_IMPACTS">
-        <div th:text="#{project.application.form.workpackage.investment.documentation.description.line.2}">descr</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.documentation.description.line.2">descr</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.documentationExpectedImpacts}">value</div>
     </div>
 
-    <div class="sub-heading-1" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE,PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT,PROJECT_INVESTMENT_MAINTENANCE" th:text="#{project.application.form.workpackage.investment.ownership}">
+    <div class="sub-heading-1" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE,PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT,PROJECT_INVESTMENT_MAINTENANCE" clf:textApplicationFormTranslation="project.application.form.workpackage.investment.ownership">
         ownership
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE">
-        <div th:text="#{project.application.form.workpackage.investment.ownership.site.location}">location</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.ownership.site.location">location</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.ownershipSiteLocation}">value</div>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT">
-        <div th:text="#{project.application.form.workpackage.investment.ownership.retain}">retain</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.ownership.retain">retain</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.ownershipRetain}">value</div>
     </div>
 
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_INVESTMENT_MAINTENANCE">
-        <div th:text="#{project.application.form.workpackage.investment.ownership.maintenance}">maintenance</div>
+        <div clf:textApplicationFormTranslation="project.application.form.workpackage.investment.ownership.maintenance">maintenance</div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${investment?.ownershipMaintenance}">value</div>
     </div>
 

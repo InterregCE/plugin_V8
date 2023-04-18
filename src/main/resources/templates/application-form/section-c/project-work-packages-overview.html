@@ -10,18 +10,18 @@
 <body>
 <th:block th:fragment="projectWorkPackagesOverview(projectDataSectionC)">
     <span th:if="${projectDataSectionC.projectWorkPackages?.size() == 0}"
-          th:text="#{project.application.form.workpackage.list.empty}">No
+          clf:textApplicationFormTranslation="project.application.form.workpackage.list.empty">No
         work packages
     </span>
     <th:block th:if="${projectDataSectionC.projectWorkPackages?.size() > 0}">
         <table class="default-table">
             <thead class="table-header">
             <tr>
-                <th th:text="#{project.application.form.workpackage.number}">
+                <th clf:textApplicationFormTranslation="project.application.form.workpackage.number">
                     Number
                 </th>
 
-                <th clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" th:text="#{project.application.form.workpackage.name}">
+                <th clf:ifAnyFieldIsVisible="PROJECT_WORK_PACKAGE_TITLE" clf:textApplicationFormTranslation="project.application.form.workpackage.name">
                     Work package name
                 </th>
             </tr>

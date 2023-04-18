@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
 <!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
 <!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
@@ -18,27 +18,27 @@
     <div class="headline text-center" th:text="${projectDataSectionA?.acronym}">
         Project Acronym
     </div>
-    <div class="sub-heading-2 text-center mt-5rem" th:text="#{export.cover.page.title.label}">
+    <div class="sub-heading-2 text-center mt-5rem" clf:textApplicationFormTranslation="export.cover.page.title.label">
         Application Form Export
     </div>
     <div class="sub-heading-2 text-center mt-1rem">
-        <span th:text="#{export.cover.page.download.label}">Downloaded On</span>
+        <span clf:textApplicationFormTranslation="export.cover.page.download.label">Downloaded On</span>
         <span th:text="${downloadedDateTime}">Date</span>
     </div>
     <div class="sub-heading-2 text-center mt-3rem">
-        <span th:text="#{export.cover.page.version.label}">Version</span>
+        <span clf:textApplicationFormTranslation="export.cover.page.version.label">Version</span>
         <span th:text="${version}">Version</span>
     </div>
     <div class="sub-heading-2 text-center mt-1rem">
-        <span th:text="#{export.cover.page.export.form.language.label}">Form language:</span>
+        <span clf:textApplicationFormTranslation="export.cover.page.export.form.language.label">Form language:</span>
         <span th:text="${exportLanguage}">Language</span>
     </div>
     <div class="sub-heading-2 text-center mt-1rem">
-        <span th:text="#{export.cover.page.input.form.language.label}">Input language:</span>
+        <span clf:textApplicationFormTranslation="export.cover.page.input.form.language.label">Input language:</span>
         <span th:text="${dataLanguage}">Language</span>
     </div>
     <div class="sub-heading-2 text-center mt-1rem">
-        <span th:text="#{export.cover.page.input.form.currency.label}">Currency: EUR</span>
+        <span clf:textApplicationFormTranslation="export.cover.page.input.form.currency.label">Currency: EUR</span>
     </div>
     <div class="page-break-after"></div>
 </th:block>

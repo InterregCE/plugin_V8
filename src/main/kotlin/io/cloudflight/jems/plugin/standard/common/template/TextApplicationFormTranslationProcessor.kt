@@ -1,7 +1,6 @@
 package io.cloudflight.jems.plugin.standard.common.template
 
 import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
-import io.cloudflight.jems.plugin.contract.models.call.CallTypeData
 import io.cloudflight.jems.plugin.standard.common.CALL_DATA
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.engine.AttributeName
@@ -12,10 +11,10 @@ import org.thymeleaf.standard.StandardDialect
 import org.thymeleaf.templatemode.TemplateMode
 import org.unbescape.html.HtmlEscape
 
-class TextBasedOnCallTypeProcessor(defaultDialectPrefix: String) : AbstractAttributeTagProcessor(
+class TextApplicationFormTranslationProcessor(defaultDialectPrefix: String) : AbstractAttributeTagProcessor(
     TemplateMode.HTML, defaultDialectPrefix,
     null, true,
-    "textBasedOnCallType", true,
+    "textApplicationFormTranslation", true,
     StandardDialect.PROCESSOR_PRECEDENCE, true
 ) {
 
@@ -26,20 +25,21 @@ class TextBasedOnCallTypeProcessor(defaultDialectPrefix: String) : AbstractAttri
     ) {
         if (context != null && attributeValue != null && structureHandler != null) {
             val translationKey = parseAttributeValue(attributeValue, context)?.toString() ?: ""
-            val call = context.getVariable(CALL_DATA) as CallDetailData
-            val spfPrefix = if (call.type == CallTypeData.SPF) "spf." else ""
+            val callSpecificKey = "call-id-${(context.getVariable(CALL_DATA) as CallDetailData).id}.$translationKey"
 
-            val callSpecificSpfKey = "call-id-${call.id}.$spfPrefix$translationKey"
-            val spfKey = "$spfPrefix$translationKey"
+            val translation = HtmlEscape.escapeHtml5Xml(
+                context.translate(callSpecificKey) ?: context.translate(translationKey) ?: translationKey
+            )
 
-            val translation = context.translate(callSpecificSpfKey) ?: context.translate(spfKey) ?: spfKey
-
-            structureHandler.setBody(HtmlEscape.escapeHtml5Xml(translation), false)
+            if (tag?.elementCompleteName == "bookmark")
+                structureHandler.setAttribute("name", translation)
+            else
+                structureHandler.setBody(translation, false)
         }
     }
 
     private fun ITemplateContext.translate(key: String) = getMessage(
-        TextBasedOnCallTypeProcessor::class.java,
+        TextApplicationFormTranslationProcessor::class.java,
         key, arrayOfNulls(0), false
     )
 

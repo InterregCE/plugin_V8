@@ -20,7 +20,7 @@
             <span th:text="${projectData.sectionA?.acronym}">Project acronym</span>
         </div>
         <div class="info-header-item italic">
-            <span th:text="#{export.cover.page.version.label}">Version</span>
+            <span clf:textApplicationFormTranslation="export.cover.page.version.label">Version</span>
             <span th:text="|${version}, |">Version</span>
             <span th:text="${downloadedDate}">downloadedDate</span>
         </div>

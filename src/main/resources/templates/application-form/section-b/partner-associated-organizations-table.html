@@ -11,11 +11,11 @@
 <th:block th:fragment="partnerAssociatedOrganizationTable(associatedOrganizations)">
     <div class="page-break-before"></div>
     <div class="title" id="associated-organizations"
-         th:text="#{project.application.form.section.part.b.associatedOrganizations}">Associated
+         clf:textApplicationFormTranslation="project.application.form.section.part.b.associatedOrganizations">Associated
         organizations
     </div>
     <span th:if="${associatedOrganizations?.size() == 0}"
-          th:text="#{project.application.form.associatedOrganization.list.empty}">No
+          clf:textApplicationFormTranslation="project.application.form.associatedOrganization.list.empty">No
         associated organizations
     </span>
 
@@ -23,15 +23,15 @@
         <table class="default-table" clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS">
             <thead class="table-header">
             <tr>
-                <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
+                <th clf:textApplicationFormTranslation="project.application.form.associatedOrganization.table.number">Number</th>
 
-                <th th:text="#{project.application.form.associatedOrganization.table.status}">Status</th>
+                <th clf:textApplicationFormTranslation="project.application.form.associatedOrganization.table.status">Status</th>
 
-                <th th:text="#{project.organization.original.name.label}">
+                <th clf:textApplicationFormTranslation="project.organization.original.name.label">
                     Partner name in Original language
                 </th>
 
-                <th th:text="#{project.application.form.associatedOrganization.table.partner}">
+                <th clf:textApplicationFormTranslation="project.application.form.associatedOrganization.table.partner">
                     Name of the responsible project partner
                 </th>
 
@@ -69,35 +69,36 @@
             </thead>
             <tbody class="table-body">
             <tr>
-                <th th:text="#{project.application.form.partner.table.number}">Number</th>
+                <th clf:textApplicationFormTranslation="project.application.form.partner.table.number">Number</th>
                 <td th:if="${isSPFCall == false}" th:text="(*{partner.role?.isLead()}? 'LP' : 'PP') + *{partner.sortNumber}"></td>
-                <td th:if="${isSPFCall == true}" th:text="#{spf.common.label.project.partner.role.shortcut.LEAD_PARTNER}"></td>
+                <td th:if="${isSPFCall == true}" clf:textApplicationFormTranslation="spf.common.label.project.partner.role.shortcut.LEAD_PARTNER"></td>
             </tr>
             <tr>
-                <th th:text="#{project.organization.original.name.label}">
+                <th clf:textApplicationFormTranslation="project.organization.original.name.label">
                     Name in original language
                 </th>
                 <td th:text="*{nameInOriginalLanguage}"></td>
             </tr>
             <tr>
-                <th th:text="#{project.organization.english.name.label}">
+                <th clf:textApplicationFormTranslation="project.organization.english.name.label">
                     Name in english
                 </th>
                 <td th:text="*{nameInEnglish}"></td>
             </tr>
             <tr>
-                <th th:text="#{project.partner.main-address.country}">Country</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.country">Country</th>
                 <td th:text="*{address?.country}"></td>
             </tr>
             <tr>
-                <th th:text="#{project.partner.main-address.region2}">Region</th>
+                <th clf:textApplicationFormTranslation="project.partner.main-address.region2">Region</th>
                 <td th:text="*{address?.nutsRegion2}"></td>
             </tr>
             <tr>
-                <th th:text="#{project.partner.secondary-address.region3}">Sub region</th>
+                <th clf:textApplicationFormTranslation="project.partner.secondary-address.region3">Sub region</th>
                 <td th:text="*{address?.nutsRegion3}"></td>
             </tr>
             <tr>
+                <!-- not call-specific -->
                 <th th:text="#{project.partner.main-address.street} + ', ' + #{project.partner.main-address.housenumber} + ', ' + #{project.partner.main-address.postalcode} + ', ' + #{project.partner.main-address.city}">Address details
                 </th>
                 <td>
@@ -114,7 +115,7 @@
             <th:block
                     th:with="legalRepresentative=${clfPartnerUtils.getLegalRepresentative(associatedOrganization?.contacts)}">
                 <tr>
-                    <th th:text="#{project.partner.representative.header.detail}">Legal
+                    <th clf:textApplicationFormTranslation="project.partner.representative.header.detail">Legal
                         representative
                     </th>
                     <td>
@@ -126,7 +127,7 @@
             </th:block>
             <th:block th:with="contactPerson=${clfPartnerUtils.getContactPerson(associatedOrganization.contacts)}">
                 <tr>
-                    <th th:text="#{project.partner.contact.header.detail}">Contact person
+                    <th clf:textApplicationFormTranslation="project.partner.contact.header.detail">Contact person
                     </th>
                     <td>
                         <span th:text="${contactPerson?.title} "></span>
@@ -135,16 +136,16 @@
                     </td>
                 </tr>
                 <tr>
-                    <th th:text="#{authentication.email.label}">Email</th>
+                    <th clf:textApplicationFormTranslation="authentication.email.label">Email</th>
                     <td th:text="${contactPerson?.email}"></td>
                 </tr>
                 <tr>
-                    <th th:text="#{project.partner.contact.telephone}">Phone</th>
+                    <th clf:textApplicationFormTranslation="project.partner.contact.telephone">Phone</th>
                     <td th:text="${contactPerson?.telephone}"></td>
                 </tr>
             </th:block>
             <tr>
-                <th th:text="#{project.application.form.partner.table.role}">Role description</th>
+                <th clf:textApplicationFormTranslation="project.application.form.partner.table.role">Role description</th>
                 <td clf:textTranslationByDataLanguage="*{roleDescription}"></td>
             </tr>
             </tbody>
