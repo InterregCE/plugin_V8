@@ -11,47 +11,47 @@
 <body>
 <th:block th:fragment="partnersOverviewTable(projectDataSectionB)">
     <div class="landscape">
-        <div class="headline" id="section-b" th:text="#{project.application.form.section.part.b}">
+        <div class="headline" id="section-b" clf:textApplicationFormTranslation="project.application.form.section.part.b">
             Section B - partners
         </div>
 
         <div id="partners-overview">
             <span th:if="${projectDataSectionB.partners.size() == 0}"
-                  th:text="#{project.application.form.partner.list.empty}">No
+                  clf:textApplicationFormTranslation="project.application.form.partner.list.empty">No
                 project partners
             </span>
 
             <th:block th:if="${projectDataSectionB.partners.size() > 0}">
-                <div class="title" th:text="#{project.application.form.section.part.b.partners}">
+                <div class="title" clf:textApplicationFormTranslation="project.application.form.section.part.b.partners">
                     Partners overview
                 </div>
                 <table class="default-table">
                     <thead class="table-header">
                     <tr>
-                        <th th:text="#{project.application.form.associatedOrganization.table.number}">Number</th>
+                        <th clf:textApplicationFormTranslation="project.application.form.associatedOrganization.table.number">Number</th>
 
-                        <th th:text="#{project.application.form.associatedOrganization.table.status}">Status</th>
+                        <th clf:textApplicationFormTranslation="project.application.form.associatedOrganization.table.status">Status</th>
 
                         <th clf:ifAnyFieldIsVisible="PARTNER_ENGLISH_NAME_OF_ORGANISATION"
-                            th:text="#{project.organization.english.name.label}">
+                            clf:textApplicationFormTranslation="project.organization.english.name.label">
                             Partner name in English
                         </th>
 
                         <th clf:ifAnyFieldIsVisible="PARTNER_MAIN_ADDRESS_COUNTRY_AND_NUTS"
-                            th:text="#{project.partner.main-address.country}">
+                            clf:textApplicationFormTranslation="project.partner.main-address.country">
                             Country
                         </th>
 
                         <th clf:ifAnyFieldIsVisible="PARTNER_ABBREVIATED_ORGANISATION_NAME"
-                            th:text="#{project.application.form.partner.table.name}">Abbreviation
+                            clf:textApplicationFormTranslation="project.application.form.partner.table.name">Abbreviation
                         </th>
 
                         <th clf:ifAnyFieldIsVisible="PARTNER_ROLE"
-                            th:text="#{project.partner.role.label}">Role
+                            clf:textApplicationFormTranslation="project.partner.role.label">Role
                         </th>
 
                         <th clf:ifAnyFieldIsVisible="PARTNER_ASSOCIATED_ORGANIZATIONS"
-                            th:text="#{project.application.form.section.part.b.associatedOrganizations}">
+                            clf:textApplicationFormTranslation="project.application.form.section.part.b.associatedOrganizations">
                             Associated organizations
                         </th>
 

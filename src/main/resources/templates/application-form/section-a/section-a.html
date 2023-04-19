@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
 <!--/*@thymesVar id="projectDataSectionA" type="io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA"*/-->
 <!--/*@thymesVar id="projectPartners" type="java.util.Set<io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData>"*/-->
 <!--/*@thymesVar id="callData" type="io.cloudflight.jems.plugin.contract.models.call.CallDetailData"*/-->
@@ -10,7 +10,7 @@
 </head>
 <body>
 <th:block th:fragment="sectionA(projectDataSectionA, projectPartners)">
-    <div id="section-a" class="headline" th:text="#{project.application.form.section.part.a}">
+    <div id="section-a" class="headline" clf:textApplicationFormTranslation="project.application.form.section.part.a">
         SECTION A - Project overview
     </div>
 

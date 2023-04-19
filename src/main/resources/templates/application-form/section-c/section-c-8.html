@@ -9,25 +9,25 @@
 <body>
 <th:block th:fragment="sectionC8(projectDataSectionC)">
     <th:block clf:ifAnyFieldIsVisible="PROJECT_OWNERSHIP,PROJECT_DURABILITY,PROJECT_TRANSFERABILITY">
-        <div class="title" id="section-c-8" th:text="#{project.application.form.section.part.c.subsection.eight}">
+        <div class="title" id="section-c-8" clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.eight">
             long-term plans
         </div>
-        <span th:text="#{project.application.form.future.plans.intro}">intro text</span>
+        <span clf:textApplicationFormTranslation="project.application.form.future.plans.intro">intro text</span>
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_OWNERSHIP">
-            <div class="sub-heading-1" th:text="#{project.application.form.future.plans.field.1}">C.8.1 ownr</div>
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.future.plans.field.1">C.8.1 ownr</div>
             <div clf:textBasedOnCallType="project.application.form.future.plans.field.1.intro">pls dscr who will ensure the financial and institutional support</div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectDataSectionC?.projectLongTermPlans?.projectOwnership}">Lorem ipsum</div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_DURABILITY">
-            <div class="sub-heading-1" th:text="#{project.application.form.future.plans.field.2}">C.8.2 duration</div>
-            <div th:text="#{project.application.form.future.plans.field.2.intro}">some outputs/deliverables should be used</div>
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.future.plans.field.2">C.8.2 duration</div>
+            <div clf:textApplicationFormTranslation="project.application.form.future.plans.field.2.intro">some outputs/deliverables should be used</div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectDataSectionC?.projectLongTermPlans?.projectDurability}">Lorem ipsum</div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_TRANSFERABILITY">
-            <div class="sub-heading-1" th:text="#{project.application.form.future.plans.field.3}">C.8.3 transfer</div>
-            <div th:text="#{project.application.form.future.plans.field.3.intro}">that you will deliver could be</div>
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.future.plans.field.3">C.8.3 transfer</div>
+            <div clf:textApplicationFormTranslation="project.application.form.future.plans.field.3.intro">that you will deliver could be</div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectDataSectionC?.projectLongTermPlans?.projectTransferability}">
                 Lorem ipsum
             </div>

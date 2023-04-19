@@ -11,7 +11,7 @@
 <th:block clf:ifAnyFieldIsVisible="PROJECT_COORDINATION,PROJECT_QUALITY_MEASURES,PROJECT_COMMUNICATION_APPROACH,PROJECT_FINANCIAL_MANAGEMENT_AND_REPORTING,PROJECT_COOPERATION_CRITERIA,PROJECT_HORIZONTAL_PRINCIPLES"
           th:fragment="projectManagement(projectDataSectionC)">
     <div id="section-c-7" class="title"
-         th:text="#{project.application.form.section.part.c.subsection.seven}">
+         clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.seven">
         C.7 Project management
     </div>
     <div clf:textBasedOnCallType="project.application.form.management.intro">
@@ -19,7 +19,7 @@
     </div>
     <th:block th:with="projectManagement=${projectDataSectionC?.projectManagement}">
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COORDINATION">
-            <div class="sub-heading-1" th:text="#{project.application.form.management.field.1}">
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.management.field.1">
                 C.7.1 How will you coordinate your project?
             </div>
             <div clf:textBasedOnCallType="project.application.form.management.field.1.intro"></div>
@@ -27,15 +27,15 @@
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_QUALITY_MEASURES">
-            <div class="sub-heading-1" th:text="#{project.application.form.management.field.2}">
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.management.field.2">
                 C.7.2 Which measures will you take to ensure quality in your project?
             </div>
-            <div th:text="#{project.application.form.management.field.2.intro}"></div>
+            <div clf:textApplicationFormTranslation="project.application.form.management.field.2.intro"></div>
             <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectQualityAssurance}"></div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COMMUNICATION_APPROACH">
-            <div class="sub-heading-1" th:text="#{project.application.form.management.field.3}">C.7.3 What will be
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.management.field.3">C.7.3 What will be
                 the general approach you will follow to communicate about your project?
             </div>
             <div clf:textBasedOnCallType="project.application.form.management.field.3.intro"></div>
@@ -43,75 +43,75 @@
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_FINANCIAL_MANAGEMENT_AND_REPORTING">
-            <div class="sub-heading-1" th:text="#{project.application.form.management.field.4}">C.7.4 How do you
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.management.field.4">C.7.4 How do you
                 foresee the financial management of the project and reporting procedures for activities and
                 budget (within the partnership and towards the programme)?
             </div>
-            <div th:text="#{project.application.form.management.field.4.intro}"></div>
+            <div clf:textApplicationFormTranslation="project.application.form.management.field.4.intro"></div>
             <div class="input-data multiline"
                  clf:textTranslationByDataLanguage="${projectManagement?.projectFinancialManagement}"></div>
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_COOPERATION_CRITERIA">
 
-            <div class="sub-heading-1" th:text="#{project.application.form.management.field.5}">C.7.5
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.management.field.5">C.7.5
                 Cooperation criteria
             </div>
-            <div th:text="#{project.application.form.management.field.5.intro}">Please select all cooperation
+            <div clf:textApplicationFormTranslation="project.application.form.management.field.5.intro">Please select all cooperation
                 criteria that apply to your project and describe how you will fulfil them.
             </div>
 
             <table class="default-table mt-1">
                 <thead class="table-header">
                 <tr>
-                    <th th:text="#{project.application.form.management.cooperation.table.header.criteria}">Cooperation
+                    <th clf:textApplicationFormTranslation="project.application.form.management.cooperation.table.header.criteria">Cooperation
                         criteria
                     </th>
                     <th></th>
-                    <th th:text="#{project.application.form.management.cooperation.table.header.description}">
+                    <th clf:textApplicationFormTranslation="project.application.form.management.cooperation.table.header.description">
                         Description
                     </th>
                 </tr>
                 </thead>
                 <tbody class="table-body">
                 <tr>
-                    <td th:text="#{project.application.form.management.cooperation.table.row.1}">Joint development</td>
+                    <td clf:textApplicationFormTranslation="project.application.form.management.cooperation.table.row.1">Joint development</td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointDevelopment == true}"
-                          th:text="#{common.yes}">Yes</span>
+                          clf:textApplicationFormTranslation="common.yes">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointDevelopment == false}"
-                              th:text="#{common.no}">No</span>
+                              clf:textApplicationFormTranslation="common.no">No</span>
                     </td>
                     <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointDevelopmentDescription}"></td>
                 </tr>
                 <tr>
-                    <td th:text="#{project.application.form.management.cooperation.table.row.2}">Joint implementation
+                    <td clf:textApplicationFormTranslation="project.application.form.management.cooperation.table.row.2">Joint implementation
                     </td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointImplementation == true}"
-                          th:text="#{common.yes}">Yes</span>
+                          clf:textApplicationFormTranslation="common.yes">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointImplementation == false}"
-                              th:text="#{common.no}">No</span>
+                              clf:textApplicationFormTranslation="common.no">No</span>
                     </td>
                     <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointImplementationDescription}"></td>
                 </tr>
                 <tr>
-                    <td th:text="#{project.application.form.management.cooperation.table.row.3}">Joint staffing</td>
+                    <td clf:textApplicationFormTranslation="project.application.form.management.cooperation.table.row.3">Joint staffing</td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointStaffing == true}"
-                          th:text="#{common.yes}">Yes</span>
+                          clf:textApplicationFormTranslation="common.yes">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointStaffing == false}"
-                              th:text="#{common.no}">No</span>
+                              clf:textApplicationFormTranslation="common.no">No</span>
                     </td>
                     <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointStaffingDescription}"></td>
                 </tr>
                 <tr>
-                    <td th:text="#{project.application.form.management.cooperation.table.row.4}">Joint financing</td>
+                    <td clf:textApplicationFormTranslation="project.application.form.management.cooperation.table.row.4">Joint financing</td>
                     <td>
                     <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointFinancing == true}"
-                          th:text="#{common.yes}">Yes</span>
+                          clf:textApplicationFormTranslation="common.yes">Yes</span>
                         <span th:if="${projectManagement?.projectCooperationCriteria?.projectJointFinancing == false}"
-                              th:text="#{common.no}">No
+                              clf:textApplicationFormTranslation="common.no">No
                 </span>
                     </td>
                     <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.projectJointFinancingDescription}"></td>
@@ -122,23 +122,23 @@
         </div>
 
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HORIZONTAL_PRINCIPLES">
-            <div class="sub-heading-1" th:text="#{project.application.form.management.field.6}">C.7.6 Horizontal
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.management.field.6">C.7.6 Horizontal
                 principles
             </div>
-            <div th:text="#{project.application.form.management.field.6.intro}">Please indicate which type of
+            <div clf:textApplicationFormTranslation="project.application.form.management.field.6.intro">Please indicate which type of
                 contribution to horizontal principles applies to the project, and justify your choice.
             </div>
             <table class="default-table mt-1">
                 <thead class="table-header">
 
                 <tr>
-                    <th th:text="#{project.application.form.management.principles.table.header.principles}">Horizontal
+                    <th clf:textApplicationFormTranslation="project.application.form.management.principles.table.header.principles">Horizontal
                         principles
                     </th>
-                    <th th:text="#{project.application.form.management.principles.table.header.contribution}">Type of
+                    <th clf:textApplicationFormTranslation="project.application.form.management.principles.table.header.contribution">Type of
                         contribution
                     </th>
-                    <th th:text="#{project.application.form.management.principles.table.header.description}">Description
+                    <th clf:textApplicationFormTranslation="project.application.form.management.principles.table.header.description">Description
                         of
                         contribution
                     </th>
@@ -146,57 +146,57 @@
                 </thead>
                 <tbody class="table-body">
                 <tr>
-                    <td th:text="#{project.application.form.management.principles.table.row.1}">Sustainable
+                    <td clf:textApplicationFormTranslation="project.application.form.management.principles.table.row.1">Sustainable
                         development
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).PositiveEffects}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.positive}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.positive">
                         positive effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).Neutral}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.neutral}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.neutral">
                         neutral
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).NegativeEffects}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.negative}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.negative">
                         negative effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sustainableDevelopmentCriteriaEffect == null}"></td>
                     <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.sustainableDevelopmentDescription}"></td>
                 </tr>
                 <tr>
-                    <td th:text="#{project.application.form.management.principles.table.row.2}">Equal opportunities and
+                    <td clf:textApplicationFormTranslation="project.application.form.management.principles.table.row.2">Equal opportunities and
                         non-discrimination
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).PositiveEffects}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.positive}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.positive">
                         positive effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).Neutral}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.neutral}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.neutral">
                         neutral
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).NegativeEffects}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.negative}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.negative">
                         negative effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.equalOpportunitiesEffect == null}"></td>
                     <td class="multiline" clf:textTranslationByDataLanguage="${projectManagement?.equalOpportunitiesDescription}"></td>
                 </tr>
                 <tr>
-                    <td th:text="#{project.application.form.management.principles.table.row.3}">Equality between men and
+                    <td clf:textApplicationFormTranslation="project.application.form.management.principles.table.row.3">Equality between men and
                         women
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).PositiveEffects}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.positive}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.positive">
                         positive effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).Neutral}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.neutral}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.neutral">
                         neutral
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect == T(io.cloudflight.jems.plugin.contract.models.project.sectionC.management.ProjectHorizontalPrinciplesEffectData).NegativeEffects}"
-                        th:text="#{project.application.form.management.principles.table.contribution.type.negative}">
+                        clf:textApplicationFormTranslation="project.application.form.management.principles.table.contribution.type.negative">
                         negative effects
                     </td>
                     <td th:if="${projectManagement?.projectHorizontalPrinciples?.sexualEqualityEffect == null}"></td>

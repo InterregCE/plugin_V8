@@ -10,20 +10,20 @@
 <body>
 <th:block th:fragment="projectRelevanceAndContext(projectDataSectionC)">
     <div id="section-c-2" class="title"
-         th:text="#{project.application.form.section.part.c.subsection.two}">
+         clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.two">
     </div>
     <!-- C 2.1 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_TERRITORIAL_CHALLENGES">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.1}"></div>
-        <div th:text="#{project.application.form.relevance.field.1.intro}"></div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.relevance.field.1"></div>
+        <div clf:textApplicationFormTranslation="project.application.form.relevance.field.1.intro"></div>
         <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.territorialChallenge}"></div>
     </div>
 
     <!-- C 2.2 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HOW_ARE_CHALLENGES_AND_OPPORTUNITIES_TACKLED">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.2}"></div>
-        <div th:text="#{project.application.form.relevance.field.2.intro}"></div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.relevance.field.2"></div>
+        <div clf:textApplicationFormTranslation="project.application.form.relevance.field.2.intro"></div>
         <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.commonChallenge}"></div>
     </div>
@@ -38,15 +38,15 @@
 
     <!-- C 2.4 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_TARGET_GROUP">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.4}"></div>
-        <div th:text="#{project.application.form.relevance.field.4.intro}"></div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.relevance.field.4"></div>
+        <div clf:textApplicationFormTranslation="project.application.form.relevance.field.4.intro"></div>
         <table class="default-table mt-1">
             <thead class="table-header">
             <tr>
-                <th th:text="#{project.application.form.relevance.target.group}">
+                <th clf:textApplicationFormTranslation="project.application.form.relevance.target.group">
                     Group
                 </th>
-                <th th:text="#{project.application.form.relevance.specification}">
+                <th clf:textApplicationFormTranslation="project.application.form.relevance.specification">
                     Specifications
                 </th>
             </tr>
@@ -68,15 +68,15 @@
     <!-- C 2.4a -->
     <th:block th:if="${isSPFCall == true}">
         <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_RECIPIENT_GROUP">
-            <div class="sub-heading-1" th:text="#{spf.project.application.form.relevance.field.4a}"></div>
-            <div th:text="#{spf.project.application.form.relevance.field.4a.intro}"></div>
+            <div class="sub-heading-1" clf:textApplicationFormTranslation="spf.project.application.form.relevance.field.4a"></div>
+            <div clf:textApplicationFormTranslation="spf.project.application.form.relevance.field.4a.intro"></div>
             <table class="default-table mt-1">
                 <thead class="table-header">
                 <tr>
-                    <th th:text="#{spf.project.application.form.relevance.recipient.group}">
+                    <th clf:textApplicationFormTranslation="spf.project.application.form.relevance.recipient.group">
                         Recipient group
                     </th>
-                    <th th:text="#{project.application.form.relevance.specification}">
+                    <th clf:textApplicationFormTranslation="project.application.form.relevance.specification">
                         Specifications
                     </th>
                 </tr>
@@ -97,15 +97,15 @@
     </th:block>
     <!-- C 2.5 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_STRATEGY_CONTRIBUTION">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.5}"></div>
-        <div th:text="#{project.application.form.relevance.field.5.intro}"></div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.relevance.field.5"></div>
+        <div clf:textApplicationFormTranslation="project.application.form.relevance.field.5.intro"></div>
         <table class="default-table mt-1">
             <thead class="table-header">
             <tr>
-                <th th:text="#{project.application.form.relevance.strategy}">
+                <th clf:textApplicationFormTranslation="project.application.form.relevance.strategy">
                     Strategy
                 </th>
-                <th th:text="#{project.application.form.relevance.contribution}">
+                <th clf:textApplicationFormTranslation="project.application.form.relevance.contribution">
                     Contribution
                 </th>
             </tr>
@@ -127,7 +127,7 @@
 
     <!-- C 2.6 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_SYNERGIES">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.6}">
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.relevance.field.6">
             C.2.6 Which synergies with past or current EU and other projects or initiatives will the project
             make use of?
         </div>
@@ -135,10 +135,10 @@
         <table class="default-table mt-1">
             <thead class="table-header">
             <tr>
-                <th th:text="#{project.application.form.relevance.project.or.initiative}">
+                <th clf:textApplicationFormTranslation="project.application.form.relevance.project.or.initiative">
                     Project initiative
                 </th>
-                <th th:text="#{project.application.form.relevance.synergy}">
+                <th clf:textApplicationFormTranslation="project.application.form.relevance.synergy">
                     Synergy
                 </th>
             </tr>
@@ -156,8 +156,8 @@
 
     <!-- C 2.7 -->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_HOW_BUILDS_PROJECT_ON_AVAILABLE_KNOWLEDGE">
-        <div class="sub-heading-1" th:text="#{project.application.form.relevance.field.7}"></div>
-        <div th:text="#{project.application.form.relevance.field.7.intro}"></div>
+        <div class="sub-heading-1" clf:textApplicationFormTranslation="project.application.form.relevance.field.7"></div>
+        <div clf:textApplicationFormTranslation="project.application.form.relevance.field.7.intro"></div>
         <div class="input-data multiline"
              clf:textTranslationByDataLanguage="${projectDataSectionC?.projectRelevance?.availableKnowledge}"></div>
     </div>

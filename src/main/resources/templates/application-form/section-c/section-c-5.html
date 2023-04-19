@@ -10,14 +10,14 @@
 <th:block th:fragment="sectionC5(projectDataSectionC)">
     <th:block clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT,PROJECT_RESULTS_TARGET_VALUE,PROJECT_RESULTS_BASELINE,PROJECT_RESULTS_DELIVERY_PERIOD,PROJECT_RESULTS_DESCRIPTION">
 
-        <div class="title" id="section-c-5" th:text="#{project.application.form.section.part.c.subsection.five}">
+        <div class="title" id="section-c-5" clf:textApplicationFormTranslation="project.application.form.section.part.c.subsection.five">
             results
         </div>
-        <span th:text="#{project.results.intro}">intro text</span>
+        <span clf:textApplicationFormTranslation="project.results.intro">intro text</span>
         <th:block th:if="${projectDataSectionC.projectResults?.size() == 0}">
             <br/>
             <br/>
-            <span th:text="#{project.results.list.empty}">No
+            <span clf:textApplicationFormTranslation="project.results.list.empty">No
                 results</span>
         </th:block>
         <th:block th:each="result, rowStat: ${projectDataSectionC.projectResults}"
@@ -27,6 +27,7 @@
                 <thead class="table-header">
                 <tr class="sub-heading-2">
                     <td colspan="2">
+                        <!-- not call-specific -->
                         <span th:if="${result.deactivated == true}" th:text="#{project.results.result.title} + ' ' +  ${result.resultNumber} + ' ' + #{export.work.plan.deactivated}">Result x(Deactivated)</span>
                         <span th:if="${result.deactivated == null or result.deactivated == false}" th:text="#{project.results.result.title} + ' ' + ${result.resultNumber}">Result x</span>
                     </td>
@@ -34,29 +35,29 @@
                 </thead>
                 <tbody class="table-body">
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">
-                    <th th:text="#{project.results.result.indicator}">Indicator</th>
+                    <th clf:textApplicationFormTranslation="project.results.result.indicator">Indicator</th>
                     <td>
                         <th:block th:text="${result.programmeResultIndicatorIdentifier + ': '}"></th:block>
                         <th:block clf:textTranslationByExportLanguage="*{programmeResultName}"></th:block>
                     </td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_PROGRAMME_RESULT_INDICATOR_AMD_MEASUREMENT_UNIT">
-                    <th th:text="#{project.results.result.measurement.unit}">measure_unit</th>
+                    <th clf:textApplicationFormTranslation="project.results.result.measurement.unit">measure_unit</th>
                     <td clf:textTranslationByExportLanguage="*{programmeResultMeasurementUnit}">unit</td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_BASELINE">
-                    <th th:text="#{project.results.result.baseline}">bsln</th>
+                    <th clf:textApplicationFormTranslation="project.results.result.baseline">bsln</th>
                     <td clf:leftAlignedNumber="*{baseline}">12345</td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_TARGET_VALUE">
-                    <th th:text="#{project.results.result.target.value}">trgt</th>
+                    <th clf:textApplicationFormTranslation="project.results.result.target.value">trgt</th>
                     <td clf:leftAlignedNumber="*{targetValue}">12345</td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_DELIVERY_PERIOD">
-                    <th th:text="#{project.results.result.delivery.period}">period</th>
+                    <th clf:textApplicationFormTranslation="project.results.result.delivery.period">period</th>
                     <td>
                     <span th:unless="*{periodNumber == null}">
-                        <span th:text="#{project.partner.budget.table.period}">Per</span>
+                        <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per</span>
                         <span th:text=" *{periodNumber}">x</span><span>, </span>
                         <span th:text="*{periodStartMonth}">x</span>
                         <span> - </span>
@@ -65,7 +66,7 @@
                     </td>
                 </tr>
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_DESCRIPTION">
-                    <th th:text="#{project.results.result.description}">Desc</th>
+                    <th clf:textApplicationFormTranslation="project.results.result.description">Desc</th>
                     <td class="multiline" clf:textTranslationByDataLanguage="*{description}">lorem ipsum</td>
                 </tr>
                 </tbody>

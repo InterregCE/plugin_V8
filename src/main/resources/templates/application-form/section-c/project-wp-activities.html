@@ -19,6 +19,7 @@
         <thead class="table-header">
         <tr>
             <td class="sub-heading-1" colspan="2">
+                <!-- not call-specific -->
                 <span th:if="${activity.deactivated == true}" th:text="#{project.work.package.tab.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber} + ' ' + #{export.work.plan.deactivated}">Activity x.x (Deactivated)</span>
                 <span th:if="${activity.deactivated == null or activity.deactivated == false}" th:text="#{project.work.package.tab.activity} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber}">Activity x.x</span>
             </td>
@@ -27,16 +28,16 @@
 
         <tbody class="table-body">
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_TITLE">
-            <th th:text="#{project.work.package.tab.activity.title}">title</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.activity.title">title</th>
             <td class="multiline" clf:textTranslationByDataLanguage="${activity.title}">value</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_START_PERIOD">
-            <th th:text="#{project.work.package.tab.activity.start.period}">period start</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.activity.start.period">period start</th>
             <td>
                 <th:block th:each="period, rowStat: ${periods}" th:object="${period}">
                     <span th:if="${period.number == activity.startPeriod}">
-                        <span th:text="#{project.partner.budget.table.period}">Per</span>
+                        <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per</span>
                         <span th:text=" *{number}">x</span><span>, </span>
                         <span th:text="*{start}">x</span>
                         <span> - </span>
@@ -47,11 +48,11 @@
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_END_PERIOD">
-            <th th:text="#{project.work.package.tab.activity.end.period}">period en</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.activity.end.period">period en</th>
             <td>
                 <th:block th:each="period, rowStat: ${periods}" th:object="${period}">
                     <span th:if="${period.number == activity.endPeriod}">
-                        <span th:text="#{project.partner.budget.table.period}">Per</span>
+                        <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per</span>
                         <span th:text=" *{number}">x</span><span>, </span>
                         <span th:text="*{start}">x</span>
                         <span> - </span>
@@ -62,12 +63,12 @@
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_DESCRIPTION">
-            <th th:text="#{project.work.package.tab.activity.description}">desc</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.activity.description">desc</th>
             <td class="multiline" clf:textTranslationByDataLanguage="${activity.description}">value</td>
         </tr>
 
         <tr clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_STATE_AID_PARTNERS_INVOLVED">
-            <th th:text="#{project.work.package.tab.activity.partnersInvolved}">partners involved</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.activity.partnersInvolved">partners involved</th>
             <td>
                 <th:block th:each="partner, rowStat : ${clfPartnerUtils.getPartnerListForActivity(activity.partnerIds, projectDataSectionB.partners)}" th:object="${partner}">
                     <span  th:text="${partner.abbreviation} + (!${rowStat.last} ? ', ' : '') "></span>
@@ -80,15 +81,16 @@
     <table class="default-table mt-1rem" clf:ifAnyFieldIsVisible="PROJECT_ACTIVITIES_DELIVERABLES">
         <thead class="table-header">
         <tr class="sub-heading-1">
+            <!-- not call-specific -->
             <td colspan="4"
                 th:text="#{project.work.package.tab.deliverables} + ' ' + ${workPackage.workPackageNumber} + '.' + ${activity.activityNumber}">del for activity x
             </td>
         </tr>
         <tr>
-            <th th:text="#{project.work.package.tab.deliverables.number}">Deliverable number</th>
-            <th th:text="#{project.work.package.tab.deliverables.title}">Deliverable title</th>
-            <th th:text="#{project.work.package.tab.deliverables.description}">Description</th>
-            <th th:text="#{project.work.package.tab.deliverables.period}">Delivery period</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.deliverables.number">Deliverable number</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.deliverables.title">Deliverable title</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.deliverables.description">Description</th>
+            <th clf:textApplicationFormTranslation="project.work.package.tab.deliverables.period">Delivery period</th>
         </tr>
         </thead>
 
@@ -104,7 +106,7 @@
             <td>
                 <th:block th:each="period, rowStat: ${periods}" th:object="${period}">
                     <span th:if="${period.number == deliverable.period}">
-                        <span th:text="#{project.partner.budget.table.period}">Per</span>
+                        <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per</span>
                         <span th:text=" *{number}">x</span><span>, </span>
                         <span th:text="*{start}">x</span>
                         <span> - </span>

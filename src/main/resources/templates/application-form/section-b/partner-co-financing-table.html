@@ -19,9 +19,9 @@
                 </td>
             </tr>
             <tr>
-                <th th:text="#{project.partner.coFinancing.source}">Source</th>
-                <th class="text-right" th:text="#{project.partner.coFinancing.amount}">Amount</th>
-                <th class="text-right" th:text="#{project.partner.coFinancing.percentage}">Percentage</th>
+                <th clf:textApplicationFormTranslation="project.partner.coFinancing.source">Source</th>
+                <th class="text-right" clf:textApplicationFormTranslation="project.partner.coFinancing.amount">Amount</th>
+                <th class="text-right" clf:textApplicationFormTranslation="project.partner.coFinancing.percentage">Percentage</th>
             </tr>
             </thead>
             <tbody class="table-body">
@@ -64,10 +64,10 @@
                 <th clf:textBasedOnCallType="project.partner.coFinancing.contribution.source.name">
                     Source of contribution
                 </th>
-                <th th:text="#{project.partner.coFinancing.contribution.legal.status}">
+                <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.legal.status">
                     Legal status of contribution
                 </th>
-                <th class="text-right" th:text="#{project.partner.coFinancing.amount}">Amount</th>
+                <th class="text-right" clf:textApplicationFormTranslation="project.partner.coFinancing.amount">Amount</th>
                 <th class="text-right" clf:textBasedOnCallType="project.partner.coFinancing.contribution.total.partner.contribution.percentage">
                     % of total partner budget
                 </th>
@@ -98,7 +98,7 @@
             </thead>
             <tbody class="table-body">
             <tr th:with="publicAmount = ${clfBudgetUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
-                <th th:text="#{project.partner.coFinancing.contribution.sub.total.public.contribution}">
+                <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.sub.total.public.contribution">
                     Sub-total public contribution
                 </th>
                 <td clf:number="${publicAmount}">34</td>
@@ -107,7 +107,7 @@
                 </td>
             </tr>
             <tr th:with="automaticPublicAmount = ${clfBudgetUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
-                <th th:text="#{project.partner.coFinancing.contribution.sub.total.automatic.public.contribution}">
+                <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.sub.total.automatic.public.contribution">
                     Sub-total automatic public
                     contribution
                 </th>
@@ -117,7 +117,7 @@
                 </td>
             </tr>
             <tr th:with="privateAmount = ${clfBudgetUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerCoFinancing.partnerContributions)}">
-                <th th:text="#{project.partner.coFinancing.contribution.sub.total.private.contribution}">
+                <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.sub.total.private.contribution">
                     Sub-total private contribution
                 </th>
                 <td clf:number="${privateAmount}">5455</td>
@@ -140,14 +140,14 @@
             <table class="default-table">
                 <thead class="table-header">
                 <tr class="sub-heading-1">
-                    <td colspan="3" th:text="#{partner.tab.coFinancing.spf}">
+                    <td colspan="3" clf:textApplicationFormTranslation="partner.tab.coFinancing.spf">
                         SPF Co-financing
                     </td>
                 </tr>
                 <tr>
-                    <th th:text="#{project.partner.coFinancing.source}">Source</th>
-                    <th class="text-right" th:text="#{project.partner.coFinancing.amount}">Amount</th>
-                    <th class="text-right" th:text="#{project.partner.coFinancing.percentage}">Percentage</th>
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.source">Source</th>
+                    <th class="text-right" clf:textApplicationFormTranslation="project.partner.coFinancing.amount">Amount</th>
+                    <th class="text-right" clf:textApplicationFormTranslation="project.partner.coFinancing.percentage">Percentage</th>
                 </tr>
                 </thead>
                 <tbody class="table-body">
@@ -159,7 +159,7 @@
                     <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
                         clf:textTranslationByExportLanguage="*{fund?.abbreviation}"></td>
                     <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).PartnerContribution}"
-                        th:text="#{project.partner.coFinancing.spf.partnerContribution}">Small projects' contribution
+                        clf:textApplicationFormTranslation="project.partner.coFinancing.spf.partnerContribution">Small projects' contribution
                     </td>
                     <td th:if="*{fundType == T(io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingFundTypeData).MainFund}"
                         clf:number="${clfBudgetUtils.percentageDown(finance?.percentage, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
@@ -172,7 +172,7 @@
                     <td clf:percentage="*{percentage}">80%</td>
                 </tr>
                 <tr class="row-bordered">
-                    <td th:text="#{project.partner.coFinancing.spf.total}">Partner total eligible SPF budget
+                    <td clf:textApplicationFormTranslation="project.partner.coFinancing.spf.total">Partner total eligible SPF budget
                     </td>
                     <td clf:number="${partnerBudgetData.projectPartnerSpfBudgetTotalCost}">
                         47593
@@ -184,20 +184,20 @@
             <table class="default-table">
                 <thead class="table-header">
                 <tr class="sub-heading-1">
-                    <td colspan="4" th:text="#{project.partner.coFinancing.spf.contribution.title}">
+                    <td colspan="4" clf:textApplicationFormTranslation="project.partner.coFinancing.spf.contribution.title">
                         Origin of small projects' contribution
                     </td>
                 </tr>
                 <tr>
-                    <th th:text="#{project.partner.coFinancing.spf.contribution.source.name}">
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.spf.contribution.source.name">
                         Source of small projects' contribution
                     </th>
-                    <th th:text="#{project.partner.coFinancing.contribution.legal.status}">
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.legal.status">
                         Legal status of contribution
                     </th>
-                    <th class="text-right" th:text="#{project.partner.coFinancing.amount}">Amount</th>
+                    <th class="text-right" clf:textApplicationFormTranslation="project.partner.coFinancing.amount">Amount</th>
                     <th class="text-right"
-                        th:text="#{project.partner.coFinancing.spf.contribution.total.partner.contribution.percentage}">
+                        clf:textApplicationFormTranslation="project.partner.coFinancing.spf.contribution.total.partner.contribution.percentage">
                         % of total SPF budget
                     </th>
                 </tr>
@@ -221,14 +221,14 @@
                 <thead class="table-header">
                 <tr class="sub-heading-1">
                     <td colspan="3"
-                        th:text="#{project.partner.coFinancing.spf.contribution.total}">total
+                        clf:textApplicationFormTranslation="project.partner.coFinancing.spf.contribution.total">total
                         contribution
                     </td>
                 </tr>
                 </thead>
                 <tbody class="table-body">
                 <tr th:with="publicAmount = ${clfBudgetUtils.getPublicContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
-                    <th th:text="#{project.partner.coFinancing.contribution.sub.total.public.contribution}">
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.sub.total.public.contribution">
                         Sub-total public contribution
                     </th>
                     <td clf:number="${publicAmount}">34</td>
@@ -237,7 +237,7 @@
                     </td>
                 </tr>
                 <tr th:with="automaticPublicAmount = ${clfBudgetUtils.getAutomaticPublicContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
-                    <th th:text="#{project.partner.coFinancing.contribution.sub.total.automatic.public.contribution}">
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.sub.total.automatic.public.contribution">
                         Sub-total automatic public
                         contribution
                     </th>
@@ -247,7 +247,7 @@
                     </td>
                 </tr>
                 <tr th:with="privateAmount = ${clfBudgetUtils.getPrivateContributionSubTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
-                    <th th:text="#{project.partner.coFinancing.contribution.sub.total.private.contribution}">
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.contribution.sub.total.private.contribution">
                         Sub-total private contribution
                     </th>
                     <td clf:number="${privateAmount}">5455</td>
@@ -257,7 +257,7 @@
                 </tr>
                 <tr class="row-bordered"
                     th:with="total = ${clfBudgetUtils.getContributionTotal(partnerBudgetData.projectPartnerSpfCoFinancing.partnerContributions)}">
-                    <th th:text="#{project.partner.coFinancing.spf.contribution.total}">total spf</th>
+                    <th clf:textApplicationFormTranslation="project.partner.coFinancing.spf.contribution.total">total spf</th>
                     <td clf:number="${total}">4757</td>
                     <td clf:percentage="${clfBudgetUtils.percentageDownTo(total, partnerBudgetData.projectPartnerSpfBudgetTotalCost)}">
                         100%

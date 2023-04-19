@@ -12,13 +12,13 @@
 <th:block th:fragment="projectOverview(projectDataSectionA, projectPartners)">
     <!--A.1 Project identification-->
     <div id="section-a-1" class="title"
-         th:text="#{project.application.form.section.part.a.subsection.one}">
+         clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.one">
         A.1 Project identification
     </div>
     <table class="default-vertical-table">
         <tbody class="table-body">
         <tr>
-            <th th:text="#{project.application.form.field.project.id}">ID (automatically created)</th>
+            <th clf:textApplicationFormTranslation="project.application.form.field.project.id">ID (automatically created)</th>
             <td th:text="${projectDataSectionA.customIdentifier}"></td>
         </tr>
         <th:block th:with="leadPartner=${clfPartnerUtils.getLeadPartner(projectPartners)}">
@@ -36,19 +36,19 @@
             </tr>
         </th:block>
         <tr clf:ifAnyFieldIsVisible="PROJECT_TITLE">
-            <th th:text="#{project.application.form.field.project.title}">Project title</th>
+            <th clf:textApplicationFormTranslation="project.application.form.field.project.title">Project title</th>
             <td class="multiline" clf:textTranslationByDataLanguage="${projectDataSectionA.title}"></td>
         </tr>
         <tr>
-            <th th:text="#{project.application.form.field.project.acronym}">Project acronym</th>
+            <th clf:textApplicationFormTranslation="project.application.form.field.project.acronym">Project acronym</th>
             <td th:text="${projectDataSectionA?.acronym}"></td>
         </tr>
         <tr>
-            <th th:text="#{project.application.form.field.project.priority}">Programme priority</th>
+            <th clf:textApplicationFormTranslation="project.application.form.field.project.priority">Programme priority</th>
             <td clf:textTranslationByExportLanguage="${projectDataSectionA.programmePriority?.title}"></td>
         </tr>
         <tr>
-            <th th:text="#{project.application.form.field.project.objective}">
+            <th clf:textApplicationFormTranslation="project.application.form.field.project.objective">
                 Specific objective
             </th>
             <td>
@@ -58,7 +58,7 @@
             </td>
         </tr>
         <tr>
-            <th th:text="#{project.application.form.field.project.duration}">Project duration (nr. of months)
+            <th clf:textApplicationFormTranslation="project.application.form.field.project.duration">Project duration (nr. of months)
             </th>
             <td th:text="${projectDataSectionA?.duration}"></td>
         </tr>
@@ -68,17 +68,17 @@
     <!--A.2 Project summary-->
     <div class="keep-together" clf:ifAnyFieldIsVisible="PROJECT_SUMMARY">
         <div id="section-a-2" class="title"
-             th:text="#{project.application.form.section.part.a.subsection.two}">
+             clf:textApplicationFormTranslation="project.application.form.section.part.a.subsection.two">
             A.2 Project summary
         </div>
         <div>
-            <div th:text="#{project.application.form.summary.intro.row.one}"></div>
+            <div clf:textApplicationFormTranslation="project.application.form.summary.intro.row.one"></div>
             <ul>
-                <li th:text="#{project.application.form.summary.intro.row.two}"></li>
-                <li th:text="#{project.application.form.summary.intro.row.three}"></li>
-                <li th:text="#{project.application.form.summary.intro.row.four}"></li>
-                <li th:text="#{project.application.form.summary.intro.row.five}"></li>
-                <li th:text="#{project.application.form.summary.intro.row.six}"></li>
+                <li clf:textApplicationFormTranslation="project.application.form.summary.intro.row.two"></li>
+                <li clf:textApplicationFormTranslation="project.application.form.summary.intro.row.three"></li>
+                <li clf:textApplicationFormTranslation="project.application.form.summary.intro.row.four"></li>
+                <li clf:textApplicationFormTranslation="project.application.form.summary.intro.row.five"></li>
+                <li clf:textApplicationFormTranslation="project.application.form.summary.intro.row.six"></li>
             </ul>
         </div>
         <div class="input-data multiline" clf:textTranslationByDataLanguage="${projectDataSectionA.intro}"></div>
