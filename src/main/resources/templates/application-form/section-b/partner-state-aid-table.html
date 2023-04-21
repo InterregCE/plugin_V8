@@ -107,7 +107,8 @@
             </th>
             <td>
                 <th:block th:each="activity, rowStat: ${partnerStateAidData.activities}">
-                    <span clf:textApplicationFormTranslation="export.partner.detail.state.aid.relevant.activity(${activity.workPackageNumber}, ${activity.activityNumber})"></span>
+                    <!-- not call-specific -->
+                    <span th:text="#{export.partner.detail.state.aid.relevant.activity(${activity.workPackageNumber}, ${activity.activityNumber})}"></span>
                     <span th:if="${rowStat.count> 0 && rowStat.last == false}">,</span>
                 </th:block>
             </td>
