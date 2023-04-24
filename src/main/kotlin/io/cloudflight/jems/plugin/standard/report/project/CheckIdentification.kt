@@ -19,7 +19,7 @@ fun checkIdentificationTab(data: ProjectReportData): PreConditionCheckMessage {
 }
 
 private fun checkIfDeadlinePassed(date: LocalDate?): PreConditionCheckMessage {
-    return if(LocalDate.now() > date) {
+    return if(LocalDate.now().isAfter(date)) {
         buildErrorPreConditionCheckMessage("$SECTION_ERROR_MESSAGES_PREFIX.reportingDate.deadline.exceeded")
     } else {
         buildInfoPreConditionCheckMessage("project.application.project.report.reportingDate.date")
