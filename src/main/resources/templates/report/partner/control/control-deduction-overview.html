@@ -37,18 +37,18 @@
           <td class="right-border"
                   th:text="#{partner.control.report.export.af.flat.rate}"></td>
           <td class="right-border"
-                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.staffCostsFlatRate)}"></td>
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions?.staffCostsFlatRate)}"></td>
           <td class="right-border"
-                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.officeAndAdministrationOnStaffCostsFlatRate)}"></td>
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions?.officeAndAdministrationOnStaffCostsFlatRate)}"></td>
           <td class="right-border"
-                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.travelAndAccommodationOnStaffCostsFlatRate)}"></td>
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions?.travelAndAccommodationOnStaffCostsFlatRate)}"></td>
           <td class="right-border"></td>
           <td class="right-border"></td>
           <td class="right-border"></td>
           <td class="right-border"></td>
           <td class="right-border"></td>
           <td class="right-border"
-                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions.otherCostsOnStaffCostsFlatRate)}"></td>
+                  clf:percentage="${clfUtils.intToBigDecimal(partnerBudgetOptions?.otherCostsOnStaffCostsFlatRate)}"></td>
           <td></td>
       </tr>
       <tr th:each="decuctionRow, iterStat:  ${controlDeductionOverview.deductionRows}" th:object="${decuctionRow}">
