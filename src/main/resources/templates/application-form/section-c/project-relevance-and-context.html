@@ -114,8 +114,7 @@
             <tr th:each="strategyData : ${projectDataSectionC.projectRelevance?.projectStrategies}">
                 <td class="m-column">
                 <span th:if="${strategyData.strategy != null}"
-                      th:text="${#messages.msg('programme.strategy.' + strategyData.strategy)}"></span>
-                    Strategy
+                      th:text="${#messages.msg('programme.strategy.' + strategyData.strategy)}">Strategy</span>
                 </td>
                 <td class="multiline" clf:textTranslationByDataLanguage="${strategyData.specification}">
                     Contribution
