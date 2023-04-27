@@ -113,7 +113,7 @@ class PartnerControlReportExportPlugin(
     override fun getDescription(): String = "PDF export of partner control report"
     override fun getName(): String = "Standard partner control report export plugin"
     override fun getKey() = "standard-partner-control-report-export-plugin"
-    override fun getVersion(): String = "1.0.0"
+    override fun getVersion(): String = "1.0.1"
 
     fun getFileName(
         projectIdentifier: String?, partnerRole: ProjectPartnerRoleData, partnerNumber: Int, reportNumber: Int
