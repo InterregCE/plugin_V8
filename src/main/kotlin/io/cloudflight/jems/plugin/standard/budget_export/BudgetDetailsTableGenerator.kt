@@ -42,9 +42,7 @@ open class BudgetDetailsTableGenerator(
     private val isDescriptionColumnVisible = isDescriptionColumnVisible(projectData.lifecycleData, callData)
     private val isAwardProcedureColumnVisible = isAwardProcedureColumnVisible(projectData.lifecycleData, callData)
     private val isInvestmentColumnVisible = isInvestmentColumnVisible(projectData.lifecycleData, callData)
-    private val isCommentColumnVisible = isFieldVisible(
-        PARTNER_BUDGET_STAFF_COST_COMMENT, projectData.lifecycleData, callData
-    )
+    private val isCommentColumnVisible = isCommentColumnVisible(projectData.lifecycleData, callData)
     private val arePeriodColumnsVisible =
         isFieldVisible(PARTNER_BUDGET_PERIODS, projectData.lifecycleData, callData)
 
@@ -538,6 +536,14 @@ open class BudgetDetailsTableGenerator(
             PARTNER_BUDGET_EQUIPMENT_DESCRIPTION, PARTNER_BUDGET_EXTERNAL_EXPERTISE_DESCRIPTION,
             PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_DESCRIPTION,PROJECT_LUMP_SUMS_DESCRIPTION
         ).any { isFieldVisible(it, lifecycleData, callData) }
+
+    private fun isCommentColumnVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =  listOf(
+        PARTNER_BUDGET_STAFF_COST_COMMENT,
+        PARTNER_BUDGET_TRAVEL_AND_ACCOMMODATION_COMMENT,
+        PARTNER_BUDGET_EXTERNAL_EXPERTISE_COMMENT,
+        PARTNER_BUDGET_EQUIPMENT_COMMENT,
+        PARTNER_BUDGET_INFRASTRUCTURE_AND_WORKS_COMMENT
+    ).any { isFieldVisible(it, lifecycleData, callData) }
 
     private fun isAwardProcedureColumnVisible(lifecycleData: ProjectLifecycleData, callData: CallDetailData) =
         listOf(
