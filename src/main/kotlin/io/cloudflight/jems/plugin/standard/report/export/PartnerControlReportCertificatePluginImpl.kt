@@ -115,7 +115,7 @@ class PartnerControlReportCertificatePluginImpl(
     }
 
     override fun getName(): String {
-        return "Standard partner control report certificate generate"
+        return "Control certificate"
     }
 
     override fun getKey(): String {
@@ -123,6 +123,6 @@ class PartnerControlReportCertificatePluginImpl(
     }
 
     override fun getVersion(): String {
-        return "1.0.0"
+        return "1.0.1"
     }
 }

@@ -28,21 +28,24 @@ class ProgrammePartnerDataExportDefaultImpl(
     private val callDataProvider: CallDataProvider,
     private val messageSource: MessageSource
 ) : ProgrammeDataExportPlugin {
-
     companion object {
         private val logger = LoggerFactory.getLogger(ProgrammePartnerDataExportDefaultImpl::class.java)
+
+        private const val optionCallId = "call_id"
     }
 
-    override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData): ExportResult {
+    override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, pluginOptions: String): ExportResult {
+
         val programmeData = programmeDataProvider.getProgrammeData()
         val exportationDateTime = ZonedDateTime.now()
         val failedProjectIds = Collections.synchronizedSet(HashSet<Long>())
+        val pluginOptionsMap = getOptionsMap(pluginOptions)
 
-        val partnersToExport = getProjectVersionsToExport(projectDataProvider.getAllProjectVersions()).parallelStream()
-            .flatMap { projectVersion ->
+        val projectVersions = getProjectsVersionsToExport(pluginOptionsMap)
+
+        val partnersToExport = projectVersions.parallelStream().flatMap { projectVersion ->
                 runCatching {
-                    val projectData =
-                        projectDataProvider.getProjectDataForProjectId(projectVersion.projectId, projectVersion.version)
+                    val projectData = projectDataProvider.getProjectDataForProjectId(projectVersion.projectId, projectVersion.version)
                     val callData = callDataProvider.getCallDataByProjectId(projectVersion.projectId)
                     return@flatMap projectData.sectionB.partners.stream().map { partner ->
                         ProjectAndCallAndPartnerData(
@@ -73,8 +76,29 @@ class ProgrammePartnerDataExportDefaultImpl(
         )
     }
 
-    private fun getProjectVersionsToExport(projectVersions: List<ProjectVersionData>) =
-        projectVersions.filter {
+    override fun getDescription(): String =
+        "Standard implementation for programme partner data exportation " +
+                "\n For exporting partner data only to a specific call, specify the call identifier in the following format \n call_id:2"
+    override fun getKey() =
+        "standard-programme-partner-data-export-plugin"
+
+    override fun getName() =
+        "Standard programme partner data export"
+
+    override fun getVersion(): String =
+        "1.1.0"
+
+    private fun getFileName(
+        programmeTitle: String?, exportationDateTime: ZonedDateTime,
+        exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
+    ) =
+        "${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_partner_${
+            exportLanguage.name.lowercase(Locale.getDefault())
+        }_${dataLanguage.name.lowercase(Locale.getDefault())}_" +
+                "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.xlsx"
+
+    private fun List<ProjectVersionData>.filterAllowedStatuses() =
+        this.filter {
             it.status !in setOf(
                 ApplicationStatusData.STEP1_DRAFT,
                 ApplicationStatusData.DRAFT,
@@ -89,24 +113,22 @@ class ProgrammePartnerDataExportDefaultImpl(
         }
             .groupBy { it.projectId }.entries.mapNotNull { it.value.maxByOrNull { projectVersion -> projectVersion.createdAt } }
 
-    fun getFileName(
-        programmeTitle: String?, exportationDateTime: ZonedDateTime,
-        exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
-    ) =
-        "${if (programmeTitle.isNullOrBlank()) "programme" else programmeTitle}_partner_${
-            exportLanguage.name.lowercase(Locale.getDefault())
-        }_${dataLanguage.name.lowercase(Locale.getDefault())}_" +
-                "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.xlsx"
+    private fun getProjectsVersionsToExport(pluginOptionsMap: Map<String, String>): List<ProjectVersionData> {
+        return if (pluginOptionsMap.containsKey(optionCallId)) {
+            val callId = pluginOptionsMap[optionCallId]?.trim()?.toLong() ?: 0L
+            val projectIds = projectDataProvider.getProjectIdsByCallIdIn(setOf(callId)).toSet()
+            projectDataProvider.getAllProjectVersionsByProjectIdIn(projectIds).filterAllowedStatuses()
+        } else {
+            projectDataProvider.getAllProjectVersions().filterAllowedStatuses()
+        }
+    }
+    private fun getOptionsMap(pluginOptions: String): Map<String, String>  {
+        return if (pluginOptions.isNotEmpty())
+            pluginOptions.split(",")
+                .map { it.trim() }.map { it.split(":") }
+                .associateBy({ it[0] }, valueTransform = { it[1] })
+        else emptyMap()
+    }
 
-    override fun getDescription(): String =
-        "Standard implementation for programme partner data exportation"
 
-    override fun getKey() =
-        "standard-programme-partner-data-export-plugin"
-
-    override fun getName() =
-        "Standard programme partner data export"
-
-    override fun getVersion(): String =
-        "1.0.4"
 }

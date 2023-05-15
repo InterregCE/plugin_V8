@@ -32,7 +32,7 @@ open class ProgrammeProjectDataExportDefaultImpl(
         private val logger = LoggerFactory.getLogger(ProgrammeProjectDataExportDefaultImpl::class.java)
     }
 
-    override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData): ExportResult {
+    override fun export(exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData, pluginOptions: String): ExportResult {
         val programmeData = programmeDataProvider.getProgrammeData()
         val exportationDateTime = ZonedDateTime.now()
         val failedProjectIds = Collections.synchronizedSet(HashSet<Long>())
@@ -103,5 +103,5 @@ open class ProgrammeProjectDataExportDefaultImpl(
         "Standard programme project data export"
 
     override fun getVersion(): String =
-        "1.0.7"
+        "1.1.0"
 }
