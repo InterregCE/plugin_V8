@@ -78,7 +78,8 @@ class ProgrammePartnerDataExportDefaultImpl(
 
     override fun getDescription(): String =
         "Standard implementation for programme partner data exportation " +
-                "\n For exporting partner data only to a specific call, specify the call identifier in the following format \n call_id:2"
+                "\n This plugin exports all partner data from Jems. " +
+                "Optionally, you can export only data of a specific call via plugin parameter (e.g. 'call_id:2')"
     override fun getKey() =
         "standard-programme-partner-data-export-plugin"
 
