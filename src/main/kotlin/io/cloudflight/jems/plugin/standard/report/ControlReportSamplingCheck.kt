@@ -48,6 +48,6 @@ open class ControlReportSamplingCheck(
         "Control risk based sampling"
 
     override fun getVersion(): String =
-        "0.0.2"
+        "0.0.3"
 
 }
