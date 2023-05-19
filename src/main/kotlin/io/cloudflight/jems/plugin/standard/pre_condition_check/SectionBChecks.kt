@@ -123,8 +123,12 @@ private fun checkIfTotalSpfBudgetIsGreaterThanZero(activePartners: Set<ProjectPa
     }
 
 private fun checkIfTotalManagementBudgetIsNotGreaterThanSpfBudget(activePartners: Collection<ProjectPartnerData>): PreConditionCheckMessage {
-    val partnersWithInvalidBudget = activePartners
-        .filter { it.budget.projectBudgetCostsCalculationResult.totalCosts > it.budget.projectPartnerSpfBudgetTotalCost.multiply(BigDecimal.valueOf(2, 1)) }
+    val partnersWithInvalidBudget = activePartners.filter {
+        val margin = it.budget.projectPartnerSpfBudgetTotalCost
+            .plus(it.budget.projectBudgetCostsCalculationResult.totalCosts)
+            .multiply(BigDecimal.valueOf(2, 1))
+        return@filter it.budget.projectBudgetCostsCalculationResult.totalCosts > margin
+    }
     if (partnersWithInvalidBudget.isEmpty())
         return buildInfoPreConditionCheckMessage("$SECTION_B_INFO_MESSAGES_PREFIX.share.management.budget.not.over.20.percent")
     else
