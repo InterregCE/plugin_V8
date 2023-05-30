@@ -4,6 +4,7 @@ import io.cloudflight.jems.plugin.config.PLUGIN_DEFAULT_TEMPLATE_ENGINE
 import io.cloudflight.jems.plugin.contract.export.ApplicationFormExportPlugin
 import io.cloudflight.jems.plugin.contract.export.ExportResult
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
+import io.cloudflight.jems.plugin.contract.models.project.sectionA.ProjectDataSectionA
 import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.addLastPeriod
@@ -59,10 +60,7 @@ open class ApplicationFormExportDefaultImpl(
 
         return ExportResult(
             contentType = MediaType.APPLICATION_PDF_VALUE,
-            fileName = getFileName(
-                projectData.sectionA?.acronym, projectData.sectionA?.customIdentifier,
-                ZonedDateTime.now(), exportLanguage, dataLanguage
-            ),
+            fileName = getFileName(projectData.sectionA, ZonedDateTime.now(), version, exportLanguage, dataLanguage),
             content = pdfService.generatePdfFromHtml(
                 templateEngine.process(
                     "application-form/application-form-export-template",
@@ -104,11 +102,11 @@ open class ApplicationFormExportDefaultImpl(
     }
 
     fun getFileName(
-        projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime,
+        projectDataSectionA: ProjectDataSectionA?, exportationDateTime: ZonedDateTime, version: String?,
         exportLanguage: SystemLanguageData, dataLanguage: SystemLanguageData
     ): String =
-        "${projectCustomIdentifier}_${projectAcronym}_${exportLanguage.name.lowercase()}_${dataLanguage.name.lowercase()}_" +
-                "${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.pdf"
+        "${projectDataSectionA?.customIdentifier}_${projectDataSectionA?.acronym}_V${version}_${exportLanguage.name.lowercase()}_" +
+                "${dataLanguage.name.lowercase()}_${exportationDateTime.format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))}.pdf"
 
     override fun getDescription(): String =
         "Standard implementation for application form exportation"
@@ -120,5 +118,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.31"
+        "1.0.32"
 }

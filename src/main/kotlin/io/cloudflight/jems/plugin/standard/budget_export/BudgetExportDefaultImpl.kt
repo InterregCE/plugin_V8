@@ -61,7 +61,7 @@ open class BudgetExportDefaultImpl(
         return ExportResult(
             contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             fileName = getFileName(
-                projectData.sectionA?.acronym, projectData.sectionA?.customIdentifier, exportationTime
+                projectData.sectionA?.acronym, projectData.sectionA?.customIdentifier, exportationTime, version
             ),
             content = excelService.generateExcel(excelData)
         )
@@ -82,5 +82,5 @@ open class BudgetExportDefaultImpl(
         "Standard budget export"
 
     override fun getVersion(): String =
-        "1.0.12"
+        "1.0.13"
 }
