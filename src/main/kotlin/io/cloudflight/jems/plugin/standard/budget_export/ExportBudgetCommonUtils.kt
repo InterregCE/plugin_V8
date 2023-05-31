@@ -26,8 +26,8 @@ fun getTitle(projectData: ProjectData, version: String?, exportationDateTime: Zo
         }"
     }
 
-fun getFileName(projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime): String =
-    "${projectCustomIdentifier}_${projectAcronym}_Budget_${exportationDateTime.format(DateTimeFormatter.ofPattern("yyMMdd_HHmmss"))}.xlsx"
+fun getFileName(projectAcronym: String?, projectCustomIdentifier: String?, exportationDateTime: ZonedDateTime, version: String?): String =
+    "${projectCustomIdentifier}_${projectAcronym}_Budget_V${version}_${exportationDateTime.format(DateTimeFormatter.ofPattern("yyMMdd_HHmmss"))}.xlsx"
 
 fun getPartnerHeaders(
     isNameInOriginalLanguageVisible: Boolean, isNameInEnglishVisible: Boolean, isCountryAndNutsVisible: Boolean,
