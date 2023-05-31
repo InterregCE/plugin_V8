@@ -1,4 +1,5 @@
 import io.cloudflight.gradle.RepositoryVisibility
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id "cloudflight-gradle-plugin" version "6.4.0"
@@ -74,5 +75,12 @@ dependencies {
 
     implementation('org.apache.poi:poi')
     implementation('org.apache.poi:poi-ooxml')
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation('org.json:json:20220320')
+
+    implementation ('com.fasterxml.jackson.core:jackson-databind:2.12.5')
+    implementation ('com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.12.5')
+    implementation ('com.fasterxml.woodstox:woodstox-core:6.2.8')
+
 }
 

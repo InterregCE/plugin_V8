@@ -101,5 +101,11 @@
     <ID>TooManyFunctions:SectionCChecks.kt$io.cloudflight.jems.plugin.standard.pre_condition_check.SectionCChecks.kt</ID>
     <ID>UnusedPrivateMember:SectionAChecks.kt$private const val SECTION_A_INFO_MESSAGES_PREFIX = "$SECTION_A_MESSAGES_PREFIX.info"</ID>
     <ID>UnusedPrivateMember:SectionEChecks.kt$private const val SECTION_E_INFO_MESSAGES_PREFIX = "$SECTION_E_MESSAGES_PREFIX.info"</ID>
+    <ID>PackageNaming:ProgrammeKeepDataExportDefaultImpl.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_keep_data_export</ID>
+    <ID>PackageNaming:ProgrammeKeepDataExportDefaultImplXml.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.programme_keep_data_export_xml</ID>
+    <ID>PackageNaming:JsonAndXmlExtractorModel.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export</ID>
+    <ID>PackageNaming:Model.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export</ID>
+    <ID>PackageNaming:Utils.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export</ID>
+    <ID>PackageNaming:MainModel.kt$package io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export</ID>
   </CurrentIssues>
 </SmellBaseline>
