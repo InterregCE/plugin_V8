@@ -24,7 +24,7 @@
 <div class="headline" th:text="#{project.application.partner.control.report.breadcrumb.title}">
   Control Report
 </div>
-<h3 th:text="#{export.partner.control.report.certificate.status( (${partnerReportData.status.name()} == 'Certified') ? 'Finalised' : 'Draft') }">
+<h3 th:text="#{export.partner.control.report.certificate.status( (${partnerReportData.status.name()} == 'Certified' or ${partnerReportData.status.name()} == 'ReOpenCertified') ? 'Finalised' : 'Draft') }">
   Control Status
 </h3>
 
