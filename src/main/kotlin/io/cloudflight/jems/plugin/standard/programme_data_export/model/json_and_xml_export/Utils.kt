@@ -17,9 +17,11 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.Pro
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.ProjectWorkPackageData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.workpackage.WorkPackageInvestmentData
 import io.cloudflight.jems.plugin.contract.models.project.versions.ProjectVersionData
+import io.cloudflight.jems.plugin.contract.models.report.partner.identification.ReportStatusData
 import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProgrammeDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
+import io.cloudflight.jems.plugin.contract.services.report.ReportPartnerDataProvider
 
 private inline fun <reified KotlinClass> kotlinClassInstance(arg1: String, arg2: String): KotlinClass? {
     val clazz = Class.forName(KotlinClass::class.java.name)
@@ -168,7 +170,8 @@ fun CamelCaseString?.toHumanReadable(): String? {
 
 fun List<ProjectVersionData>.getProjectVersionsToExport(): List<ProjectVersionData> {
     val filter = this.filter {
-        it.status !in setOf(
+        it.status == ApplicationStatusData.CONTRACTED
+      /*  it.status !in setOf(
             ApplicationStatusData.STEP1_DRAFT,
             ApplicationStatusData.DRAFT,
             ApplicationStatusData.RETURNED_TO_APPLICANT,
@@ -178,7 +181,7 @@ fun List<ProjectVersionData>.getProjectVersionsToExport(): List<ProjectVersionDa
             ApplicationStatusData.IN_MODIFICATION,
             ApplicationStatusData.MODIFICATION_REJECTED,
             ApplicationStatusData.MODIFICATION_SUBMITTED
-        )
+        )*/
     }
     return filter.groupBy { it.projectId }.entries.mapNotNull {
         it.value.maxByOrNull { projectVersion -> projectVersion.createdAt }
@@ -257,12 +260,18 @@ private fun ProjectData.backPartnerAndBudgetList(
 internal fun List<ProjectVersionData>.toMainModel(
     programmeDataProvider: ProgrammeDataProvider,
     projectDataProvider: ProjectDataProvider,
-    callDataProvider: CallDataProvider
+    callDataProvider: CallDataProvider,
+    reportPartnerDataProvider: ReportPartnerDataProvider,
 ): MainModel {
     val listInjected = ArrayList<MainModel.BasicModel>()
     this.forEach {
         val projectData = projectDataProvider.getProjectDataForProjectId(it.projectId, it.version)
         val (partnerData, budgetData) = projectData.backPartnerAndBudgetList(projectDataProvider, it)
+        val partnerReports = reportPartnerDataProvider.getAllPartnerReportsBaseDataByProjectId(it.projectId)
+        val  filteredPartnerReports = partnerReports.filter { report ->
+            val partnerReportData = reportPartnerDataProvider.get(report.partnerId, report.id)
+            partnerReportData.status == ReportStatusData.Certified
+        }.toList()
         listInjected.add(
             MainModel.BasicModel(
                 projectData,
@@ -270,7 +279,9 @@ internal fun List<ProjectVersionData>.toMainModel(
                 projectDataProvider.getAllProjectVersions(),
                 partnerData,
                 budgetData,
-                callDataProvider.getCallDataByProjectId(it.projectId)
+                callDataProvider.getCallDataByProjectId(it.projectId),
+                filteredPartnerReports,
+                reportPartnerDataProvider
             )
         )
     }

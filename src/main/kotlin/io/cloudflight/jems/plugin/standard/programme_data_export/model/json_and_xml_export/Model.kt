@@ -22,9 +22,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
+import io.cloudflight.jems.plugin.contract.models.report.partner.procurement.ProjectPartnerReportProcurementData
+import io.cloudflight.jems.plugin.contract.models.report.partner.procurement.ProjectPartnerReportProcurementSubcontractData
 
 
-    data class Model(
+data class Model(
         @field:JacksonXmlProperty(localName = "programme")
         @SerializedName("programme")
         val program: Programme
@@ -407,32 +409,32 @@ data class Partner(
         @SerializedName("contractor_name") val contractorName: String,
         @field:JacksonXmlProperty(localName = "contractor_vat")
         @SerializedName("contractor_vat") val contractorVat: String
-    ) /*{
+    ) {
         companion object {
             fun listFrom(list: List<ProjectPartnerReportProcurementData>): List<Contractor> {
                 val back = ArrayList<Contractor>()
                 list.forEach {
-                    back.add(Contractor(it.contractName, it.vatNumber))
+                    back.add(Contractor(it.supplierName, it.vatNumber))
                 }
                 return back.toList()
             }
         }
-    }*/
+    }
 
     data class SubContractor(
         @SerializedName("subcontractor_name") val subContractorName: String,
         @SerializedName("subcontractor_vat") val subContractorVat: String
-    ) /*{
+    ) {
         companion object {
             fun listFrom(list: List<ProjectPartnerReportProcurementSubcontractData>): List<SubContractor> {
                 val back = ArrayList<SubContractor>()
                 list.forEach {
-                    back.add(SubContractor(it.contractName, it.vatNumber))
+                    back.add(SubContractor(it.supplierName, it.vatNumber))
                 }
                 return back.toList()
             }
         }
-    }*/
+    }
 }
 
 data class GenericMultiLanguage(

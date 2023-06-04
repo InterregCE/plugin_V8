@@ -1,6 +1,5 @@
 package io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export
 
-import com.google.gson.Gson
 import io.cloudflight.jems.plugin.contract.models.call.CallDetailData
 import io.cloudflight.jems.plugin.contract.models.call.CallTypeData
 import io.cloudflight.jems.plugin.contract.models.programme.ProgrammeInfoData
@@ -11,6 +10,10 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.Proj
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerBudgetOptionsData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerSummaryData
 import io.cloudflight.jems.plugin.contract.models.project.versions.ProjectVersionData
+import io.cloudflight.jems.plugin.contract.models.report.partner.identification.ProjectPartnerReportBaseData
+import io.cloudflight.jems.plugin.contract.models.report.partner.procurement.ProjectPartnerReportProcurementData
+import io.cloudflight.jems.plugin.contract.models.report.partner.procurement.ProjectPartnerReportProcurementSubcontractData
+import io.cloudflight.jems.plugin.contract.services.report.ReportPartnerDataProvider
 import io.cloudflight.jems.plugin.standard.common.PartnerUtils
 import java.math.BigDecimal
 
@@ -36,15 +39,31 @@ data class MainModel(
         val versionsData: List<ProjectVersionData>,
         val projectPartnerSummary: List<ProjectPartnerSummaryData>,
         val projectPartnerBudgetOptions: List<ProjectPartnerBudgetOptionsData>,
-        val callDetailData: CallDetailData
+        val callDetailData: CallDetailData,
+        val partnerReports: List<ProjectPartnerReportBaseData>,
+        val reportPartnerDataProvider: ReportPartnerDataProvider
     ) {
         private fun ProjectData.buildPartners(): List<Partner> {
             val partners = ArrayList<Partner>()
             this.sectionB.partners.forEach {
+                val partnerID : Long? = it.id
                 val financeData = it.budget.projectPartnerCoFinancing
                 val partnerContributions = financeData.partnerContributions
                 var partnerContribution: BigDecimal = BigDecimal.ZERO
                 var legalStatus: String? = null
+                var contractorList: List<ProjectPartnerReportProcurementData>? = null
+                var procurementSubcontractList: List<ProjectPartnerReportProcurementSubcontractData>? = null
+                if (partnerID != null){
+                    var filteredPartnerReports = partnerReports.filter { report ->
+                        report.partnerId == partnerID
+                    }
+                    contractorList = filteredPartnerReports.flatMap { report ->
+                        reportPartnerDataProvider.getProcurementList(report.partnerId, report.id)
+                    }
+                    procurementSubcontractList = contractorList.flatMap { contractor ->
+                        reportPartnerDataProvider.getProcurementSubcontract( partnerID, contractor.reportId, contractor.id)
+                    }
+                }
                 partnerContributions.forEach { contribData ->
                     contribData.amount?.let { amount ->
                         partnerContribution += amount
@@ -67,8 +86,8 @@ data class MainModel(
                             GenericMultiLanguage(it.nameInOriginalLanguage.orEmpty(), null),
                             GenericMultiLanguage(it.nameInEnglish.orEmpty(), "en")
                         ),
-                        contractors = null,
-                        subContractors = null,
+                        contractors = contractorList?.let { it1 -> Partner.Contractor.listFrom(it1) },
+                        subContractors = procurementSubcontractList?.let { it1 -> Partner.SubContractor.listFrom(it1) },
                         address = listOf(
                             Partner.Address(
                                 Partner.Address.MainOrDepartment.Main.name.lowercase(),

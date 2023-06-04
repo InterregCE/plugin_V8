@@ -6,6 +6,7 @@ import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
 import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProgrammeDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
+import io.cloudflight.jems.plugin.contract.services.report.ReportPartnerDataProvider
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export.JsonAndXmlExtractorModel
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export.getProjectVersionsToExport
 import io.cloudflight.jems.plugin.standard.programme_data_export.model.json_and_xml_export.toMainModel
@@ -18,6 +19,7 @@ class ProgrammeKeepDataExportDefaultImpl(
     private val programmeDataProvider: ProgrammeDataProvider,
     private val projectDataProvider: ProjectDataProvider,
     private val callDataProvider: CallDataProvider,
+    private val reportPartnerDataProvider: ReportPartnerDataProvider,
 ) : ProgrammeDataExportPlugin {
     override fun getDescription(): String = "keep.eu implementation for programme data exportation json format"
     override fun getKey() = "keep-programme-data-export-json-plugin"
@@ -33,7 +35,8 @@ class ProgrammeKeepDataExportDefaultImpl(
             .toMainModel(
                 programmeDataProvider,
                 projectDataProvider,
-                callDataProvider
+                callDataProvider,
+                reportPartnerDataProvider
             )
         return JsonAndXmlExtractorModel(JsonAndXmlExtractorModel.KindOfExtractor.JSON)
             .extract(mainModel, exportLanguage, dataLanguage, programmeData)
