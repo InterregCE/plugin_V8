@@ -405,10 +405,10 @@ data class Partner(
     }
 
     data class Contractor(
-        @field:JacksonXmlProperty(localName = "contractor_name")
-        @SerializedName("contractor_name") val contractorName: String,
-        @field:JacksonXmlProperty(localName = "contractor_vat")
-        @SerializedName("contractor_vat") val contractorVat: String
+            @field:JacksonXmlProperty(localName = "contractor_name")
+            @SerializedName("contractor_name") val contractorName: String,
+            @field:JacksonXmlProperty(localName = "contractor_vat")
+            @SerializedName("contractor_vat") val contractorVat: String
     ) {
         companion object {
             fun listFrom(list: List<ProjectPartnerReportProcurementData>): List<Contractor> {
@@ -422,8 +422,10 @@ data class Partner(
     }
 
     data class SubContractor(
-        @SerializedName("subcontractor_name") val subContractorName: String,
-        @SerializedName("subcontractor_vat") val subContractorVat: String
+            @field:JacksonXmlProperty(localName = "subcontractor_name")
+            @SerializedName("subcontractor_name") val subContractorName: String,
+            @field:JacksonXmlProperty(localName = "subcontractor_vat")
+            @SerializedName("subcontractor_vat") val subContractorVat: String
     ) {
         companion object {
             fun listFrom(list: List<ProjectPartnerReportProcurementSubcontractData>): List<SubContractor> {
