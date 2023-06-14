@@ -8,6 +8,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.Locale
+import java.util.regex.Pattern
 
 
 fun SystemLanguageData.toLocale() =
@@ -44,3 +45,6 @@ fun BigDecimal.format(): String =
         minimumFractionDigits = 2
         isGroupingUsed = true
     }.format(this)
+
+fun String.getRidOfInvalidAsciiCharsFromXML() = Pattern.compile("[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u10000-\u10FFF]+")
+    .matcher(this).replaceAll("")
