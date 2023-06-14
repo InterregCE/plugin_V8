@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+
+<!--/*@thymesVar id="projectIdentification" type="io.cloudflight.jems.plugin.contract.models.project.ProjectIdentificationData"*/-->
+<!--/*@thymesVar id="checklistDetail" type="io.cloudflight.jems.plugin.standard.programme_data_export.checklist_export.common.Checklist"*/-->
+<!--/*@thymesVar id="totalWeightedScore" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="maxWeightedScore" type="java.math.BigDecimal"*/-->
+<!--/*@thymesVar id="scoreQuestions" type="java.util.List<io.cloudflight.jems.plugin.standard.programme_data_export.checklist_export.common.Question>"*/-->
+
+<!--/*@thymesVar id="clfUtils" type="io.cloudflight.jems.plugin.standard.common.template.TemplateUtils"*/-->
+
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+
+    <style>
+        @page :first {
+            @top-center {
+                content: element(input) !important;
+            }
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        div.padding {
+            padding: 10px;
+        }
+
+        table.remove-zebra tr {
+            border-radius: 5px;
+        }
+
+        table.remove-zebra th {
+            font-weight: normal;
+        }
+
+        span.total-sub-line, div.explanation-label {
+            font-size: .8rem;
+            color: rgb(128, 128, 128);
+        }
+
+        span.total-sub-line {
+            margin-top: -.33rem;
+        }
+
+        div.explanation-label {
+            padding-top: 5px;
+        }
+
+        th.selected-option {
+            font-weight: bold !important;
+            color: #505d75 !important;
+            border: 1px solid #505d75 !important;
+            background-color: #f4fafe !important;
+        }
+
+        table.options, div.score, div.explanation {
+            margin: 10px 0 10px 0;
+        }
+
+        div.justification {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+<div class="info-header-section">
+    <div class="info-header-item">
+        <span th:text="|${projectIdentification.programmeTitle}|">Programme Title</span>
+        <br/>
+        <span th:text="|${projectIdentification.customIdentifier} - |">Project Id</span>
+        <span th:text="${projectIdentification.acronym}">Project acronym</span>
+    </div>
+    <div class="info-header-item">
+        <span th:text="|${checklistDetail.id} - |">Checklist id</span>
+        <span th:text="${checklistDetail.name}">Checklist name</span>
+        <br/>
+        <span th:text="|#{export.checklist.status}: ${checklistDetail.status}|"></span>
+        <span th:if="${checklistDetail.finishedDate}"
+              th:text="| (#{export.checklist.status.since} ${checklistDetail.finishedDate})|"></span>
+    </div>
+    <div class="info-header-item">
+        <span th:text="${checklistDetail.creatorEmail}">Creator email</span>
+    </div>
+</div>
+
+<div th:if="${maxWeightedScore > 0}">
+    <div class="title" th:text="#{export.checklist.score.table}"></div>
+    <table class="score default-vertical-table">
+        <tbody class="table-body">
+        <tr>
+            <th th:text="#{export.checklist.score.table.question}"></th>
+            <th class="text-right" th:text="#{export.checklist.score.table.score}"></th>
+            <th class="text-right" th:text="#{export.checklist.score.table.weight}"></th>
+            <th class="text-right" th:text="#{export.checklist.score.table.weighted.score}"></th>
+        </tr>
+        <tr th:each="question : ${scoreQuestions}">
+            <td th:text="*{question.scoreMetadata?.question}"></td>
+            <td class="text-right">
+                <th:block th:if="${question.answerMetadata?.score}">
+                    <span clf:number="*{question.answerMetadata?.score}"></span>
+                    <br/>
+                    <span th:text="|(#{export.checklist.score.table.out.of} ${checklistDetail.maxScore})|" class="total-sub-line"></span>
+                </th:block>
+            </td>
+            <td clf:number="*{question.scoreMetadata?.weight}" class="text-right"></td>
+            <td clf:number="*{question.answerMetadata?.weightedScore}" class="text-right bold"></td>
+        </tr>
+        <tr>
+            <td colspan="3" th:text="#{export.checklist.score.table.total}"></td>
+            <td class="text-right">
+                <span clf:number="${totalWeightedScore}" class="bold"></span>
+                <br/>
+                <span th:text="|(#{export.checklist.score.table.out.of} ${maxWeightedScore})|" class="total-sub-line"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="padding"></div>
+
+<div th:each="question : ${checklistDetail.questions}">
+    <th:block th:if="${question.headlineMetadata}">
+        <div class="title headline" th:text="${question.headlineMetadata?.value}"></div>
+    </th:block>
+
+    <th:block th:if="${question.headlineMetadata == null}">
+        <th:block th:if="${question.scoreMetadata}">
+            <div class="sub-title bold" th:text="${question.scoreMetadata.question}"></div>
+
+            <div class="score">
+                <span clf:number="${question.answerMetadata?.score}"></span>
+                <span th:if="${question.answerMetadata?.score == null}">0.00</span>
+                <span class="total-sub-line"
+                      th:text="| / ${checklistDetail.maxScore} (#{export.checklist.score.table.weight}: ${question.scoreMetadata?.weight})|"></span>
+            </div>
+
+            <div class="justification" th:text="${question.answerMetadata?.justification}"></div>
+        </th:block>
+
+        <th:block th:if="${question.textInputMetadata}">
+            <div class="sub-title bold" th:text="${question.textInputMetadata.question}"></div>
+
+            <div class="explanation-label" th:text="|${question.textInputMetadata?.explanationLabel}:|"></div>
+            <div th:text="${question.answerMetadata?.explanation} ?: #{export.checklist.no.explanation}"
+                 class="explanation"></div>
+        </th:block>
+
+        <th:block th:if="${question.optionsToggleMetadata}">
+            <div class="sub-title bold" th:text="${question.optionsToggleMetadata.question}"></div>
+
+            <table class="options default-vertical-table remove-zebra">
+                <tbody class="table-body">
+
+                <tr th:with="answer=${question.answerMetadata?.answer}">
+                    <th th:with="firstOption=${question.optionsToggleMetadata.firstOption}"
+                        th:text="${firstOption}"
+                        th:class="${firstOption?.equals(answer)} ? 'selected-option'"></th>
+
+                    <th th:with="secondOption=${question.optionsToggleMetadata.secondOption}"
+                        th:text="${secondOption}"
+                        th:class="${secondOption?.equals(answer)} ? 'selected-option'"></th>
+
+                    <th th:if="${question.optionsToggleMetadata.thirdOption}"
+                        th:with="thirdOption=${question.optionsToggleMetadata.thirdOption}"
+                        th:text="${thirdOption}"
+                        th:class="${thirdOption?.equals(answer)} ? 'selected-option'"></th>
+                </tr>
+                </tbody>
+            </table>
+            <div th:if="${question.answerMetadata?.answer == null}"
+                 th:text="#{export.checklist.no.selected}"></div>
+
+            <div class="justification" th:text="${question.answerMetadata?.justification}"></div>
+        </th:block>
+    </th:block>
+    <br/>
+</div>
+
+</body>
+</html>

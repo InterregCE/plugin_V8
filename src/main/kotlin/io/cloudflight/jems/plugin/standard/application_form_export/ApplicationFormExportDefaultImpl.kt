@@ -9,20 +9,21 @@ import io.cloudflight.jems.plugin.contract.services.CallDataProvider
 import io.cloudflight.jems.plugin.contract.services.ProjectDataProvider
 import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.addLastPeriod
 import io.cloudflight.jems.plugin.standard.application_form_export.timeplan.getTimeplanData
-import io.cloudflight.jems.plugin.standard.common.toLocale
+import io.cloudflight.jems.plugin.standard.common.BudgetUtils
+import io.cloudflight.jems.plugin.standard.common.CALL_DATA
 import io.cloudflight.jems.plugin.standard.common.CLF_BUDGET_UTILS
 import io.cloudflight.jems.plugin.standard.common.CLF_PARTNER_UTILS
 import io.cloudflight.jems.plugin.standard.common.CLF_PROJECT_UTILS
-import io.cloudflight.jems.plugin.standard.common.BudgetUtils
-import io.cloudflight.jems.plugin.standard.common.PartnerUtils
-import io.cloudflight.jems.plugin.standard.common.ProjectUtils
-import io.cloudflight.jems.plugin.standard.common.CALL_DATA
-import io.cloudflight.jems.plugin.standard.common.PROJECT_DATA
 import io.cloudflight.jems.plugin.standard.common.DATA_LANGUAGE
 import io.cloudflight.jems.plugin.standard.common.EXPORT_LANGUAGE
+import io.cloudflight.jems.plugin.standard.common.PROJECT_DATA
+import io.cloudflight.jems.plugin.standard.common.PartnerUtils
+import io.cloudflight.jems.plugin.standard.common.ProjectUtils
+import io.cloudflight.jems.plugin.standard.common.getRidOfInvalidAsciiCharsFromXML
 import io.cloudflight.jems.plugin.standard.common.pdf.PdfService
 import io.cloudflight.jems.plugin.standard.common.template.CLF_UTILS
 import io.cloudflight.jems.plugin.standard.common.template.TemplateUtils
+import io.cloudflight.jems.plugin.standard.common.toLocale
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -31,7 +32,6 @@ import org.thymeleaf.context.Context
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.regex.Pattern
 
 
 @Service
@@ -42,11 +42,6 @@ open class ApplicationFormExportDefaultImpl(
     @Qualifier(PLUGIN_DEFAULT_TEMPLATE_ENGINE)
     val templateEngine: ITemplateEngine
 ) : ApplicationFormExportPlugin {
-
-    companion object {
-        private val p = Pattern.compile("[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u10000-\u10FFF]+")
-        private fun String.getRidOfInvalidAsciiCharsFromXML() = p.matcher(this).replaceAll("")
-    }
 
     override fun export(
         projectId: Long,
@@ -118,5 +113,5 @@ open class ApplicationFormExportDefaultImpl(
         "Standard application form export"
 
     override fun getVersion(): String =
-        "1.0.32"
+        "1.0.33"
 }
