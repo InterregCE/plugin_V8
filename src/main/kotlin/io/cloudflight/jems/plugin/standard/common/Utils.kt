@@ -10,7 +10,6 @@ import java.text.NumberFormat
 import java.util.Locale
 import java.util.regex.Pattern
 
-
 fun SystemLanguageData.toLocale() =
     Locale(name.lowercase())
 
@@ -40,7 +39,7 @@ fun BigDecimal.percentageDown(percentage: BigDecimal): BigDecimal =
         .divide(BigDecimal(100), 2, RoundingMode.DOWN)
 
 fun BigDecimal.format(): String =
-    NumberFormat.getInstance(Locale.ENGLISH).apply {
+    NumberFormat.getInstance(Locale.GERMAN).apply {
         maximumFractionDigits = 2
         minimumFractionDigits = 2
         isGroupingUsed = true
