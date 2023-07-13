@@ -39,6 +39,7 @@ internal class ChecksSectionA {
             endDateTimeStep1 = null,
             endDateTime = ZonedDateTime.of(2027, 12, 3, 12, 20, 59, 90000, ZoneId.systemDefault()),
             isAdditionalFundAllowed = true,
+            isDirectContributionsAllowed = false,
             lengthOfPeriod = 12,
             description = emptySet(),
             objectives  = emptyList(),
