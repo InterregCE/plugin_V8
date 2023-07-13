@@ -7,8 +7,6 @@ import io.cloudflight.jems.plugin.contract.models.call.FieldVisibilityStatusData
 import io.cloudflight.jems.plugin.contract.models.call.flatrate.FlatRateSetupData
 import io.cloudflight.jems.plugin.contract.models.common.InputTranslationData
 import io.cloudflight.jems.plugin.contract.models.common.SystemLanguageData
-import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundData
-import io.cloudflight.jems.plugin.contract.models.programme.fund.ProgrammeFundTypeData
 import io.cloudflight.jems.plugin.contract.models.project.ApplicationFormFieldId
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ApplicationStatusData
 import io.cloudflight.jems.plugin.contract.models.project.lifecycle.ProjectLifecycleData
@@ -17,7 +15,10 @@ import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.Proj
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerAddressTypeData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerData
 import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.ProjectPartnerRoleData
-import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.*
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetCostData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.BudgetCostsCalculationResultData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.PartnerBudgetData
+import io.cloudflight.jems.plugin.contract.models.project.sectionB.partners.budget.ProjectPartnerCoFinancingAndContributionData
 import io.cloudflight.jems.plugin.contract.models.project.sectionC.relevance.ProjectTargetGroupData
 import io.cloudflight.jems.plugin.contract.pre_condition_check.models.MessageType
 import io.cloudflight.jems.plugin.standard.pre_condition_check.helpers.CallDataContainer
@@ -40,6 +41,7 @@ internal class ChecksSectionB {
             endDateTimeStep1 = null,
             endDateTime = ZonedDateTime.of(2027, 12, 3, 12, 20, 59, 90000, ZoneId.systemDefault()),
             isAdditionalFundAllowed = true,
+            isDirectContributionsAllowed = false,
             lengthOfPeriod = 12,
             description = emptySet(),
             objectives = emptyList(),
