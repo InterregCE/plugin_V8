@@ -725,16 +725,6 @@ private fun checkIfInvestmentsAreValid(
                 )
             )
         }
-        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_IS_BENEFITING) &&
-            investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
-        ) {
-            errorInvestmentsMessages.add(
-                buildErrorPreConditionCheckMessage(
-                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.benefiting.is.not.provided",
-                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                )
-            )
-        }
         if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_CROSS_BORDER_TRANSNATIONAL_RELEVANCE_OF_INVESTMENT) &&
             investment.justificationTransactionalRelevance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         ) {
@@ -745,32 +735,12 @@ private fun checkIfInvestmentsAreValid(
                 )
             )
         }
-        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE) &&
-            investment.ownershipSiteLocation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_IS_BENEFITING) &&
+            investment.justificationBenefits.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
         ) {
             errorInvestmentsMessages.add(
                 buildErrorPreConditionCheckMessage(
-                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.site.owner.is.not.provided",
-                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                )
-            )
-        }
-        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT) &&
-            investment.ownershipRetain.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
-        ) {
-            errorInvestmentsMessages.add(
-                buildErrorPreConditionCheckMessage(
-                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.end.project.is.not.provided",
-                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
-                )
-            )
-        }
-        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_MAINTENANCE) &&
-            investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
-        ) {
-            errorInvestmentsMessages.add(
-                buildErrorPreConditionCheckMessage(
-                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.maintenance.is.not.provided",
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.benefiting.is.not.provided",
                     mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
             )
@@ -801,6 +771,36 @@ private fun checkIfInvestmentsAreValid(
             errorInvestmentsMessages.add(
                 buildErrorPreConditionCheckMessage(
                     "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.documentation.expected.impacts.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
+                )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_WHO_OWNS_THE_INVESTMENT_SITE) &&
+            investment.ownershipSiteLocation.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        ) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.site.owner.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
+                )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_OWNERSHIP_AFTER_END_OF_PROJECT) &&
+            investment.ownershipRetain.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        ) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.end.project.is.not.provided",
+                    mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
+                )
+            )
+        }
+        if (isFieldVisible(ApplicationFormFieldId.PROJECT_INVESTMENT_MAINTENANCE) &&
+            investment.ownershipMaintenance.isNotFullyTranslated(CallDataContainer.get().inputLanguages)
+        ) {
+            errorInvestmentsMessages.add(
+                buildErrorPreConditionCheckMessage(
+                    "$SECTION_C_ERROR_MESSAGES_PREFIX.project.work.package.investments.maintenance.is.not.provided",
                     mapOf("id" to (workPackageNumber.toString() + "." + investment.investmentNumber.toString()))
                 )
             )
