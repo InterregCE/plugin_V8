@@ -33,5 +33,5 @@ open class ChecklistExportDefaultImpl(
         "Standard checklist export"
 
     override fun getVersion(): String =
-        "1.0.0"
+        "1.0.1"
 }

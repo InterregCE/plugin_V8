@@ -59,6 +59,7 @@ class ChecklistExportServiceImpl(
         ChecklistTypeData.APPLICATION_FORM_ASSESSMENT -> "assessment-decision-checklist"
         ChecklistTypeData.CONTRACTING -> "contracting-checklist"
         ChecklistTypeData.CONTROL -> "control-checklist"
+        ChecklistTypeData.VERIFICATION -> "verification-checklist"
     }
 
     private fun getFileName(checklist: Checklist): String =
