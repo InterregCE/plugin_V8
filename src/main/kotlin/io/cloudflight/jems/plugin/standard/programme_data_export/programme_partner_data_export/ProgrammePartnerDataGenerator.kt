@@ -229,7 +229,7 @@ class ProgrammePartnerDataGenerator(
                 vat = partnerData.vat,
                 vatRecovery = partnerData.vatRecovery,
                 otherIdentifierNumber = partnerData.otherIdentifierNumber,
-                otherIdentifierDescription = partnerData.legalStatusDescription.getTranslationFor(dataLanguage),
+                otherIdentifierDescription = partnerData.otherIdentifierDescription.getTranslationFor(dataLanguage),
                 pic = partnerData.pic,
                 stateAidCheck = getStateAidCheck(partnerData.stateAid, exportLocale, messageSource),
                 stateAidScheme = partnerData.stateAid?.stateAidScheme?.abbreviatedName?.getTranslationFor(dataLanguage),
