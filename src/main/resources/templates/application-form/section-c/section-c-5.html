@@ -56,12 +56,16 @@
                 <tr clf:ifAnyFieldIsVisible="PROJECT_RESULTS_DELIVERY_PERIOD">
                     <th clf:textApplicationFormTranslation="project.results.result.delivery.period">period</th>
                     <td>
-                    <span th:unless="*{periodNumber == null}">
+                    <span th:unless="*{periodNumber == null || periodNumber == 255}">
                         <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per</span>
                         <span th:text=" *{periodNumber}">x</span><span>, </span>
                         <span th:text="*{periodStartMonth}">x</span>
                         <span> - </span>
                         <span th:text="*{periodEndMonth}">x</span>
+                    </span>
+                    <span th:if="*{periodNumber == 255}">
+                        <span clf:textApplicationFormTranslation="project.partner.budget.table.period">Per </span>
+                        <span clf:textApplicationFormTranslation="project.results.result.delivery.period.last">lastperiod</span>
                     </span>
                     </td>
                 </tr>
