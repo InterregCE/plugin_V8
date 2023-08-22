@@ -87,7 +87,7 @@ class ProgrammePartnerDataExportDefaultImpl(
         "Standard programme partner data export"
 
     override fun getVersion(): String =
-        "1.1.1"
+        "1.1.2"
 
     private fun getFileName(
         programmeTitle: String?, exportationDateTime: ZonedDateTime,
