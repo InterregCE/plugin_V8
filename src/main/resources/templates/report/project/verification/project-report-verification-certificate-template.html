@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:clf="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="projectIdentification" type="io.cloudflight.jems.plugin.contract.models.project.ProjectIdentificationData"*/-->
+<!--/*@thymesVar id="projectReportIdentification" type="io.cloudflight.jems.plugin.contract.models.report.project.identification.ProjectReportData"*/-->
+<head>
+    <link rel="stylesheet" type="text/css" media="all" href="styles/common.css"
+          th:href="@{styles/common.css}"/>
+</head>
+<body>
+    <div class="logo-s">
+        <img  th:if="${logo == null}" th:src="@{application-form/images/InterregProgrammeLogo_96.png}"/>
+        <img  th:if="${logo != null}" th:src="|data:image/png;base64,${logo}|"/>
+    </div>
+
+    <div class="headline" th:text="#{export.project.verification.certificate.title}">
+        Verification Certificate
+    </div>
+    <h3 th:text="#{export.project.verification.certificate.status( (${projectReportIdentification.status.name()} == 'Finalized') ? 'Finalised' : 'Draft') }">
+        Verification Status
+    </h3>
+
+</body>
+</html>
